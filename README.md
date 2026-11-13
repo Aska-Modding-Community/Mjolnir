@@ -109,14 +109,14 @@ flowchart LR
     player -- loads --> proxy
     sdk --> mod["Your mod"]
 
-    classDef gamebox fill:#eceae7,stroke:#9a918a,color:#1b1a18
-    classDef mine fill:#fdac00,stroke:#8a5800,color:#1b1a18
-    classDef yours fill:#ffffff,stroke:#8a5800,color:#1b1a18,stroke-dasharray:5 3
+    classDef gamebox fill:none,stroke:#9a918a
+    classDef mine fill:none,stroke:#fdac00
+    classDef yours fill:none,stroke:#9a918a,stroke-dasharray:5 3
     class exe,player gamebox
     class proxy,clr,core,sdk mine
     class mod yours
-    style game fill:#f7f6f4,stroke:#d8d2cc,color:#5c524b
-    style mjolnir fill:#fff7e6,stroke:#e8cd96,color:#8a5800
+    style game fill:none,stroke:#9a918a,stroke-dasharray:4 4
+    style mjolnir fill:none,stroke:#fdac00,stroke-dasharray:4 4
 ```
 
 1. **version.dll** forwards every real export of the system DLL and detours `il2cpp_init` **by name** — no native
