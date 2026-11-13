@@ -95,28 +95,28 @@ The same C#, the same Harmony. What changes is the platform under them.
 ## Boot chain
 
 ```mermaid
-flowchart TD
-    exe["Aska.exe"]
-    player["UnityPlayer.dll"]
-    proxy["version.dll<br/>Mjolnir.Native · C++ proxy"]
-    clr["CoreCLR<br/>private .NET 10, beside the game"]
-    core["Mjolnir.Core<br/>interop · Harmony · mod loading · fault isolation"]
-    sdk["Mjolnir.SDK + modules<br/>the only API mods see"]
-    mod["Your mod<br/>Mjolnir/Mods/"]
+flowchart LR
+    subgraph game ["The game"]
+        direction TB
+        exe["Aska.exe"] --> player["UnityPlayer.dll"]
+    end
 
-    exe --> player
-    player -- imports --> proxy
-    proxy -- "detours il2cpp_init" --> clr
-    clr -- starts --> core
-    core -- "internal contracts" --> sdk
-    sdk --> mod
+    subgraph mjolnir ["Mjolnir"]
+        direction TB
+        proxy["version.dll"] --> clr["CoreCLR"] --> core["Mjolnir.Core"] --> sdk["Mjolnir.SDK"]
+    end
 
-    classDef game fill:#e9e5e1,stroke:#8d857d,color:#1b1a18
-    classDef mjolnir fill:#fdac00,stroke:#8a5800,color:#1b1a18
-    classDef yours fill:#f8f2f0,stroke:#8a5800,color:#1b1a18,stroke-dasharray:5 3
-    class exe,player game
-    class proxy,clr,core,sdk mjolnir
+    player -- loads --> proxy
+    sdk --> mod["Your mod"]
+
+    classDef gamebox fill:#eceae7,stroke:#9a918a,color:#1b1a18
+    classDef mine fill:#fdac00,stroke:#8a5800,color:#1b1a18
+    classDef yours fill:#ffffff,stroke:#8a5800,color:#1b1a18,stroke-dasharray:5 3
+    class exe,player gamebox
+    class proxy,clr,core,sdk mine
     class mod yours
+    style game fill:#f7f6f4,stroke:#d8d2cc,color:#5c524b
+    style mjolnir fill:#fff7e6,stroke:#e8cd96,color:#8a5800
 ```
 
 1. **version.dll** forwards every real export of the system DLL and detours `il2cpp_init` **by name** — no native
