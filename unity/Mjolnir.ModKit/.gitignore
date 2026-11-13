@@ -3,11 +3,20 @@
 /Temp/
 /Logs/
 /UserSettings/
+/MemoryCaptures/
+/Recordings/
 /Build/
 /obj/
 *.csproj
 *.sln
 *.slnx
+*.unitypackage
+sysinfo.txt
+# What an editor or an IDE leaves beside the project.
+/.vs/
+/.idea/
+/.vsconfig
+.DS_Store
 # The game's skeletons, imported from the player's own game (Mjolnir > Import Rigs): the game's, not ours.
 /Assets/Mjolnir/Rigs/
 /Assets/Mjolnir/Rigs.meta

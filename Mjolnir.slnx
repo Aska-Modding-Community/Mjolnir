@@ -107,6 +107,7 @@
   </Folder>
   <Folder Name="/unity/">
     <File Path="unity/Directory.Build.props" />
+    <File Path="unity/Mjolnir.ModKit/README.md" />
     <File Path="unity/Mjolnir.ModKit/Packages/manifest.json" />
     <File Path="unity/Mjolnir.ModKit/Assets/Mjolnir/Editor/KitSetup.cs" />
     <File Path="unity/Mjolnir.ModKit/Assets/Mjolnir/Editor/BundleBuilder.cs" />
