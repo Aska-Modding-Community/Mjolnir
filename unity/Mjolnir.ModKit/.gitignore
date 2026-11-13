@@ -12,6 +12,10 @@
 *.slnx
 *.unitypackage
 sysinfo.txt
+# A package someone put in Packages/ for their own work, and the lock file Unity then rewrites: the project's own
+# dependencies are pinned in manifest.json, and each computer resolves the rest for itself.
+/Packages/*/
+/Packages/packages-lock.json
 # What an editor or an IDE leaves beside the project.
 /.vs/
 /.idea/
