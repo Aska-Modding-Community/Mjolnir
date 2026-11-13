@@ -94,21 +94,29 @@ The same C#, the same Harmony. What changes is the platform under them.
 
 ## Boot chain
 
-```text
-Aska.exe
- └─ UnityPlayer.dll ── imports ──► version.dll            Mjolnir.Native (C++): a proxy of the system DLL
-                                    │ detours il2cpp_init
-                                    ▼
-                                  CoreCLR (Mjolnir/dotnet)
-                                    │
-                                    ▼
-                                  Mjolnir.Core             closed runtime: interop, Harmony, mod loading, fault isolation
-                                    │ loads mods through internal contracts
-                                    ▼
-                                  Mjolnir.SDK + modules    the only API mods see
-                                    │
-                                    ▼
-                                  Mjolnir/Mods/<mod>/*.dll
+```mermaid
+flowchart TD
+    exe["Aska.exe"]
+    player["UnityPlayer.dll"]
+    proxy["version.dll<br/>Mjolnir.Native · C++ proxy"]
+    clr["CoreCLR<br/>private .NET 10, beside the game"]
+    core["Mjolnir.Core<br/>interop · Harmony · mod loading · fault isolation"]
+    sdk["Mjolnir.SDK + modules<br/>the only API mods see"]
+    mod["Your mod<br/>Mjolnir/Mods/"]
+
+    exe --> player
+    player -- imports --> proxy
+    proxy -- "detours il2cpp_init" --> clr
+    clr -- starts --> core
+    core -- "internal contracts" --> sdk
+    sdk --> mod
+
+    classDef game fill:#e9e5e1,stroke:#8d857d,color:#1b1a18
+    classDef mjolnir fill:#fdac00,stroke:#8a5800,color:#1b1a18
+    classDef yours fill:#f8f2f0,stroke:#8a5800,color:#1b1a18,stroke-dasharray:5 3
+    class exe,player game
+    class proxy,clr,core,sdk mjolnir
+    class mod yours
 ```
 
 1. **version.dll** forwards every real export of the system DLL and detours `il2cpp_init` **by name** — no native
