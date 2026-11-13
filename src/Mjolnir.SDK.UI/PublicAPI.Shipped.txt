@@ -1,0 +1,672 @@
+#nullable enable
+Mjolnir.SDK.UI.BindableValue<T>
+Mjolnir.SDK.UI.BindableValue<T>.BindableValue(T value = default(T)) -> void
+Mjolnir.SDK.UI.BindableValue<T>.Changed -> System.EventHandler<Mjolnir.SDK.ValueChangedEventArgs<T>!>?
+Mjolnir.SDK.UI.BindableValue<T>.Value.get -> T
+Mjolnir.SDK.UI.BindableValue<T>.Value.set -> void
+Mjolnir.SDK.UI.BindingMode
+Mjolnir.SDK.UI.BindingMode.Default = 0 -> Mjolnir.SDK.UI.BindingMode
+Mjolnir.SDK.UI.BindingMode.OneTime = 3 -> Mjolnir.SDK.UI.BindingMode
+Mjolnir.SDK.UI.BindingMode.OneWay = 1 -> Mjolnir.SDK.UI.BindingMode
+Mjolnir.SDK.UI.BindingMode.TwoWay = 2 -> Mjolnir.SDK.UI.BindingMode
+Mjolnir.SDK.UI.Bitmap
+Mjolnir.SDK.UI.Bitmap.Bitmap(string! path) -> void
+Mjolnir.SDK.UI.Command
+Mjolnir.SDK.UI.Command.CanExecute(object? parameter) -> bool
+Mjolnir.SDK.UI.Command.CanExecuteChanged -> System.EventHandler?
+Mjolnir.SDK.UI.Command.Command(System.Action! execute, System.Func<bool>? canExecute = null) -> void
+Mjolnir.SDK.UI.Command.Command(System.Action<object?>! execute, System.Func<object?, bool>? canExecute = null) -> void
+Mjolnir.SDK.UI.Command.Execute(object? parameter) -> void
+Mjolnir.SDK.UI.Command.RaiseCanExecuteChanged() -> void
+Mjolnir.SDK.UI.Control
+Mjolnir.SDK.UI.Control.FontSize.get -> double
+Mjolnir.SDK.UI.Control.FontSize.set -> void
+Mjolnir.SDK.UI.Control.Height.get -> double
+Mjolnir.SDK.UI.Control.Height.set -> void
+Mjolnir.SDK.UI.Control.HorizontalAlignment.get -> Mjolnir.SDK.UI.HorizontalAlignment
+Mjolnir.SDK.UI.Control.HorizontalAlignment.set -> void
+Mjolnir.SDK.UI.Control.IsEffectivelyEnabled.get -> bool
+Mjolnir.SDK.UI.Control.IsEnabled.get -> bool
+Mjolnir.SDK.UI.Control.IsEnabled.set -> void
+Mjolnir.SDK.UI.Control.IsVisible.get -> bool
+Mjolnir.SDK.UI.Control.IsVisible.set -> void
+Mjolnir.SDK.UI.Control.Loaded -> System.EventHandler<Mjolnir.SDK.UI.LoadedEventArgs!>?
+Mjolnir.SDK.UI.Control.Margin.get -> Mjolnir.SDK.UI.Thickness
+Mjolnir.SDK.UI.Control.Margin.set -> void
+Mjolnir.SDK.UI.Control.MaxHeight.get -> double
+Mjolnir.SDK.UI.Control.MaxHeight.set -> void
+Mjolnir.SDK.UI.Control.MaxWidth.get -> double
+Mjolnir.SDK.UI.Control.MaxWidth.set -> void
+Mjolnir.SDK.UI.Control.MinHeight.get -> double
+Mjolnir.SDK.UI.Control.MinHeight.set -> void
+Mjolnir.SDK.UI.Control.MinWidth.get -> double
+Mjolnir.SDK.UI.Control.MinWidth.set -> void
+Mjolnir.SDK.UI.Control.Name.get -> string?
+Mjolnir.SDK.UI.Control.Name.set -> void
+Mjolnir.SDK.UI.Control.Opacity.get -> double
+Mjolnir.SDK.UI.Control.Opacity.set -> void
+Mjolnir.SDK.UI.Control.Padding.get -> Mjolnir.SDK.UI.Thickness?
+Mjolnir.SDK.UI.Control.Padding.set -> void
+Mjolnir.SDK.UI.Control.ToolTip.get -> object?
+Mjolnir.SDK.UI.Control.ToolTip.set -> void
+Mjolnir.SDK.UI.Control.VerticalAlignment.get -> Mjolnir.SDK.UI.VerticalAlignment
+Mjolnir.SDK.UI.Control.VerticalAlignment.set -> void
+Mjolnir.SDK.UI.Control.Width.get -> double
+Mjolnir.SDK.UI.Control.Width.set -> void
+Mjolnir.SDK.UI.ControlExtensions
+Mjolnir.SDK.UI.Controls
+Mjolnir.SDK.UI.Controls.Add(System.Collections.Generic.IEnumerable<Mjolnir.SDK.UI.Control?>? elements) -> void
+Mjolnir.SDK.UI.Controls.AddRange(System.Collections.Generic.IEnumerable<Mjolnir.SDK.UI.Control?>! elements) -> void
+Mjolnir.SDK.UI.Controls.Move(int oldIndex, int newIndex) -> void
+Mjolnir.SDK.UI.Dialog
+Mjolnir.SDK.UI.Dock
+Mjolnir.SDK.UI.Dock.Bottom = 1 -> Mjolnir.SDK.UI.Dock
+Mjolnir.SDK.UI.Dock.Left = 0 -> Mjolnir.SDK.UI.Dock
+Mjolnir.SDK.UI.Dock.Right = 2 -> Mjolnir.SDK.UI.Dock
+Mjolnir.SDK.UI.Dock.Top = 3 -> Mjolnir.SDK.UI.Dock
+Mjolnir.SDK.UI.FuncDataTemplate<T>
+Mjolnir.SDK.UI.FuncDataTemplate<T>.Build(object? data) -> Mjolnir.SDK.UI.Control?
+Mjolnir.SDK.UI.FuncDataTemplate<T>.FuncDataTemplate(System.Func<T, Mjolnir.SDK.UI.Control?>! build) -> void
+Mjolnir.SDK.UI.FuncDataTemplate<T>.Match(object? data) -> bool
+Mjolnir.SDK.UI.FuncTemplate<TElement>
+Mjolnir.SDK.UI.FuncTemplate<TElement>.Build() -> TElement!
+Mjolnir.SDK.UI.FuncTemplate<TElement>.FuncTemplate(System.Func<TElement!>! build) -> void
+Mjolnir.SDK.UI.HeaderedControl
+Mjolnir.SDK.UI.HeaderedControl.ContentWidth.get -> double
+Mjolnir.SDK.UI.HeaderedControl.ContentWidth.set -> void
+Mjolnir.SDK.UI.HeaderedControl.Description.get -> string?
+Mjolnir.SDK.UI.HeaderedControl.Description.set -> void
+Mjolnir.SDK.UI.HeaderedControl.Header.get -> string?
+Mjolnir.SDK.UI.HeaderedControl.Header.set -> void
+Mjolnir.SDK.UI.HeaderedControl.Icon.get -> Mjolnir.SDK.UI.Bitmap?
+Mjolnir.SDK.UI.HeaderedControl.Icon.set -> void
+Mjolnir.SDK.UI.HorizontalAlignment
+Mjolnir.SDK.UI.HorizontalAlignment.Center = 2 -> Mjolnir.SDK.UI.HorizontalAlignment
+Mjolnir.SDK.UI.HorizontalAlignment.Left = 1 -> Mjolnir.SDK.UI.HorizontalAlignment
+Mjolnir.SDK.UI.HorizontalAlignment.Right = 3 -> Mjolnir.SDK.UI.HorizontalAlignment
+Mjolnir.SDK.UI.HorizontalAlignment.Stretch = 0 -> Mjolnir.SDK.UI.HorizontalAlignment
+Mjolnir.SDK.UI.HotKeys
+Mjolnir.SDK.UI.Hud
+Mjolnir.SDK.UI.HudAnchor
+Mjolnir.SDK.UI.HudAnchor.BottomLeft = 3 -> Mjolnir.SDK.UI.HudAnchor
+Mjolnir.SDK.UI.HudAnchor.BottomRight = 4 -> Mjolnir.SDK.UI.HudAnchor
+Mjolnir.SDK.UI.HudAnchor.TopCenter = 1 -> Mjolnir.SDK.UI.HudAnchor
+Mjolnir.SDK.UI.HudAnchor.TopLeft = 0 -> Mjolnir.SDK.UI.HudAnchor
+Mjolnir.SDK.UI.HudAnchor.TopRight = 2 -> Mjolnir.SDK.UI.HudAnchor
+Mjolnir.SDK.UI.IDataTemplate
+Mjolnir.SDK.UI.IDataTemplate.Build(object? data) -> Mjolnir.SDK.UI.Control?
+Mjolnir.SDK.UI.IDataTemplate.Match(object? data) -> bool
+Mjolnir.SDK.UI.InterfaceScale
+Mjolnir.SDK.UI.LoadedEventArgs
+Mjolnir.SDK.UI.LoadedEventArgs.LoadedEventArgs(UnityEngine.RectTransform! rectTransform) -> void
+Mjolnir.SDK.UI.LoadedEventArgs.RectTransform.get -> UnityEngine.RectTransform!
+Mjolnir.SDK.UI.MenuButtons
+Mjolnir.SDK.UI.MenuButtons.Add(Mjolnir.SDK.UI.UiButton! button) -> Mjolnir.SDK.UI.UiButton!
+Mjolnir.SDK.UI.MenuButtons.Add(Mjolnir.SDK.UI.UiMenuItem! item) -> Mjolnir.SDK.UI.UiMenuItem!
+Mjolnir.SDK.UI.MenuButtons.Opened -> System.EventHandler?
+Mjolnir.SDK.UI.MenuButtons.Remove(Mjolnir.SDK.UI.UiButton! button) -> bool
+Mjolnir.SDK.UI.MenuButtons.Remove(Mjolnir.SDK.UI.UiMenuItem! item) -> bool
+Mjolnir.SDK.UI.MenuTabs
+Mjolnir.SDK.UI.MenuTabs.Add(Mjolnir.SDK.UI.UiTabItem! tab) -> Mjolnir.SDK.UI.UiTabItem!
+Mjolnir.SDK.UI.MenuTabs.Remove(Mjolnir.SDK.UI.UiTabItem! tab) -> bool
+Mjolnir.SDK.UI.Menus
+Mjolnir.SDK.UI.MjolnirObject
+Mjolnir.SDK.UI.MjolnirObject.Bind<T, TModel, TValue>(Mjolnir.SDK.UI.MjolnirProperty<T>! property, TModel! model, System.Linq.Expressions.Expression<System.Func<TModel!, TValue>!>! path, Mjolnir.SDK.UI.BindingMode mode = Mjolnir.SDK.UI.BindingMode.Default, System.Func<TValue, T>? convert = null, System.Func<T, TValue>? convertBack = null) -> System.IDisposable!
+Mjolnir.SDK.UI.MjolnirObject.Bind<T, TSource>(Mjolnir.SDK.UI.MjolnirProperty<T>! property, Mjolnir.SDK.IBindable<TSource>! source, Mjolnir.SDK.UI.BindingMode mode = Mjolnir.SDK.UI.BindingMode.Default, System.Func<TSource, T>? convert = null, System.Func<T, TSource>? convertBack = null) -> System.IDisposable!
+Mjolnir.SDK.UI.MjolnirObject.Bind<T, TSource>(Mjolnir.SDK.UI.MjolnirProperty<T>! property, Mjolnir.SDK.IReadOnlyBindable<TSource>! source, System.Func<TSource, T>? convert = null) -> System.IDisposable!
+Mjolnir.SDK.UI.MjolnirObject.Bind<T, TSource>(Mjolnir.SDK.UI.MjolnirProperty<T>! property, System.Func<TSource>! source, System.Func<TSource, T>? convert = null) -> System.IDisposable!
+Mjolnir.SDK.UI.MjolnirObject.Bind<T, TSource>(Mjolnir.SDK.UI.MjolnirProperty<T>! property, System.Func<TSource>! source, System.TimeSpan interval, System.Func<TSource, T>? convert = null) -> System.IDisposable!
+Mjolnir.SDK.UI.MjolnirObject.Bind<T, TSource>(Mjolnir.SDK.UI.MjolnirProperty<T>! property, System.IObservable<TSource>! source, System.Func<TSource, T>? convert = null) -> System.IDisposable!
+Mjolnir.SDK.UI.MjolnirObject.ClearValue<T>(Mjolnir.SDK.UI.MjolnirProperty<T>! property) -> void
+Mjolnir.SDK.UI.MjolnirObject.GetObservable<T>(Mjolnir.SDK.UI.MjolnirProperty<T>! property) -> System.IObservable<T>!
+Mjolnir.SDK.UI.MjolnirObject.GetValue<T>(Mjolnir.SDK.UI.MjolnirProperty<T>! property) -> T
+Mjolnir.SDK.UI.MjolnirObject.PropertyChanged -> System.EventHandler<Mjolnir.SDK.UI.MjolnirPropertyChangedEventArgs!>?
+Mjolnir.SDK.UI.MjolnirObject.SetValue<T>(Mjolnir.SDK.UI.MjolnirProperty<T>! property, T value) -> void
+Mjolnir.SDK.UI.MjolnirProperty
+Mjolnir.SDK.UI.MjolnirProperty.DefaultBindingMode.get -> Mjolnir.SDK.UI.BindingMode
+Mjolnir.SDK.UI.MjolnirProperty.Name.get -> string!
+Mjolnir.SDK.UI.MjolnirProperty.OwnerType.get -> System.Type!
+Mjolnir.SDK.UI.MjolnirProperty.PropertyType.get -> System.Type!
+Mjolnir.SDK.UI.MjolnirProperty<T>
+Mjolnir.SDK.UI.MjolnirProperty<T>.DefaultValue.get -> T
+Mjolnir.SDK.UI.MjolnirPropertyChangedEventArgs
+Mjolnir.SDK.UI.MjolnirPropertyChangedEventArgs.GetNewValue<T>() -> T
+Mjolnir.SDK.UI.MjolnirPropertyChangedEventArgs.GetOldValue<T>() -> T
+Mjolnir.SDK.UI.MjolnirPropertyChangedEventArgs.NewValue.get -> object?
+Mjolnir.SDK.UI.MjolnirPropertyChangedEventArgs.OldValue.get -> object?
+Mjolnir.SDK.UI.MjolnirPropertyChangedEventArgs.Property.get -> Mjolnir.SDK.UI.MjolnirProperty!
+Mjolnir.SDK.UI.MjolnirPropertyChangedEventArgs.Sender.get -> Mjolnir.SDK.UI.MjolnirObject!
+Mjolnir.SDK.UI.MjolnirPropertyChangedEventArgs<T>
+Mjolnir.SDK.UI.MjolnirPropertyChangedEventArgs<T>.NewValue.get -> T
+Mjolnir.SDK.UI.MjolnirPropertyChangedEventArgs<T>.OldValue.get -> T
+Mjolnir.SDK.UI.MjolnirPropertyChangedEventArgs<T>.Property.get -> Mjolnir.SDK.UI.MjolnirProperty<T>!
+Mjolnir.SDK.UI.Notify
+Mjolnir.SDK.UI.Orientation
+Mjolnir.SDK.UI.Orientation.Horizontal = 1 -> Mjolnir.SDK.UI.Orientation
+Mjolnir.SDK.UI.Orientation.Vertical = 0 -> Mjolnir.SDK.UI.Orientation
+Mjolnir.SDK.UI.Panel
+Mjolnir.SDK.UI.Panel.Children.get -> Mjolnir.SDK.UI.Controls!
+Mjolnir.SDK.UI.ProgressBase
+Mjolnir.SDK.UI.ProgressBase.Foreground.get -> UnityEngine.Color?
+Mjolnir.SDK.UI.ProgressBase.Foreground.set -> void
+Mjolnir.SDK.UI.ProgressBase.Maximum.get -> double
+Mjolnir.SDK.UI.ProgressBase.Maximum.set -> void
+Mjolnir.SDK.UI.ProgressBase.Minimum.get -> double
+Mjolnir.SDK.UI.ProgressBase.Minimum.set -> void
+Mjolnir.SDK.UI.ProgressBase.Percentage.get -> double
+Mjolnir.SDK.UI.ProgressBase.ProgressTextForeground.get -> UnityEngine.Color?
+Mjolnir.SDK.UI.ProgressBase.ProgressTextForeground.set -> void
+Mjolnir.SDK.UI.ProgressBase.ProgressTextFormat.get -> string!
+Mjolnir.SDK.UI.ProgressBase.ProgressTextFormat.set -> void
+Mjolnir.SDK.UI.ProgressBase.ShowProgressText.get -> bool
+Mjolnir.SDK.UI.ProgressBase.ShowProgressText.set -> void
+Mjolnir.SDK.UI.ProgressBase.Value.get -> double
+Mjolnir.SDK.UI.ProgressBase.Value.set -> void
+Mjolnir.SDK.UI.ProgressBase.ValueChanged -> System.EventHandler<Mjolnir.SDK.UI.RangeValueChangedEventArgs!>?
+Mjolnir.SDK.UI.RangeValueChangedEventArgs
+Mjolnir.SDK.UI.RangeValueChangedEventArgs.RangeValueChangedEventArgs(double oldValue, double newValue) -> void
+Mjolnir.SDK.UI.SelectingItemsControl
+Mjolnir.SDK.UI.SelectingItemsControl.ItemText.get -> System.Func<object?, string!>?
+Mjolnir.SDK.UI.SelectingItemsControl.ItemText.set -> void
+Mjolnir.SDK.UI.SelectingItemsControl.ItemsSource.get -> System.Collections.IEnumerable?
+Mjolnir.SDK.UI.SelectingItemsControl.ItemsSource.set -> void
+Mjolnir.SDK.UI.SelectingItemsControl.SelectedIndex.get -> int
+Mjolnir.SDK.UI.SelectingItemsControl.SelectedIndex.set -> void
+Mjolnir.SDK.UI.SelectingItemsControl.SelectedItem.get -> object?
+Mjolnir.SDK.UI.SelectingItemsControl.SelectedItem.set -> void
+Mjolnir.SDK.UI.SelectingItemsControl.SelectionChanged -> System.EventHandler<Mjolnir.SDK.UI.SelectionChangedEventArgs!>?
+Mjolnir.SDK.UI.SelectionChangedEventArgs
+Mjolnir.SDK.UI.SelectionChangedEventArgs.AddedItems.get -> System.Collections.IList!
+Mjolnir.SDK.UI.SelectionChangedEventArgs.RemovedItems.get -> System.Collections.IList!
+Mjolnir.SDK.UI.SelectionChangedEventArgs.SelectionChangedEventArgs(System.Collections.IList! removedItems, System.Collections.IList! addedItems) -> void
+Mjolnir.SDK.UI.SettingControls
+Mjolnir.SDK.UI.SizeToContent
+Mjolnir.SDK.UI.SizeToContent.Height = 1 -> Mjolnir.SDK.UI.SizeToContent
+Mjolnir.SDK.UI.SizeToContent.Manual = 0 -> Mjolnir.SDK.UI.SizeToContent
+Mjolnir.SDK.UI.Stretch
+Mjolnir.SDK.UI.Stretch.Fill = 0 -> Mjolnir.SDK.UI.Stretch
+Mjolnir.SDK.UI.Stretch.Uniform = 1 -> Mjolnir.SDK.UI.Stretch
+Mjolnir.SDK.UI.TextAlignment
+Mjolnir.SDK.UI.TextAlignment.Center = 1 -> Mjolnir.SDK.UI.TextAlignment
+Mjolnir.SDK.UI.TextAlignment.Justify = 3 -> Mjolnir.SDK.UI.TextAlignment
+Mjolnir.SDK.UI.TextAlignment.Left = 0 -> Mjolnir.SDK.UI.TextAlignment
+Mjolnir.SDK.UI.TextAlignment.Right = 2 -> Mjolnir.SDK.UI.TextAlignment
+Mjolnir.SDK.UI.TextChangedEventArgs
+Mjolnir.SDK.UI.TextChangedEventArgs.NewText.get -> string!
+Mjolnir.SDK.UI.TextChangedEventArgs.OldText.get -> string!
+Mjolnir.SDK.UI.TextChangedEventArgs.TextChangedEventArgs(string! oldText, string! newText) -> void
+Mjolnir.SDK.UI.TextInputContentType
+Mjolnir.SDK.UI.TextInputContentType.Digits = 1 -> Mjolnir.SDK.UI.TextInputContentType
+Mjolnir.SDK.UI.TextInputContentType.Normal = 0 -> Mjolnir.SDK.UI.TextInputContentType
+Mjolnir.SDK.UI.TextInputContentType.Number = 2 -> Mjolnir.SDK.UI.TextInputContentType
+Mjolnir.SDK.UI.TextWrapping
+Mjolnir.SDK.UI.TextWrapping.NoWrap = 0 -> Mjolnir.SDK.UI.TextWrapping
+Mjolnir.SDK.UI.TextWrapping.Wrap = 1 -> Mjolnir.SDK.UI.TextWrapping
+Mjolnir.SDK.UI.Thickness
+Mjolnir.SDK.UI.Thickness.Bottom.get -> double
+Mjolnir.SDK.UI.Thickness.Equals(Mjolnir.SDK.UI.Thickness other) -> bool
+Mjolnir.SDK.UI.Thickness.IsEmpty.get -> bool
+Mjolnir.SDK.UI.Thickness.Left.get -> double
+Mjolnir.SDK.UI.Thickness.Right.get -> double
+Mjolnir.SDK.UI.Thickness.Thickness() -> void
+Mjolnir.SDK.UI.Thickness.Thickness(double horizontal, double vertical) -> void
+Mjolnir.SDK.UI.Thickness.Thickness(double left, double top, double right, double bottom) -> void
+Mjolnir.SDK.UI.Thickness.Thickness(double uniform) -> void
+Mjolnir.SDK.UI.Thickness.Top.get -> double
+Mjolnir.SDK.UI.UiBorder
+Mjolnir.SDK.UI.UiBorder.Background.get -> UnityEngine.Color?
+Mjolnir.SDK.UI.UiBorder.Background.set -> void
+Mjolnir.SDK.UI.UiBorder.Child.get -> Mjolnir.SDK.UI.Control?
+Mjolnir.SDK.UI.UiBorder.Child.set -> void
+Mjolnir.SDK.UI.UiBorder.UiBorder() -> void
+Mjolnir.SDK.UI.UiButton
+Mjolnir.SDK.UI.UiButton.Click -> System.EventHandler?
+Mjolnir.SDK.UI.UiButton.Command.get -> System.Windows.Input.ICommand?
+Mjolnir.SDK.UI.UiButton.Command.set -> void
+Mjolnir.SDK.UI.UiButton.CommandParameter.get -> object?
+Mjolnir.SDK.UI.UiButton.CommandParameter.set -> void
+Mjolnir.SDK.UI.UiButton.Content.get -> string!
+Mjolnir.SDK.UI.UiButton.Content.set -> void
+Mjolnir.SDK.UI.UiButton.UiButton() -> void
+Mjolnir.SDK.UI.UiCard
+Mjolnir.SDK.UI.UiCard.Click -> System.EventHandler?
+Mjolnir.SDK.UI.UiCard.Command.get -> System.Windows.Input.ICommand?
+Mjolnir.SDK.UI.UiCard.Command.set -> void
+Mjolnir.SDK.UI.UiCard.CommandParameter.get -> object?
+Mjolnir.SDK.UI.UiCard.CommandParameter.set -> void
+Mjolnir.SDK.UI.UiCard.Image.get -> Mjolnir.SDK.UI.Bitmap?
+Mjolnir.SDK.UI.UiCard.Image.set -> void
+Mjolnir.SDK.UI.UiCard.IsSelected.get -> bool
+Mjolnir.SDK.UI.UiCard.IsSelected.set -> void
+Mjolnir.SDK.UI.UiCard.Subtitle.get -> string!
+Mjolnir.SDK.UI.UiCard.Subtitle.set -> void
+Mjolnir.SDK.UI.UiCard.Title.get -> string!
+Mjolnir.SDK.UI.UiCard.Title.set -> void
+Mjolnir.SDK.UI.UiCard.UiCard() -> void
+Mjolnir.SDK.UI.UiComboBox
+Mjolnir.SDK.UI.UiComboBox.PlaceholderText.get -> string?
+Mjolnir.SDK.UI.UiComboBox.PlaceholderText.set -> void
+Mjolnir.SDK.UI.UiComboBox.UiComboBox() -> void
+Mjolnir.SDK.UI.UiExpander
+Mjolnir.SDK.UI.UiExpander.Collapsed -> System.EventHandler?
+Mjolnir.SDK.UI.UiExpander.Content.get -> Mjolnir.SDK.UI.Control?
+Mjolnir.SDK.UI.UiExpander.Content.set -> void
+Mjolnir.SDK.UI.UiExpander.Expanded -> System.EventHandler?
+Mjolnir.SDK.UI.UiExpander.Header.get -> string?
+Mjolnir.SDK.UI.UiExpander.Header.set -> void
+Mjolnir.SDK.UI.UiExpander.IsExpanded.get -> bool
+Mjolnir.SDK.UI.UiExpander.IsExpanded.set -> void
+Mjolnir.SDK.UI.UiExpander.UiExpander() -> void
+Mjolnir.SDK.UI.UiGrid
+Mjolnir.SDK.UI.UiGrid.ColumnDefinitions.get -> string!
+Mjolnir.SDK.UI.UiGrid.ColumnDefinitions.set -> void
+Mjolnir.SDK.UI.UiGrid.ColumnSpacing.get -> double
+Mjolnir.SDK.UI.UiGrid.ColumnSpacing.set -> void
+Mjolnir.SDK.UI.UiGrid.RowSpacing.get -> double
+Mjolnir.SDK.UI.UiGrid.RowSpacing.set -> void
+Mjolnir.SDK.UI.UiGrid.UiGrid() -> void
+Mjolnir.SDK.UI.UiHotKeyBox
+Mjolnir.SDK.UI.UiHotKeyBox.Gesture.get -> Mjolnir.SDK.KeyGesture
+Mjolnir.SDK.UI.UiHotKeyBox.Gesture.set -> void
+Mjolnir.SDK.UI.UiHotKeyBox.GestureChanged -> System.EventHandler<Mjolnir.SDK.ValueChangedEventArgs<Mjolnir.SDK.KeyGesture>!>?
+Mjolnir.SDK.UI.UiHotKeyBox.UiHotKeyBox() -> void
+Mjolnir.SDK.UI.UiImage
+Mjolnir.SDK.UI.UiImage.Source.get -> Mjolnir.SDK.UI.Bitmap?
+Mjolnir.SDK.UI.UiImage.Source.set -> void
+Mjolnir.SDK.UI.UiImage.Stretch.get -> Mjolnir.SDK.UI.Stretch
+Mjolnir.SDK.UI.UiImage.Stretch.set -> void
+Mjolnir.SDK.UI.UiImage.UiImage() -> void
+Mjolnir.SDK.UI.UiItemsControl
+Mjolnir.SDK.UI.UiItemsControl.ItemTemplate.get -> Mjolnir.SDK.UI.IDataTemplate?
+Mjolnir.SDK.UI.UiItemsControl.ItemTemplate.set -> void
+Mjolnir.SDK.UI.UiItemsControl.ItemsPanel.get -> Mjolnir.SDK.UI.FuncTemplate<Mjolnir.SDK.UI.Panel!>?
+Mjolnir.SDK.UI.UiItemsControl.ItemsPanel.set -> void
+Mjolnir.SDK.UI.UiItemsControl.ItemsSource.get -> System.Collections.IEnumerable?
+Mjolnir.SDK.UI.UiItemsControl.ItemsSource.set -> void
+Mjolnir.SDK.UI.UiItemsControl.UiItemsControl() -> void
+Mjolnir.SDK.UI.UiKeyHint
+Mjolnir.SDK.UI.UiKeyHint.Gesture.get -> Mjolnir.SDK.KeyGesture
+Mjolnir.SDK.UI.UiKeyHint.Gesture.set -> void
+Mjolnir.SDK.UI.UiKeyHint.Text.get -> string!
+Mjolnir.SDK.UI.UiKeyHint.Text.set -> void
+Mjolnir.SDK.UI.UiKeyHint.UiKeyHint() -> void
+Mjolnir.SDK.UI.UiLayoutTransformControl
+Mjolnir.SDK.UI.UiLayoutTransformControl.Child.get -> Mjolnir.SDK.UI.Control?
+Mjolnir.SDK.UI.UiLayoutTransformControl.Child.set -> void
+Mjolnir.SDK.UI.UiLayoutTransformControl.Scale.get -> double
+Mjolnir.SDK.UI.UiLayoutTransformControl.Scale.set -> void
+Mjolnir.SDK.UI.UiLayoutTransformControl.UiLayoutTransformControl() -> void
+Mjolnir.SDK.UI.UiListBox
+Mjolnir.SDK.UI.UiListBox.ItemTemplate.get -> Mjolnir.SDK.UI.IDataTemplate?
+Mjolnir.SDK.UI.UiListBox.ItemTemplate.set -> void
+Mjolnir.SDK.UI.UiListBox.ItemsSource.get -> System.Collections.IEnumerable?
+Mjolnir.SDK.UI.UiListBox.ItemsSource.set -> void
+Mjolnir.SDK.UI.UiListBox.SelectedIndex.get -> int
+Mjolnir.SDK.UI.UiListBox.SelectedIndex.set -> void
+Mjolnir.SDK.UI.UiListBox.SelectedItem.get -> object?
+Mjolnir.SDK.UI.UiListBox.SelectedItem.set -> void
+Mjolnir.SDK.UI.UiListBox.SelectionChanged -> System.EventHandler<Mjolnir.SDK.UI.SelectionChangedEventArgs!>?
+Mjolnir.SDK.UI.UiListBox.UiListBox() -> void
+Mjolnir.SDK.UI.UiMenuItem
+Mjolnir.SDK.UI.UiMenuItem.Click -> System.EventHandler?
+Mjolnir.SDK.UI.UiMenuItem.Command.get -> System.Windows.Input.ICommand?
+Mjolnir.SDK.UI.UiMenuItem.Command.set -> void
+Mjolnir.SDK.UI.UiMenuItem.CommandParameter.get -> object?
+Mjolnir.SDK.UI.UiMenuItem.CommandParameter.set -> void
+Mjolnir.SDK.UI.UiMenuItem.Header.get -> string!
+Mjolnir.SDK.UI.UiMenuItem.Header.set -> void
+Mjolnir.SDK.UI.UiMenuItem.Items.get -> Mjolnir.SDK.UI.Controls!
+Mjolnir.SDK.UI.UiMenuItem.UiMenuItem() -> void
+Mjolnir.SDK.UI.UiProgressBar
+Mjolnir.SDK.UI.UiProgressBar.UiProgressBar() -> void
+Mjolnir.SDK.UI.UiProgressRing
+Mjolnir.SDK.UI.UiProgressRing.Icon.get -> Mjolnir.SDK.UI.Bitmap?
+Mjolnir.SDK.UI.UiProgressRing.Icon.set -> void
+Mjolnir.SDK.UI.UiProgressRing.UiProgressRing() -> void
+Mjolnir.SDK.UI.UiScrollViewer
+Mjolnir.SDK.UI.UiScrollViewer.Content.get -> Mjolnir.SDK.UI.Control?
+Mjolnir.SDK.UI.UiScrollViewer.Content.set -> void
+Mjolnir.SDK.UI.UiScrollViewer.UiScrollViewer() -> void
+Mjolnir.SDK.UI.UiSectionHeader
+Mjolnir.SDK.UI.UiSectionHeader.Text.get -> string!
+Mjolnir.SDK.UI.UiSectionHeader.Text.set -> void
+Mjolnir.SDK.UI.UiSectionHeader.UiSectionHeader() -> void
+Mjolnir.SDK.UI.UiSlider
+Mjolnir.SDK.UI.UiSlider.IsSnapToTickEnabled.get -> bool
+Mjolnir.SDK.UI.UiSlider.IsSnapToTickEnabled.set -> void
+Mjolnir.SDK.UI.UiSlider.Maximum.get -> double
+Mjolnir.SDK.UI.UiSlider.Maximum.set -> void
+Mjolnir.SDK.UI.UiSlider.Minimum.get -> double
+Mjolnir.SDK.UI.UiSlider.Minimum.set -> void
+Mjolnir.SDK.UI.UiSlider.TickFrequency.get -> double
+Mjolnir.SDK.UI.UiSlider.TickFrequency.set -> void
+Mjolnir.SDK.UI.UiSlider.UiSlider() -> void
+Mjolnir.SDK.UI.UiSlider.Value.get -> double
+Mjolnir.SDK.UI.UiSlider.Value.set -> void
+Mjolnir.SDK.UI.UiSlider.ValueChanged -> System.EventHandler<Mjolnir.SDK.UI.RangeValueChangedEventArgs!>?
+Mjolnir.SDK.UI.UiSlider.ValueFormat.get -> string?
+Mjolnir.SDK.UI.UiSlider.ValueFormat.set -> void
+Mjolnir.SDK.UI.UiSlot
+Mjolnir.SDK.UI.UiSlot.Click -> System.EventHandler?
+Mjolnir.SDK.UI.UiSlot.Command.get -> System.Windows.Input.ICommand?
+Mjolnir.SDK.UI.UiSlot.Command.set -> void
+Mjolnir.SDK.UI.UiSlot.CommandParameter.get -> object?
+Mjolnir.SDK.UI.UiSlot.CommandParameter.set -> void
+Mjolnir.SDK.UI.UiSlot.Count.get -> int?
+Mjolnir.SDK.UI.UiSlot.Count.set -> void
+Mjolnir.SDK.UI.UiSlot.FillFraction.get -> double?
+Mjolnir.SDK.UI.UiSlot.FillFraction.set -> void
+Mjolnir.SDK.UI.UiSlot.Icon.get -> Mjolnir.SDK.UI.Bitmap?
+Mjolnir.SDK.UI.UiSlot.Icon.set -> void
+Mjolnir.SDK.UI.UiSlot.IsSelected.get -> bool
+Mjolnir.SDK.UI.UiSlot.IsSelected.set -> void
+Mjolnir.SDK.UI.UiSlot.UiSlot() -> void
+Mjolnir.SDK.UI.UiStackPanel
+Mjolnir.SDK.UI.UiStackPanel.Orientation.get -> Mjolnir.SDK.UI.Orientation
+Mjolnir.SDK.UI.UiStackPanel.Orientation.set -> void
+Mjolnir.SDK.UI.UiStackPanel.Spacing.get -> double
+Mjolnir.SDK.UI.UiStackPanel.Spacing.set -> void
+Mjolnir.SDK.UI.UiStackPanel.UiStackPanel() -> void
+Mjolnir.SDK.UI.UiStepper
+Mjolnir.SDK.UI.UiStepper.UiStepper() -> void
+Mjolnir.SDK.UI.UiTabControl
+Mjolnir.SDK.UI.UiTabControl.Items.get -> Mjolnir.SDK.UI.Controls!
+Mjolnir.SDK.UI.UiTabControl.SelectedIndex.get -> int
+Mjolnir.SDK.UI.UiTabControl.SelectedIndex.set -> void
+Mjolnir.SDK.UI.UiTabControl.SelectedItem.get -> Mjolnir.SDK.UI.UiTabItem?
+Mjolnir.SDK.UI.UiTabControl.SelectedItem.set -> void
+Mjolnir.SDK.UI.UiTabControl.SelectionChanged -> System.EventHandler<Mjolnir.SDK.UI.SelectionChangedEventArgs!>?
+Mjolnir.SDK.UI.UiTabControl.TabStripPlacement.get -> Mjolnir.SDK.UI.Dock
+Mjolnir.SDK.UI.UiTabControl.TabStripPlacement.set -> void
+Mjolnir.SDK.UI.UiTabControl.UiTabControl() -> void
+Mjolnir.SDK.UI.UiTabItem
+Mjolnir.SDK.UI.UiTabItem.Content.get -> Mjolnir.SDK.UI.Control?
+Mjolnir.SDK.UI.UiTabItem.Content.set -> void
+Mjolnir.SDK.UI.UiTabItem.Header.get -> string!
+Mjolnir.SDK.UI.UiTabItem.Header.set -> void
+Mjolnir.SDK.UI.UiTabItem.Icon.get -> Mjolnir.SDK.UI.Bitmap?
+Mjolnir.SDK.UI.UiTabItem.Icon.set -> void
+Mjolnir.SDK.UI.UiTabItem.UiTabItem() -> void
+Mjolnir.SDK.UI.UiTextBlock
+Mjolnir.SDK.UI.UiTextBlock.Foreground.get -> UnityEngine.Color?
+Mjolnir.SDK.UI.UiTextBlock.Foreground.set -> void
+Mjolnir.SDK.UI.UiTextBlock.Text.get -> string!
+Mjolnir.SDK.UI.UiTextBlock.Text.set -> void
+Mjolnir.SDK.UI.UiTextBlock.TextAlignment.get -> Mjolnir.SDK.UI.TextAlignment?
+Mjolnir.SDK.UI.UiTextBlock.TextAlignment.set -> void
+Mjolnir.SDK.UI.UiTextBlock.TextWrapping.get -> Mjolnir.SDK.UI.TextWrapping
+Mjolnir.SDK.UI.UiTextBlock.TextWrapping.set -> void
+Mjolnir.SDK.UI.UiTextBlock.UiTextBlock() -> void
+Mjolnir.SDK.UI.UiTextBox
+Mjolnir.SDK.UI.UiTextBox.ContentType.get -> Mjolnir.SDK.UI.TextInputContentType
+Mjolnir.SDK.UI.UiTextBox.ContentType.set -> void
+Mjolnir.SDK.UI.UiTextBox.MaxLength.get -> int
+Mjolnir.SDK.UI.UiTextBox.MaxLength.set -> void
+Mjolnir.SDK.UI.UiTextBox.PlaceholderText.get -> string?
+Mjolnir.SDK.UI.UiTextBox.PlaceholderText.set -> void
+Mjolnir.SDK.UI.UiTextBox.Text.get -> string!
+Mjolnir.SDK.UI.UiTextBox.Text.set -> void
+Mjolnir.SDK.UI.UiTextBox.TextAlignment.get -> Mjolnir.SDK.UI.TextAlignment?
+Mjolnir.SDK.UI.UiTextBox.TextAlignment.set -> void
+Mjolnir.SDK.UI.UiTextBox.TextChanged -> System.EventHandler<Mjolnir.SDK.UI.TextChangedEventArgs!>?
+Mjolnir.SDK.UI.UiTextBox.UiTextBox() -> void
+Mjolnir.SDK.UI.UiTextBox.UpdateSourceTrigger.get -> Mjolnir.SDK.UI.UpdateSourceTrigger
+Mjolnir.SDK.UI.UiTextBox.UpdateSourceTrigger.set -> void
+Mjolnir.SDK.UI.UiToggleSwitch
+Mjolnir.SDK.UI.UiToggleSwitch.IsChecked.get -> bool
+Mjolnir.SDK.UI.UiToggleSwitch.IsChecked.set -> void
+Mjolnir.SDK.UI.UiToggleSwitch.IsCheckedChanged -> System.EventHandler<Mjolnir.SDK.ValueChangedEventArgs<bool>!>?
+Mjolnir.SDK.UI.UiToggleSwitch.OffContent.get -> string?
+Mjolnir.SDK.UI.UiToggleSwitch.OffContent.set -> void
+Mjolnir.SDK.UI.UiToggleSwitch.OnContent.get -> string?
+Mjolnir.SDK.UI.UiToggleSwitch.OnContent.set -> void
+Mjolnir.SDK.UI.UiToggleSwitch.UiToggleSwitch() -> void
+Mjolnir.SDK.UI.UiUnityHost
+Mjolnir.SDK.UI.UiUnityHost.UiUnityHost(System.Action<UnityEngine.RectTransform!>! build) -> void
+Mjolnir.SDK.UI.UiUserControl
+Mjolnir.SDK.UI.UiUserControl.Content.get -> Mjolnir.SDK.UI.Control?
+Mjolnir.SDK.UI.UiUserControl.Content.set -> void
+Mjolnir.SDK.UI.UiUserControl.UiUserControl() -> void
+Mjolnir.SDK.UI.UiWindow
+Mjolnir.SDK.UI.UiWindow.Close() -> void
+Mjolnir.SDK.UI.UiWindow.Closed -> System.EventHandler?
+Mjolnir.SDK.UI.UiWindow.Content.get -> Mjolnir.SDK.UI.Control?
+Mjolnir.SDK.UI.UiWindow.Content.set -> void
+Mjolnir.SDK.UI.UiWindow.Dispose() -> void
+Mjolnir.SDK.UI.UiWindow.Footer.get -> Mjolnir.SDK.UI.Control?
+Mjolnir.SDK.UI.UiWindow.Footer.set -> void
+Mjolnir.SDK.UI.UiWindow.Height.get -> double
+Mjolnir.SDK.UI.UiWindow.Height.set -> void
+Mjolnir.SDK.UI.UiWindow.IsOpen.get -> bool
+Mjolnir.SDK.UI.UiWindow.MaxHeight.get -> double
+Mjolnir.SDK.UI.UiWindow.MaxHeight.set -> void
+Mjolnir.SDK.UI.UiWindow.MaxWidth.get -> double
+Mjolnir.SDK.UI.UiWindow.MaxWidth.set -> void
+Mjolnir.SDK.UI.UiWindow.MinHeight.get -> double
+Mjolnir.SDK.UI.UiWindow.MinHeight.set -> void
+Mjolnir.SDK.UI.UiWindow.MinWidth.get -> double
+Mjolnir.SDK.UI.UiWindow.MinWidth.set -> void
+Mjolnir.SDK.UI.UiWindow.Opened -> System.EventHandler?
+Mjolnir.SDK.UI.UiWindow.Show() -> void
+Mjolnir.SDK.UI.UiWindow.SizeToContent.get -> Mjolnir.SDK.UI.SizeToContent
+Mjolnir.SDK.UI.UiWindow.SizeToContent.set -> void
+Mjolnir.SDK.UI.UiWindow.Title.get -> string!
+Mjolnir.SDK.UI.UiWindow.Title.set -> void
+Mjolnir.SDK.UI.UiWindow.UiWindow() -> void
+Mjolnir.SDK.UI.UiWindow.Width.get -> double
+Mjolnir.SDK.UI.UiWindow.Width.set -> void
+Mjolnir.SDK.UI.UiWindow.WindowStyle.get -> Mjolnir.SDK.UI.WindowStyle
+Mjolnir.SDK.UI.UiWindow.WindowStyle.init -> void
+Mjolnir.SDK.UI.UiWrapPanel
+Mjolnir.SDK.UI.UiWrapPanel.ItemHeight.get -> double
+Mjolnir.SDK.UI.UiWrapPanel.ItemHeight.set -> void
+Mjolnir.SDK.UI.UiWrapPanel.ItemSpacing.get -> double
+Mjolnir.SDK.UI.UiWrapPanel.ItemSpacing.set -> void
+Mjolnir.SDK.UI.UiWrapPanel.ItemWidth.get -> double
+Mjolnir.SDK.UI.UiWrapPanel.ItemWidth.set -> void
+Mjolnir.SDK.UI.UiWrapPanel.ItemsAlignment.get -> Mjolnir.SDK.UI.WrapPanelItemsAlignment
+Mjolnir.SDK.UI.UiWrapPanel.ItemsAlignment.set -> void
+Mjolnir.SDK.UI.UiWrapPanel.LineSpacing.get -> double
+Mjolnir.SDK.UI.UiWrapPanel.LineSpacing.set -> void
+Mjolnir.SDK.UI.UiWrapPanel.Orientation.get -> Mjolnir.SDK.UI.Orientation
+Mjolnir.SDK.UI.UiWrapPanel.Orientation.set -> void
+Mjolnir.SDK.UI.UiWrapPanel.UiWrapPanel() -> void
+Mjolnir.SDK.UI.UpdateSourceTrigger
+Mjolnir.SDK.UI.UpdateSourceTrigger.LostFocus = 0 -> Mjolnir.SDK.UI.UpdateSourceTrigger
+Mjolnir.SDK.UI.UpdateSourceTrigger.PropertyChanged = 1 -> Mjolnir.SDK.UI.UpdateSourceTrigger
+Mjolnir.SDK.UI.VerticalAlignment
+Mjolnir.SDK.UI.VerticalAlignment.Bottom = 3 -> Mjolnir.SDK.UI.VerticalAlignment
+Mjolnir.SDK.UI.VerticalAlignment.Center = 2 -> Mjolnir.SDK.UI.VerticalAlignment
+Mjolnir.SDK.UI.VerticalAlignment.Stretch = 0 -> Mjolnir.SDK.UI.VerticalAlignment
+Mjolnir.SDK.UI.VerticalAlignment.Top = 1 -> Mjolnir.SDK.UI.VerticalAlignment
+Mjolnir.SDK.UI.WindowStyle
+Mjolnir.SDK.UI.WindowStyle.Dialog = 1 -> Mjolnir.SDK.UI.WindowStyle
+Mjolnir.SDK.UI.WindowStyle.Menu = 0 -> Mjolnir.SDK.UI.WindowStyle
+Mjolnir.SDK.UI.WrapPanelItemsAlignment
+Mjolnir.SDK.UI.WrapPanelItemsAlignment.Center = 1 -> Mjolnir.SDK.UI.WrapPanelItemsAlignment
+Mjolnir.SDK.UI.WrapPanelItemsAlignment.End = 2 -> Mjolnir.SDK.UI.WrapPanelItemsAlignment
+Mjolnir.SDK.UI.WrapPanelItemsAlignment.Start = 0 -> Mjolnir.SDK.UI.WrapPanelItemsAlignment
+const Mjolnir.SDK.UI.InterfaceScale.Maximum = 1.5 -> double
+const Mjolnir.SDK.UI.InterfaceScale.Minimum = 0.75 -> double
+override Mjolnir.SDK.UI.BindableValue<T>.ToString() -> string!
+override Mjolnir.SDK.UI.Bitmap.ToString() -> string!
+override Mjolnir.SDK.UI.Control.ToString() -> string!
+override Mjolnir.SDK.UI.HeaderedControl.ToString() -> string!
+override Mjolnir.SDK.UI.MjolnirProperty.ToString() -> string!
+override Mjolnir.SDK.UI.Thickness.Equals(object? obj) -> bool
+override Mjolnir.SDK.UI.Thickness.GetHashCode() -> int
+override Mjolnir.SDK.UI.Thickness.ToString() -> string!
+override Mjolnir.SDK.UI.UiButton.ToString() -> string!
+override Mjolnir.SDK.UI.UiCard.ToString() -> string!
+override Mjolnir.SDK.UI.UiExpander.ToString() -> string!
+override Mjolnir.SDK.UI.UiHotKeyBox.ToString() -> string!
+override Mjolnir.SDK.UI.UiMenuItem.ToString() -> string!
+override Mjolnir.SDK.UI.UiSectionHeader.ToString() -> string!
+override Mjolnir.SDK.UI.UiTabItem.ToString() -> string!
+override Mjolnir.SDK.UI.UiWindow.ToString() -> string!
+static Mjolnir.SDK.UI.Bitmap.implicit operator Mjolnir.SDK.UI.Bitmap?(UnityEngine.Sprite? sprite) -> Mjolnir.SDK.UI.Bitmap?
+static Mjolnir.SDK.UI.Bitmap.implicit operator Mjolnir.SDK.UI.Bitmap?(UnityEngine.Texture2D? texture) -> Mjolnir.SDK.UI.Bitmap?
+static Mjolnir.SDK.UI.ControlExtensions.OnClick(this Mjolnir.SDK.UI.UiButton! button, System.Action! click) -> Mjolnir.SDK.UI.UiButton!
+static Mjolnir.SDK.UI.ControlExtensions.OnClick(this Mjolnir.SDK.UI.UiButton! button, System.EventHandler! handler) -> Mjolnir.SDK.UI.UiButton!
+static Mjolnir.SDK.UI.ControlExtensions.OnClick(this Mjolnir.SDK.UI.UiCard! card, System.Action! click) -> Mjolnir.SDK.UI.UiCard!
+static Mjolnir.SDK.UI.ControlExtensions.OnClick(this Mjolnir.SDK.UI.UiMenuItem! item, System.Action! click) -> Mjolnir.SDK.UI.UiMenuItem!
+static Mjolnir.SDK.UI.ControlExtensions.OnClick(this Mjolnir.SDK.UI.UiMenuItem! item, System.EventHandler! handler) -> Mjolnir.SDK.UI.UiMenuItem!
+static Mjolnir.SDK.UI.ControlExtensions.OnClick(this Mjolnir.SDK.UI.UiSlot! slot, System.Action! click) -> Mjolnir.SDK.UI.UiSlot!
+static Mjolnir.SDK.UI.ControlExtensions.OnIsCheckedChanged(this Mjolnir.SDK.UI.UiToggleSwitch! toggle, System.Action<bool>! changed) -> Mjolnir.SDK.UI.UiToggleSwitch!
+static Mjolnir.SDK.UI.ControlExtensions.OnLoaded<TElement>(this TElement! element, System.Action<UnityEngine.RectTransform!>! loaded) -> TElement!
+static Mjolnir.SDK.UI.ControlExtensions.OnSelectionChanged<TSelector>(this TSelector! selector, System.Action<object?>! changed) -> TSelector!
+static Mjolnir.SDK.UI.ControlExtensions.OnTextChanged(this Mjolnir.SDK.UI.UiTextBox! textBox, System.Action<string!>! changed) -> Mjolnir.SDK.UI.UiTextBox!
+static Mjolnir.SDK.UI.ControlExtensions.OnValueChanged(this Mjolnir.SDK.UI.UiSlider! slider, System.Action<double>! changed) -> Mjolnir.SDK.UI.UiSlider!
+static Mjolnir.SDK.UI.ControlExtensions.OnValueChanged<TProgress>(this TProgress! bar, System.Action<double>! changed) -> TProgress!
+static Mjolnir.SDK.UI.ControlExtensions.WithBinding<TElement, T, TModel, TValue>(this TElement! element, Mjolnir.SDK.UI.MjolnirProperty<T>! property, TModel! model, System.Linq.Expressions.Expression<System.Func<TModel!, TValue>!>! path, Mjolnir.SDK.UI.BindingMode mode = Mjolnir.SDK.UI.BindingMode.Default, System.Func<TValue, T>? convert = null, System.Func<T, TValue>? convertBack = null) -> TElement!
+static Mjolnir.SDK.UI.ControlExtensions.WithBinding<TElement, T, TSource>(this TElement! element, Mjolnir.SDK.UI.MjolnirProperty<T>! property, Mjolnir.SDK.IBindable<TSource>! source, Mjolnir.SDK.UI.BindingMode mode = Mjolnir.SDK.UI.BindingMode.Default, System.Func<TSource, T>? convert = null, System.Func<T, TSource>? convertBack = null) -> TElement!
+static Mjolnir.SDK.UI.ControlExtensions.WithBinding<TElement, T, TSource>(this TElement! element, Mjolnir.SDK.UI.MjolnirProperty<T>! property, Mjolnir.SDK.IReadOnlyBindable<TSource>! source, System.Func<TSource, T>? convert = null) -> TElement!
+static Mjolnir.SDK.UI.ControlExtensions.WithBinding<TElement, T, TSource>(this TElement! element, Mjolnir.SDK.UI.MjolnirProperty<T>! property, System.Func<TSource>! source, System.Func<TSource, T>? convert = null) -> TElement!
+static Mjolnir.SDK.UI.ControlExtensions.WithBinding<TElement, T, TSource>(this TElement! element, Mjolnir.SDK.UI.MjolnirProperty<T>! property, System.Func<TSource>! source, System.TimeSpan interval, System.Func<TSource, T>? convert = null) -> TElement!
+static Mjolnir.SDK.UI.ControlExtensions.WithBinding<TElement, T, TSource>(this TElement! element, Mjolnir.SDK.UI.MjolnirProperty<T>! property, System.IObservable<TSource>! source, System.Func<TSource, T>? convert = null) -> TElement!
+static Mjolnir.SDK.UI.Dialog.Confirm(string! title, string! message, System.Action? onConfirm, System.Action? onCancel = null, string? confirmText = null, string? cancelText = null) -> void
+static Mjolnir.SDK.UI.Dialog.ConfirmAsync(string! title, string! message, string? confirmText = null, string? cancelText = null) -> System.Threading.Tasks.Task<bool>!
+static Mjolnir.SDK.UI.Dialog.Message(string! title, string! message, System.Action? onClose = null, string? okText = null) -> void
+static Mjolnir.SDK.UI.Dialog.MessageAsync(string! title, string! message, string? okText = null) -> System.Threading.Tasks.Task!
+static Mjolnir.SDK.UI.Dialog.Prompt(string! title, string! message, System.Action<string!>! onConfirm, System.Action? onCancel = null, string! text = "", string? placeholder = null, int maxLength = 0, string? confirmText = null, string? cancelText = null) -> void
+static Mjolnir.SDK.UI.Dialog.PromptAsync(string! title, string! message, string! text = "", string? placeholder = null, int maxLength = 0, string? confirmText = null, string? cancelText = null) -> System.Threading.Tasks.Task<string?>!
+static Mjolnir.SDK.UI.HotKeys.Add(Mjolnir.SDK.IReadOnlyBindable<Mjolnir.SDK.KeyGesture>! gesture, System.Action! pressed) -> System.IDisposable!
+static Mjolnir.SDK.UI.HotKeys.Add(Mjolnir.SDK.KeyGesture gesture, System.Action! pressed) -> System.IDisposable!
+static Mjolnir.SDK.UI.Hud.Add<T>(T! element, Mjolnir.SDK.UI.HudAnchor anchor = Mjolnir.SDK.UI.HudAnchor.TopLeft) -> T!
+static Mjolnir.SDK.UI.Hud.AddAt<T>(T! element, System.Func<UnityEngine.Vector3>! worldPosition, UnityEngine.Vector2 offset = default(UnityEngine.Vector2)) -> T!
+static Mjolnir.SDK.UI.Hud.AddAt<T>(T! element, UnityEngine.Transform! target, UnityEngine.Vector3 worldOffset = default(UnityEngine.Vector3), UnityEngine.Vector2 offset = default(UnityEngine.Vector2)) -> T!
+static Mjolnir.SDK.UI.Hud.Ready -> System.EventHandler?
+static Mjolnir.SDK.UI.Hud.Remove(Mjolnir.SDK.UI.Control! element) -> bool
+static Mjolnir.SDK.UI.Hud.Root.get -> UnityEngine.RectTransform?
+static Mjolnir.SDK.UI.InterfaceScale.Hud.get -> Mjolnir.SDK.IBindable<double>!
+static Mjolnir.SDK.UI.InterfaceScale.Menus.get -> Mjolnir.SDK.IBindable<double>!
+static Mjolnir.SDK.UI.Menus.Journal.get -> Mjolnir.SDK.UI.MenuTabs!
+static Mjolnir.SDK.UI.Menus.Main.get -> Mjolnir.SDK.UI.MenuButtons!
+static Mjolnir.SDK.UI.Menus.Pause.get -> Mjolnir.SDK.UI.MenuButtons!
+static Mjolnir.SDK.UI.Menus.Settings.get -> Mjolnir.SDK.UI.MenuTabs!
+static Mjolnir.SDK.UI.MjolnirProperty.Register<TOwner, T>(string! name, T defaultValue = default(T), Mjolnir.SDK.UI.BindingMode defaultBindingMode = Mjolnir.SDK.UI.BindingMode.OneWay) -> Mjolnir.SDK.UI.MjolnirProperty<T>!
+static Mjolnir.SDK.UI.Notify.Banner(string! title, string! text, float seconds = 3) -> void
+static Mjolnir.SDK.UI.Notify.Counter(string! key, string! text, double amount, Mjolnir.SDK.UI.Bitmap? icon = null) -> void
+static Mjolnir.SDK.UI.Notify.Message(string! text) -> void
+static Mjolnir.SDK.UI.Notify.Message(string! text, Mjolnir.SDK.UI.Bitmap? icon) -> void
+static Mjolnir.SDK.UI.SettingControls.For<T>(Mjolnir.SDK.Config.ConfigEntry<T>! entry) -> Mjolnir.SDK.UI.HeaderedControl!
+static Mjolnir.SDK.UI.Thickness.operator !=(Mjolnir.SDK.UI.Thickness a, Mjolnir.SDK.UI.Thickness b) -> bool
+static Mjolnir.SDK.UI.Thickness.operator ==(Mjolnir.SDK.UI.Thickness a, Mjolnir.SDK.UI.Thickness b) -> bool
+static readonly Mjolnir.SDK.UI.Control.FontSizeProperty -> Mjolnir.SDK.UI.MjolnirProperty<double>!
+static readonly Mjolnir.SDK.UI.Control.HeightProperty -> Mjolnir.SDK.UI.MjolnirProperty<double>!
+static readonly Mjolnir.SDK.UI.Control.HorizontalAlignmentProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.UI.HorizontalAlignment>!
+static readonly Mjolnir.SDK.UI.Control.IsEnabledProperty -> Mjolnir.SDK.UI.MjolnirProperty<bool>!
+static readonly Mjolnir.SDK.UI.Control.IsVisibleProperty -> Mjolnir.SDK.UI.MjolnirProperty<bool>!
+static readonly Mjolnir.SDK.UI.Control.MarginProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.UI.Thickness>!
+static readonly Mjolnir.SDK.UI.Control.MaxHeightProperty -> Mjolnir.SDK.UI.MjolnirProperty<double>!
+static readonly Mjolnir.SDK.UI.Control.MaxWidthProperty -> Mjolnir.SDK.UI.MjolnirProperty<double>!
+static readonly Mjolnir.SDK.UI.Control.MinHeightProperty -> Mjolnir.SDK.UI.MjolnirProperty<double>!
+static readonly Mjolnir.SDK.UI.Control.MinWidthProperty -> Mjolnir.SDK.UI.MjolnirProperty<double>!
+static readonly Mjolnir.SDK.UI.Control.NameProperty -> Mjolnir.SDK.UI.MjolnirProperty<string?>!
+static readonly Mjolnir.SDK.UI.Control.OpacityProperty -> Mjolnir.SDK.UI.MjolnirProperty<double>!
+static readonly Mjolnir.SDK.UI.Control.PaddingProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.UI.Thickness?>!
+static readonly Mjolnir.SDK.UI.Control.ToolTipProperty -> Mjolnir.SDK.UI.MjolnirProperty<object?>!
+static readonly Mjolnir.SDK.UI.Control.VerticalAlignmentProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.UI.VerticalAlignment>!
+static readonly Mjolnir.SDK.UI.Control.WidthProperty -> Mjolnir.SDK.UI.MjolnirProperty<double>!
+static readonly Mjolnir.SDK.UI.HeaderedControl.ContentWidthProperty -> Mjolnir.SDK.UI.MjolnirProperty<double>!
+static readonly Mjolnir.SDK.UI.HeaderedControl.DescriptionProperty -> Mjolnir.SDK.UI.MjolnirProperty<string?>!
+static readonly Mjolnir.SDK.UI.HeaderedControl.HeaderProperty -> Mjolnir.SDK.UI.MjolnirProperty<string?>!
+static readonly Mjolnir.SDK.UI.HeaderedControl.IconProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.UI.Bitmap?>!
+static readonly Mjolnir.SDK.UI.ProgressBase.ForegroundProperty -> Mjolnir.SDK.UI.MjolnirProperty<UnityEngine.Color?>!
+static readonly Mjolnir.SDK.UI.ProgressBase.MaximumProperty -> Mjolnir.SDK.UI.MjolnirProperty<double>!
+static readonly Mjolnir.SDK.UI.ProgressBase.MinimumProperty -> Mjolnir.SDK.UI.MjolnirProperty<double>!
+static readonly Mjolnir.SDK.UI.ProgressBase.ProgressTextForegroundProperty -> Mjolnir.SDK.UI.MjolnirProperty<UnityEngine.Color?>!
+static readonly Mjolnir.SDK.UI.ProgressBase.ProgressTextFormatProperty -> Mjolnir.SDK.UI.MjolnirProperty<string!>!
+static readonly Mjolnir.SDK.UI.ProgressBase.ShowProgressTextProperty -> Mjolnir.SDK.UI.MjolnirProperty<bool>!
+static readonly Mjolnir.SDK.UI.ProgressBase.ValueProperty -> Mjolnir.SDK.UI.MjolnirProperty<double>!
+static readonly Mjolnir.SDK.UI.SelectingItemsControl.ItemTextProperty -> Mjolnir.SDK.UI.MjolnirProperty<System.Func<object?, string!>?>!
+static readonly Mjolnir.SDK.UI.SelectingItemsControl.ItemsSourceProperty -> Mjolnir.SDK.UI.MjolnirProperty<System.Collections.IEnumerable?>!
+static readonly Mjolnir.SDK.UI.SelectingItemsControl.SelectedIndexProperty -> Mjolnir.SDK.UI.MjolnirProperty<int>!
+static readonly Mjolnir.SDK.UI.SelectingItemsControl.SelectedItemProperty -> Mjolnir.SDK.UI.MjolnirProperty<object?>!
+static readonly Mjolnir.SDK.UI.UiBorder.BackgroundProperty -> Mjolnir.SDK.UI.MjolnirProperty<UnityEngine.Color?>!
+static readonly Mjolnir.SDK.UI.UiBorder.ChildProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.UI.Control?>!
+static readonly Mjolnir.SDK.UI.UiButton.CommandParameterProperty -> Mjolnir.SDK.UI.MjolnirProperty<object?>!
+static readonly Mjolnir.SDK.UI.UiButton.CommandProperty -> Mjolnir.SDK.UI.MjolnirProperty<System.Windows.Input.ICommand?>!
+static readonly Mjolnir.SDK.UI.UiButton.ContentProperty -> Mjolnir.SDK.UI.MjolnirProperty<string!>!
+static readonly Mjolnir.SDK.UI.UiCard.CommandParameterProperty -> Mjolnir.SDK.UI.MjolnirProperty<object?>!
+static readonly Mjolnir.SDK.UI.UiCard.CommandProperty -> Mjolnir.SDK.UI.MjolnirProperty<System.Windows.Input.ICommand?>!
+static readonly Mjolnir.SDK.UI.UiCard.ImageProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.UI.Bitmap?>!
+static readonly Mjolnir.SDK.UI.UiCard.IsSelectedProperty -> Mjolnir.SDK.UI.MjolnirProperty<bool>!
+static readonly Mjolnir.SDK.UI.UiCard.SubtitleProperty -> Mjolnir.SDK.UI.MjolnirProperty<string!>!
+static readonly Mjolnir.SDK.UI.UiCard.TitleProperty -> Mjolnir.SDK.UI.MjolnirProperty<string!>!
+static readonly Mjolnir.SDK.UI.UiComboBox.PlaceholderTextProperty -> Mjolnir.SDK.UI.MjolnirProperty<string?>!
+static readonly Mjolnir.SDK.UI.UiExpander.ContentProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.UI.Control?>!
+static readonly Mjolnir.SDK.UI.UiExpander.HeaderProperty -> Mjolnir.SDK.UI.MjolnirProperty<string?>!
+static readonly Mjolnir.SDK.UI.UiExpander.IsExpandedProperty -> Mjolnir.SDK.UI.MjolnirProperty<bool>!
+static readonly Mjolnir.SDK.UI.UiGrid.ColumnDefinitionsProperty -> Mjolnir.SDK.UI.MjolnirProperty<string!>!
+static readonly Mjolnir.SDK.UI.UiGrid.ColumnSpacingProperty -> Mjolnir.SDK.UI.MjolnirProperty<double>!
+static readonly Mjolnir.SDK.UI.UiGrid.RowSpacingProperty -> Mjolnir.SDK.UI.MjolnirProperty<double>!
+static readonly Mjolnir.SDK.UI.UiHotKeyBox.GestureProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.KeyGesture>!
+static readonly Mjolnir.SDK.UI.UiImage.SourceProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.UI.Bitmap?>!
+static readonly Mjolnir.SDK.UI.UiImage.StretchProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.UI.Stretch>!
+static readonly Mjolnir.SDK.UI.UiItemsControl.ItemTemplateProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.UI.IDataTemplate?>!
+static readonly Mjolnir.SDK.UI.UiItemsControl.ItemsPanelProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.UI.FuncTemplate<Mjolnir.SDK.UI.Panel!>?>!
+static readonly Mjolnir.SDK.UI.UiItemsControl.ItemsSourceProperty -> Mjolnir.SDK.UI.MjolnirProperty<System.Collections.IEnumerable?>!
+static readonly Mjolnir.SDK.UI.UiKeyHint.GestureProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.KeyGesture>!
+static readonly Mjolnir.SDK.UI.UiKeyHint.TextProperty -> Mjolnir.SDK.UI.MjolnirProperty<string!>!
+static readonly Mjolnir.SDK.UI.UiLayoutTransformControl.ChildProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.UI.Control?>!
+static readonly Mjolnir.SDK.UI.UiLayoutTransformControl.ScaleProperty -> Mjolnir.SDK.UI.MjolnirProperty<double>!
+static readonly Mjolnir.SDK.UI.UiListBox.ItemTemplateProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.UI.IDataTemplate?>!
+static readonly Mjolnir.SDK.UI.UiListBox.ItemsSourceProperty -> Mjolnir.SDK.UI.MjolnirProperty<System.Collections.IEnumerable?>!
+static readonly Mjolnir.SDK.UI.UiListBox.SelectedIndexProperty -> Mjolnir.SDK.UI.MjolnirProperty<int>!
+static readonly Mjolnir.SDK.UI.UiListBox.SelectedItemProperty -> Mjolnir.SDK.UI.MjolnirProperty<object?>!
+static readonly Mjolnir.SDK.UI.UiMenuItem.CommandParameterProperty -> Mjolnir.SDK.UI.MjolnirProperty<object?>!
+static readonly Mjolnir.SDK.UI.UiMenuItem.CommandProperty -> Mjolnir.SDK.UI.MjolnirProperty<System.Windows.Input.ICommand?>!
+static readonly Mjolnir.SDK.UI.UiMenuItem.HeaderProperty -> Mjolnir.SDK.UI.MjolnirProperty<string!>!
+static readonly Mjolnir.SDK.UI.UiProgressRing.IconProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.UI.Bitmap?>!
+static readonly Mjolnir.SDK.UI.UiScrollViewer.ContentProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.UI.Control?>!
+static readonly Mjolnir.SDK.UI.UiSectionHeader.TextProperty -> Mjolnir.SDK.UI.MjolnirProperty<string!>!
+static readonly Mjolnir.SDK.UI.UiSlider.IsSnapToTickEnabledProperty -> Mjolnir.SDK.UI.MjolnirProperty<bool>!
+static readonly Mjolnir.SDK.UI.UiSlider.MaximumProperty -> Mjolnir.SDK.UI.MjolnirProperty<double>!
+static readonly Mjolnir.SDK.UI.UiSlider.MinimumProperty -> Mjolnir.SDK.UI.MjolnirProperty<double>!
+static readonly Mjolnir.SDK.UI.UiSlider.TickFrequencyProperty -> Mjolnir.SDK.UI.MjolnirProperty<double>!
+static readonly Mjolnir.SDK.UI.UiSlider.ValueFormatProperty -> Mjolnir.SDK.UI.MjolnirProperty<string?>!
+static readonly Mjolnir.SDK.UI.UiSlider.ValueProperty -> Mjolnir.SDK.UI.MjolnirProperty<double>!
+static readonly Mjolnir.SDK.UI.UiSlot.CommandParameterProperty -> Mjolnir.SDK.UI.MjolnirProperty<object?>!
+static readonly Mjolnir.SDK.UI.UiSlot.CommandProperty -> Mjolnir.SDK.UI.MjolnirProperty<System.Windows.Input.ICommand?>!
+static readonly Mjolnir.SDK.UI.UiSlot.CountProperty -> Mjolnir.SDK.UI.MjolnirProperty<int?>!
+static readonly Mjolnir.SDK.UI.UiSlot.FillFractionProperty -> Mjolnir.SDK.UI.MjolnirProperty<double?>!
+static readonly Mjolnir.SDK.UI.UiSlot.IconProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.UI.Bitmap?>!
+static readonly Mjolnir.SDK.UI.UiSlot.IsSelectedProperty -> Mjolnir.SDK.UI.MjolnirProperty<bool>!
+static readonly Mjolnir.SDK.UI.UiStackPanel.OrientationProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.UI.Orientation>!
+static readonly Mjolnir.SDK.UI.UiStackPanel.SpacingProperty -> Mjolnir.SDK.UI.MjolnirProperty<double>!
+static readonly Mjolnir.SDK.UI.UiTabControl.SelectedIndexProperty -> Mjolnir.SDK.UI.MjolnirProperty<int>!
+static readonly Mjolnir.SDK.UI.UiTabControl.TabStripPlacementProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.UI.Dock>!
+static readonly Mjolnir.SDK.UI.UiTabItem.ContentProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.UI.Control?>!
+static readonly Mjolnir.SDK.UI.UiTabItem.HeaderProperty -> Mjolnir.SDK.UI.MjolnirProperty<string!>!
+static readonly Mjolnir.SDK.UI.UiTabItem.IconProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.UI.Bitmap?>!
+static readonly Mjolnir.SDK.UI.UiTextBlock.ForegroundProperty -> Mjolnir.SDK.UI.MjolnirProperty<UnityEngine.Color?>!
+static readonly Mjolnir.SDK.UI.UiTextBlock.TextAlignmentProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.UI.TextAlignment?>!
+static readonly Mjolnir.SDK.UI.UiTextBlock.TextProperty -> Mjolnir.SDK.UI.MjolnirProperty<string!>!
+static readonly Mjolnir.SDK.UI.UiTextBlock.TextWrappingProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.UI.TextWrapping>!
+static readonly Mjolnir.SDK.UI.UiTextBox.ContentTypeProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.UI.TextInputContentType>!
+static readonly Mjolnir.SDK.UI.UiTextBox.MaxLengthProperty -> Mjolnir.SDK.UI.MjolnirProperty<int>!
+static readonly Mjolnir.SDK.UI.UiTextBox.PlaceholderTextProperty -> Mjolnir.SDK.UI.MjolnirProperty<string?>!
+static readonly Mjolnir.SDK.UI.UiTextBox.TextAlignmentProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.UI.TextAlignment?>!
+static readonly Mjolnir.SDK.UI.UiTextBox.TextProperty -> Mjolnir.SDK.UI.MjolnirProperty<string!>!
+static readonly Mjolnir.SDK.UI.UiTextBox.UpdateSourceTriggerProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.UI.UpdateSourceTrigger>!
+static readonly Mjolnir.SDK.UI.UiToggleSwitch.IsCheckedProperty -> Mjolnir.SDK.UI.MjolnirProperty<bool>!
+static readonly Mjolnir.SDK.UI.UiToggleSwitch.OffContentProperty -> Mjolnir.SDK.UI.MjolnirProperty<string?>!
+static readonly Mjolnir.SDK.UI.UiToggleSwitch.OnContentProperty -> Mjolnir.SDK.UI.MjolnirProperty<string?>!
+static readonly Mjolnir.SDK.UI.UiUserControl.ContentProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.UI.Control?>!
+static readonly Mjolnir.SDK.UI.UiWindow.ContentProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.UI.Control?>!
+static readonly Mjolnir.SDK.UI.UiWindow.FooterProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.UI.Control?>!
+static readonly Mjolnir.SDK.UI.UiWindow.HeightProperty -> Mjolnir.SDK.UI.MjolnirProperty<double>!
+static readonly Mjolnir.SDK.UI.UiWindow.MaxHeightProperty -> Mjolnir.SDK.UI.MjolnirProperty<double>!
+static readonly Mjolnir.SDK.UI.UiWindow.MaxWidthProperty -> Mjolnir.SDK.UI.MjolnirProperty<double>!
+static readonly Mjolnir.SDK.UI.UiWindow.MinHeightProperty -> Mjolnir.SDK.UI.MjolnirProperty<double>!
+static readonly Mjolnir.SDK.UI.UiWindow.MinWidthProperty -> Mjolnir.SDK.UI.MjolnirProperty<double>!
+static readonly Mjolnir.SDK.UI.UiWindow.SizeToContentProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.UI.SizeToContent>!
+static readonly Mjolnir.SDK.UI.UiWindow.TitleProperty -> Mjolnir.SDK.UI.MjolnirProperty<string!>!
+static readonly Mjolnir.SDK.UI.UiWindow.WidthProperty -> Mjolnir.SDK.UI.MjolnirProperty<double>!
+static readonly Mjolnir.SDK.UI.UiWrapPanel.ItemHeightProperty -> Mjolnir.SDK.UI.MjolnirProperty<double>!
+static readonly Mjolnir.SDK.UI.UiWrapPanel.ItemSpacingProperty -> Mjolnir.SDK.UI.MjolnirProperty<double>!
+static readonly Mjolnir.SDK.UI.UiWrapPanel.ItemWidthProperty -> Mjolnir.SDK.UI.MjolnirProperty<double>!
+static readonly Mjolnir.SDK.UI.UiWrapPanel.ItemsAlignmentProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.UI.WrapPanelItemsAlignment>!
+static readonly Mjolnir.SDK.UI.UiWrapPanel.LineSpacingProperty -> Mjolnir.SDK.UI.MjolnirProperty<double>!
+static readonly Mjolnir.SDK.UI.UiWrapPanel.OrientationProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.UI.Orientation>!

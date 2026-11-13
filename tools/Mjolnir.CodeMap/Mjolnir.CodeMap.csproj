@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Static code map of GameAssembly.dll by method name, for the extension-point map (step 7).
+       Reads the Cpp2IL dummy assemblies (build/interop-dummy) for method RVAs and field offsets. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>Mjolnir.CodeMap</AssemblyName>
+    <RootNamespace>Mjolnir.CodeMap</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AsmResolver.DotNet" />
+    <PackageReference Include="Iced" />
+  </ItemGroup>
+
+</Project>

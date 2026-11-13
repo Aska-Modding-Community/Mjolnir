@@ -1,0 +1,112 @@
+# The UI example's texts in English, the fallback of every language without a file of its own (the SDK's Localization).
+# A file per language next to the mod's .dll, named by Steam's language name (russian.toml) or a code (ru.toml).
+# Keys nest with dots: [section] form is the key "section.form". An enum's items show their names unless a file names
+# them: [Difficulty] in russian.toml. The Mods window's texts ([mod], [sections], [config.<section>.<key>]) are those
+# of the code here (WithDisplayName, the descriptions); russian.toml translates them.
+
+intro = "This window is a game menu: the player stands still, the cursor is free and Esc closes it."
+marker = "Where the world was loaded"
+hud.key = "The example's window"
+banner.ready = "The world is ready"
+
+[section]
+form = "A simple form"
+controls = "Controls"
+layout = "Layout"
+messages = "Messages"
+more = "More controls"
+sizes = "Sizes"
+
+[message]
+hello = "Hello from UI Example"
+question = "Is this the game's own dialog?"
+rename = "Your name?"
+berries = "Berries"
+
+[expander]
+details = "Details"
+
+[grid]
+language = "Language"
+clicks = "Clicks"
+volume = "Volume"
+
+[scroll]
+line = "Line {0} of a list that scrolls on its own"
+
+[sizes]
+narrow = "A narrow control"
+narrow_hint = "ControlWidth = 220: the description has room to run on to here"
+small = "Smaller letters"
+inherited = "Its letters come from the panel"
+big = "Bigger letters"
+scaled = "Drawn at 80 %"
+faded = "Opacity = 0.5: drawn half see-through"
+paragraph = "MaxWidth = 600: this paragraph grows with the window only up to 600 reference pixels, then stays in the middle, so its lines stay easy to read however wide the window is."
+
+[button]
+rename = "Rename…"
+
+# The menu item in the main and pause menus (Views/ExampleMenu) and the tabs window (Views/TabsWindow).
+[menu]
+window = "Every element"
+tabs = "Tabs and lists"
+more = "More"
+hello = "Say hello"
+ask = "Ask"
+
+# The example's tabs in the game's settings menu and journal (Views/ExampleTabs).
+[tab]
+settings = "UI Example"
+journal = "Camp supplies"
+journal_intro = "A page of the journal added by a mod: the game's own tab, window and title, the mod's content."
+
+[tabs]
+title = "Tabs and lists"
+supplies = "Supplies"
+categories = "Categories"
+tips = "Tooltips"
+add = "Add a find"
+tiles = "Tiles"
+
+[supply]
+wood = "Wood"
+wood_text = "Logs from felled trees: walls, tools and firewood."
+stone = "Stone"
+stone_text = "Picked up from the ground or broken from rocks; foundations and hearths need it."
+berries = "Berries"
+berries_text = "Gathered from bushes. Eaten raw, they still the hunger a little."
+flint = "Flint"
+flint_text = "A sharp stone for the first tools."
+found = "Find #{0}"
+found_text = "Added by the button: the list follows its collection, and selecting by code moves the details too."
+
+[category]
+tools = "Tools"
+tools_text = "Tabs on the left are the journal's list of categories: a picture and a name, amber while selected."
+weapons = "Weapons"
+weapons_text = "Q and E switch the outer tabs only."
+food = "Food"
+food_text = "A tab without a picture starts its name where the picture would be."
+
+[tips]
+hint = "Rest the pointer on an element to see its tooltip."
+button = "A tooltip with a title"
+wood = "Wood\nThe first line is the card's title; the rest is its text."
+row = "A row with a tooltip"
+row_tip = "Rows have tooltips too"
+rich = "A tooltip made of elements"
+village = "Any element can be a tooltip: this one holds a text and a progress bar."
+
+# The tiles tab of the tabs window (Views/TabsWindow).
+[tiles]
+hint = "The supplies as the game's slots, and cards: click one of each."
+picked = "Selected: {0}"
+
+[card]
+smith = "Smith"
+smith_text = "Tools"
+hunter = "Hunter"
+hunter_text = "Bows"
+farmer = "Farmer"
+farmer_text = "Fields"

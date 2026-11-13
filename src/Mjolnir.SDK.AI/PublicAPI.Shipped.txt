@@ -1,0 +1,25 @@
+#nullable enable
+Mjolnir.SDK.AI.Resident
+Mjolnir.SDK.AI.Resident.Activity.get -> string!
+Mjolnir.SDK.AI.Resident.IsAlive.get -> bool
+Mjolnir.SDK.AI.Resident.ModJob.get -> Mjolnir.SDK.AI.ResidentJob?
+Mjolnir.SDK.AI.Resident.Name.get -> string!
+Mjolnir.SDK.AI.Resident.Position.get -> UnityEngine.Vector3
+Mjolnir.SDK.AI.Resident.Sheet.get -> Mjolnir.SDK.CharacterSheet!
+Mjolnir.SDK.AI.ResidentEventArgs
+Mjolnir.SDK.AI.ResidentEventArgs.Resident.get -> Mjolnir.SDK.AI.Resident!
+Mjolnir.SDK.AI.ResidentEventArgs.ResidentEventArgs(Mjolnir.SDK.AI.Resident! resident) -> void
+Mjolnir.SDK.AI.ResidentJob
+Mjolnir.SDK.AI.ResidentJob.Do(System.Action<Mjolnir.SDK.AI.Resident!>! action) -> Mjolnir.SDK.AI.ResidentJob!
+Mjolnir.SDK.AI.ResidentJob.ModId.get -> string!
+Mjolnir.SDK.AI.ResidentJob.MoveTo(System.Func<Mjolnir.SDK.AI.Resident!, UnityEngine.Vector3>! place, float distance = 2) -> Mjolnir.SDK.AI.ResidentJob!
+Mjolnir.SDK.AI.ResidentJob.Name.get -> string!
+Mjolnir.SDK.AI.ResidentJob.Wait(System.TimeSpan duration) -> Mjolnir.SDK.AI.ResidentJob!
+Mjolnir.SDK.AI.Residents
+override Mjolnir.SDK.AI.Resident.ToString() -> string!
+override Mjolnir.SDK.AI.ResidentJob.ToString() -> string!
+static Mjolnir.SDK.AI.Residents.AddJob(string! name, System.Func<Mjolnir.SDK.AI.Resident!, float>! priority) -> Mjolnir.SDK.AI.ResidentJob!
+static Mjolnir.SDK.AI.Residents.Added -> System.EventHandler<Mjolnir.SDK.AI.ResidentEventArgs!>?
+static Mjolnir.SDK.AI.Residents.All.get -> System.Collections.Generic.IReadOnlyList<Mjolnir.SDK.AI.Resident!>!
+static Mjolnir.SDK.AI.Residents.Removed -> System.EventHandler<Mjolnir.SDK.AI.ResidentEventArgs!>?
+static Mjolnir.SDK.AI.Residents.Spawn(UnityEngine.Vector3 position) -> bool

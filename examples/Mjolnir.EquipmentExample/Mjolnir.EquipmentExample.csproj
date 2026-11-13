@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Example mod: a weapon, a piece of armour and a food of a mod's own through the Mjolnir.SDK.Content module (item kinds,
+       damage, armour, effects on hit, while worn and when eaten), a reference for mod authors. It needs no game types and no
+       Harmony patch of its own: the SDK hides them. deploy.ps1 -Examples ships Mjolnir.EquipmentExample.dll/.pdb and lang/ to
+       Mjolnir\Mods\Mjolnir.EquipmentExample. -->
+  <PropertyGroup>
+    <AssemblyName>Mjolnir.EquipmentExample</AssemblyName>
+    <RootNamespace>Mjolnir.EquipmentExample</RootNamespace>
+    <Version>1.0.0</Version>
+    <IsMjolnirMod>true</IsMjolnirMod>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <MjolnirSdk Include="Mjolnir.SDK.Content" />
+  </ItemGroup>
+
+  <!-- Next to the .dll: its texts (the items' names among them). -->
+  <ItemGroup>
+    <None Update="lang\*.toml" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

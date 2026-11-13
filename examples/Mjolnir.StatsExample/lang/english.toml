@@ -1,0 +1,8 @@
+# The Stats Example's texts in English, the fallback of every language without a file of its own. The Mods window's texts
+# ([mod], [config.<section>.<key>]) are those of the code; russian.toml translates them.
+
+[effect.blessing]
+name = "Blessing"
+description = "Stronger, and wounds close by themselves."
+added = "You feel blessed."
+removed = "The blessing fades."

@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Example mod: what a character is made of, through Mjolnir.SDK's CharacterStats, and a status effect of a mod's own through
+       Mjolnir.SDK.Content, a reference for mod authors. It needs no game types and no Harmony patch of its own: the SDK hides
+       them. deploy.ps1 -Examples ships Mjolnir.StatsExample.dll/.pdb, items/ and lang/ to Mjolnir\Mods\Mjolnir.StatsExample. -->
+  <PropertyGroup>
+    <AssemblyName>Mjolnir.StatsExample</AssemblyName>
+    <RootNamespace>Mjolnir.StatsExample</RootNamespace>
+    <Version>1.0.0</Version>
+    <IsMjolnirMod>true</IsMjolnirMod>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <MjolnirSdk Include="Mjolnir.SDK.Player;Mjolnir.SDK.Content" />
+  </ItemGroup>
+
+  <!-- Next to the .dll: its effect's picture and its texts. -->
+  <ItemGroup>
+    <None Update="items\*.png" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="lang\*.toml" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

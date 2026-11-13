@@ -1,0 +1,14 @@
+# The Altar Example's texts in English, the fallback of every language without a file of its own.
+
+[altar]
+pray = "Pray"
+prayed = "The gods restore your strength."
+
+[mod]
+name = "Altar Example"
+description = "An altar to build, where the player prays."
+
+[building.altar]
+name = "Altar"
+description = "A place of prayer"
+lore = "An old runestone on a slab of stone. Those who pray here get their strength back."

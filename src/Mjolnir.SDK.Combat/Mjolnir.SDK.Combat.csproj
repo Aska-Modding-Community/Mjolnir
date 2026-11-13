@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Mjolnir.SDK.Combat, the SDK module that connects Combatant and Combatants (Mjolnir.SDK) to the game's damage:
+       the players, villagers, pets, creatures and dens as combatants, every blow before and after it
+       lands, deaths, and damage, healing and kills dealt by mods. Mods do not reference it: what they use is in Mjolnir.SDK, so
+       that the player module and the villager module can hand the same combatants out. It reaches Core only through
+       Mjolnir.SDK (CombatModule is started by SdkModules). deploy.ps1 ships it to Mjolnir\core next to the SDK. -->
+  <PropertyGroup>
+    <AssemblyName>Mjolnir.SDK.Combat</AssemblyName>
+    <RootNamespace>Mjolnir.SDK.Combat</RootNamespace>
+    <Version>$(MjolnirPlatformVersion)</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mjolnir.SDK\Mjolnir.SDK.csproj" />
+  </ItemGroup>
+
+  <!-- Characters, creatures and their damage (Assembly-CSharp), attributes (SandSailorStudio), the network objects they are
+       (Fusion.Runtime, Fusion.Common). -->
+  <ItemGroup>
+    <GameInterop Include="Il2Cppmscorlib;UnityEngine.CoreModule;Assembly-CSharp;SandSailorStudio" />
+    <GameInterop Include="Fusion.Runtime;Fusion.Common" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Mjolnir.SDK.Combat.Tests" />
+  </ItemGroup>
+
+</Project>

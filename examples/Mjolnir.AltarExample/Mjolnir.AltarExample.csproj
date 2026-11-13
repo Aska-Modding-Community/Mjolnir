@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Example mod: a building of a mod's own with its own model (Mjolnir.SDK.Content) and an interaction of its own that the
+       player uses (Mjolnir.SDK.AI), with Mjolnir.SDK.Player for the player's stamina and Mjolnir.SDK.UI for the
+       messages; a reference for mod authors. It needs no game types and no Harmony patch of its own: the SDK hides them.
+       deploy.ps1 -Examples ships Mjolnir.AltarExample.dll/.pdb, lang/, items/ and bundles/ to Mjolnir\Mods\Mjolnir.AltarExample.
+       The bundle bundles/models (the altar) is built by the Mjolnir kit (unity/Mjolnir.ModKit, tools/build-bundles.ps1). -->
+  <PropertyGroup>
+    <AssemblyName>Mjolnir.AltarExample</AssemblyName>
+    <RootNamespace>Mjolnir.AltarExample</RootNamespace>
+    <Version>1.0.0</Version>
+    <IsMjolnirMod>true</IsMjolnirMod>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <MjolnirSdk Include="Mjolnir.SDK.AI;Mjolnir.SDK.Content;Mjolnir.SDK.Player;Mjolnir.SDK.UI" />
+  </ItemGroup>
+
+  <!-- Next to the .dll: its texts (the altar's and the prayer's), its picture and its model. -->
+  <ItemGroup>
+    <None Update="lang\*.toml" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="bundles\*" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="items\*.png" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

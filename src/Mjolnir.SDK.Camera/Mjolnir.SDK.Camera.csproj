@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Mjolnir.SDK.Camera, the SDK module for the player's camera: reading it, the screen and the
+       world, modifiers on the game's own cameras, and cameras of a mod's own taking over the view. Mods that use it reference it
+       besides Mjolnir.SDK. It reaches Core only through Mjolnir.SDK (CameraModule is started by SdkModules). deploy.ps1 ships
+       it to Mjolnir\core next to the SDK. -->
+  <PropertyGroup>
+    <AssemblyName>Mjolnir.SDK.Camera</AssemblyName>
+    <RootNamespace>Mjolnir.SDK.Camera</RootNamespace>
+    <Version>$(MjolnirPlatformVersion)</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mjolnir.SDK\Mjolnir.SDK.csproj" />
+  </ItemGroup>
+
+  <!-- The game's InputManager and PlayerDrive (Assembly-CSharp), its Cinemachine cameras, and physics for the view's ray. -->
+  <ItemGroup>
+    <GameInterop Include="Il2Cppmscorlib;UnityEngine.CoreModule;UnityEngine.PhysicsModule;Assembly-CSharp;SandSailorStudio;Cinemachine;Fusion.Runtime" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Mjolnir.SDK.Camera.Tests" />
+  </ItemGroup>
+
+</Project>

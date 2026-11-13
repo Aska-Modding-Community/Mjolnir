@@ -1,0 +1,137 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".gitignore" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Build.targets" />
+    <File Path="Directory.Packages.props" />
+    <File Path="LICENSE" />
+  </Folder>
+  <Folder Name="/docs/">
+    <File Path="README.md" />
+    <File Path="CHANGELOG.md" />
+  </Folder>
+  <Folder Name="/Loader/">
+    <Project Path="src/Mjolnir.Core/Mjolnir.Core.csproj" />
+  </Folder>
+  <Folder Name="/Loader/Mjolnir.Native/">
+    <File Path="src/Mjolnir.Native/CMakeLists.txt" />
+    <File Path="src/Mjolnir.Native/CMakePresets.json" />
+    <File Path="src/Mjolnir.Native/version.def" />
+  </Folder>
+  <Folder Name="/Loader/Mjolnir.Native/src/">
+    <File Path="src/Mjolnir.Native/src/clr_host.cpp" />
+    <File Path="src/Mjolnir.Native/src/clr_host.h" />
+    <File Path="src/Mjolnir.Native/src/dllmain.cpp" />
+    <File Path="src/Mjolnir.Native/src/iat.cpp" />
+    <File Path="src/Mjolnir.Native/src/iat.h" />
+    <File Path="src/Mjolnir.Native/src/il2cpp_hook.cpp" />
+    <File Path="src/Mjolnir.Native/src/il2cpp_hook.h" />
+    <File Path="src/Mjolnir.Native/src/log.cpp" />
+    <File Path="src/Mjolnir.Native/src/log.h" />
+    <File Path="src/Mjolnir.Native/src/native_context.h" />
+    <File Path="src/Mjolnir.Native/src/paths.cpp" />
+    <File Path="src/Mjolnir.Native/src/paths.h" />
+    <File Path="src/Mjolnir.Native/src/proxy.cpp" />
+  </Folder>
+  <Folder Name="/Loader/Mjolnir.Native/third_party/">
+    <File Path="src/Mjolnir.Native/third_party/dotnet/README.md" />
+    <File Path="src/Mjolnir.Native/third_party/dotnet/coreclr_delegates.h" />
+    <File Path="src/Mjolnir.Native/third_party/dotnet/hostfxr.h" />
+  </Folder>
+  <Folder Name="/SDK/">
+    <Project Path="src/Mjolnir.SDK/Mjolnir.SDK.csproj" />
+    <Project Path="src/Mjolnir.SDK.UI/Mjolnir.SDK.UI.csproj" />
+    <Project Path="src/Mjolnir.SDK.Player/Mjolnir.SDK.Player.csproj" />
+    <Project Path="src/Mjolnir.SDK.Content/Mjolnir.SDK.Content.csproj" />
+    <Project Path="src/Mjolnir.SDK.AI/Mjolnir.SDK.AI.csproj" />
+    <Project Path="src/Mjolnir.SDK.World/Mjolnir.SDK.World.csproj" />
+    <Project Path="src/Mjolnir.SDK.Net/Mjolnir.SDK.Net.csproj" />
+    <Project Path="src/Mjolnir.SDK.Stats/Mjolnir.SDK.Stats.csproj" />
+    <Project Path="src/Mjolnir.SDK.Combat/Mjolnir.SDK.Combat.csproj" />
+    <Project Path="src/Mjolnir.SDK.Animation/Mjolnir.SDK.Animation.csproj" />
+    <Project Path="src/Mjolnir.SDK.Camera/Mjolnir.SDK.Camera.csproj" />
+    <Project Path="src/Mjolnir.SDK.Terrain/Mjolnir.SDK.Terrain.csproj" />
+  </Folder>
+  <Folder Name="/tests/" />
+  <Folder Name="/tests/unit/">
+    <Project Path="tests/Mjolnir.Core.Tests/Mjolnir.Core.Tests.csproj" />
+    <Project Path="tests/Mjolnir.SDK.Tests/Mjolnir.SDK.Tests.csproj" />
+    <Project Path="tests/Mjolnir.SDK.UI.Tests/Mjolnir.SDK.UI.Tests.csproj" />
+    <Project Path="tests/Mjolnir.SDK.Player.Tests/Mjolnir.SDK.Player.Tests.csproj" />
+    <Project Path="tests/Mjolnir.SDK.Content.Tests/Mjolnir.SDK.Content.Tests.csproj" />
+    <Project Path="tests/Mjolnir.SDK.AI.Tests/Mjolnir.SDK.AI.Tests.csproj" />
+    <Project Path="tests/Mjolnir.SDK.World.Tests/Mjolnir.SDK.World.Tests.csproj" />
+    <Project Path="tests/Mjolnir.SDK.Net.Tests/Mjolnir.SDK.Net.Tests.csproj" />
+    <Project Path="tests/Mjolnir.SDK.Stats.Tests/Mjolnir.SDK.Stats.Tests.csproj" />
+    <Project Path="tests/Mjolnir.SDK.Combat.Tests/Mjolnir.SDK.Combat.Tests.csproj" />
+    <Project Path="tests/Mjolnir.SDK.Animation.Tests/Mjolnir.SDK.Animation.Tests.csproj" />
+    <Project Path="tests/Mjolnir.SDK.Camera.Tests/Mjolnir.SDK.Camera.Tests.csproj" />
+    <Project Path="tests/Mjolnir.SDK.Terrain.Tests/Mjolnir.SDK.Terrain.Tests.csproj" />
+    <File Path="tests/Shared/ApiSurface.cs" />
+  </Folder>
+  <Folder Name="/tests/in-game/">
+    <Project Path="tests/Mjolnir.SmokeMod/Mjolnir.SmokeMod.csproj" />
+    <Project Path="tests/Mjolnir.FaultMod/Mjolnir.FaultMod.csproj" />
+    <Project Path="tests/Mjolnir.UiLab/Mjolnir.UiLab.csproj" />
+    <File Path="tests/Mjolnir.UiLab/Blender/raise_arm.py" />
+  </Folder>
+  <Folder Name="/examples/">
+    <Project Path="examples/Mjolnir.InfiniteStamina/Mjolnir.InfiniteStamina.csproj" />
+    <Project Path="examples/Mjolnir.UiExample/Mjolnir.UiExample.csproj" />
+    <Project Path="examples/Mjolnir.PlayerExample/Mjolnir.PlayerExample.csproj" />
+    <Project Path="examples/Mjolnir.ItemsExample/Mjolnir.ItemsExample.csproj" />
+    <Project Path="examples/Mjolnir.VillagersExample/Mjolnir.VillagersExample.csproj" />
+    <Project Path="examples/Mjolnir.AltarExample/Mjolnir.AltarExample.csproj" />
+    <Project Path="examples/Mjolnir.StatsExample/Mjolnir.StatsExample.csproj" />
+    <Project Path="examples/Mjolnir.AnimationsExample/Mjolnir.AnimationsExample.csproj" />
+    <Project Path="examples/Mjolnir.CheatInventory/Mjolnir.CheatInventory.csproj" />
+    <Project Path="examples/Mjolnir.EquipmentExample/Mjolnir.EquipmentExample.csproj" />
+  </Folder>
+  <Folder Name="/tools/">
+    <Project Path="tools/Mjolnir.CodeMap/Mjolnir.CodeMap.csproj" />
+    <Project Path="tools/Mjolnir.InteropGen/Mjolnir.InteropGen.csproj" />
+    <File Path="tools/build-native.cmd" />
+    <File Path="tools/deploy.ps1" />
+    <File Path="tools/gen-interop.ps1" />
+    <File Path="tools/build-bundles.ps1" />
+    <File Path="tools/package.ps1" />
+    <File Path="tools/locations.ps1" />
+    <File Path="tools/package/README.txt" />
+    <File Path="tools/sdk-assemblies.ps1" />
+    <File Path="tools/platform-files.ps1" />
+    <File Path="tools/licenses/BSD-2-Clause.txt" />
+    <File Path="tools/licenses/Capstone.txt" />
+    <File Path="tools/licenses/GPL-3.0-only.txt" />
+    <File Path="tools/licenses/LGPL-3.0-only.txt" />
+    <File Path="tools/licenses/MIT.txt" />
+  </Folder>
+  <Folder Name="/unity/">
+    <File Path="unity/Directory.Build.props" />
+    <File Path="unity/Mjolnir.ModKit/Packages/manifest.json" />
+    <File Path="unity/Mjolnir.ModKit/Assets/Mjolnir/Editor/KitSetup.cs" />
+    <File Path="unity/Mjolnir.ModKit/Assets/Mjolnir/Editor/BundleBuilder.cs" />
+    <File Path="unity/Mjolnir.ModKit/Assets/Mjolnir/Examples/Editor/ModelParts.cs" />
+    <File Path="unity/Mjolnir.ModKit/Assets/Mjolnir/Examples/Editor/TwineModel.cs" />
+    <File Path="unity/Mjolnir.ModKit/Assets/Mjolnir/Examples/Editor/TwineSpoolModel.cs" />
+    <File Path="unity/Mjolnir.ModKit/Assets/Mjolnir/Examples/Editor/AltarModel.cs" />
+    <File Path="unity/Mjolnir.ModKit/Assets/Mjolnir/Examples/Editor/ExampleBundles.cs" />
+    <File Path="unity/Mjolnir.ModKit/Assets/Mjolnir/Editor/AnimationImport.cs" />
+    <File Path="unity/Mjolnir.ModKit/Assets/Mjolnir/Editor/RigModels.cs" />
+    <File Path="unity/Mjolnir.ModKit/Assets/Mjolnir/Editor/AnimationPreview.cs" />
+    <File Path="unity/Mjolnir.ModKit/Assets/Mjolnir/Editor/ClipPicker.cs" />
+    <File Path="unity/Mjolnir.ModKit/Assets/Mjolnir/Editor/PreviewStage.cs" />
+    <File Path="unity/Mjolnir.ModKit/Assets/Mjolnir/Editor/GameClips.cs" />
+    <File Path="unity/Mjolnir.ModKit/Assets/Mjolnir/Editor/GameFolder.cs" />
+    <File Path="unity/Mjolnir.ModKit/Assets/Mjolnir/Editor/IconRenderer.cs" />
+    <File Path="unity/Mjolnir.ModKit/Assets/Mjolnir/Editor/KitCommon.cs" />
+    <File Path="unity/Mjolnir.ModKit/Assets/Mjolnir/Editor/KitWindow.cs" />
+    <File Path="unity/Mjolnir.ModKit/Assets/Mjolnir/Editor/Masks.cs" />
+    <File Path="unity/Mjolnir.ModKit/Assets/Mjolnir/Editor/ModChecks.cs" />
+    <File Path="unity/Mjolnir.ModKit/Assets/Mjolnir/Editor/ModFolders.cs" />
+    <File Path="unity/Mjolnir.ModKit/Assets/Mjolnir/Editor/RigBake.cs" />
+    <File Path="unity/Mjolnir.ModKit/Assets/Mjolnir/Editor/RigBakeWindow.cs" />
+    <File Path="unity/Mjolnir.ModKit/Assets/Mjolnir/Editor/RigExport.cs" />
+    <File Path="unity/Mjolnir.ModKit/Assets/Mjolnir/Editor/RigImporter.cs" />
+    <File Path="unity/Mjolnir.ModKit/Assets/Mjolnir/Rig/RigGizmo.cs" />
+  </Folder>
+</Solution>

@@ -1,0 +1,14 @@
+# Mjolnir.SDK.Net's own texts in English (NetTexts); every language without a file of its own shows these.
+
+[refusal]
+title = "Unable to join the session"
+differs = "Your mod configuration does not match the host's."
+platform = "Mjolnir version: host {0}, yours {1}. Install the same version as the host."
+missing = "Required by the host, not installed or turned off:"
+extra = "Installed, but not used by the host:"
+versions = "Different versions:"
+version = "{0}: host {1}, yours {2}"
+vanilla = "The host plays without Mjolnir. To join, turn off the mods every player needs:"
+no_answer = "The host did not confirm the mod configuration in time. Try joining again."
+action = "Turn mods on or off in the Mjolnir window of the main menu, then restart the game."
+ok = "OK"

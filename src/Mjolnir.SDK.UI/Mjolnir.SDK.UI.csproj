@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Mjolnir.SDK.UI, the first module of the SDK: mod UI built in code and drawn with clones of the game's
+       own menus, the HUD, the game menus' buttons, dialogs, and the Mods window.
+       Mods that show UI reference it besides Mjolnir.SDK. It reaches Core only through Mjolnir.SDK (UiModule is started
+       by SdkModules). deploy.ps1 ships it to Mjolnir\core next to the SDK. -->
+  <PropertyGroup>
+    <AssemblyName>Mjolnir.SDK.UI</AssemblyName>
+    <RootNamespace>Mjolnir.SDK.UI</RootNamespace>
+    <Version>$(MjolnirPlatformVersion)</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mjolnir.SDK\Mjolnir.SDK.csproj" />
+  </ItemGroup>
+
+  <!-- The game's menus and HUD: UGUI, TextMeshPro and the game's UI types; ImageConversionModule for Bitmap files. -->
+  <ItemGroup>
+    <GameInterop Include="Il2Cppmscorlib;UnityEngine.CoreModule;Assembly-CSharp;SandSailorStudio" />
+    <GameInterop Include="Unity.TextMeshPro;UnityEngine.UI;UnityEngine.UIModule;UnityEngine.TextRenderingModule" />
+    <GameInterop Include="UnityEngine.ImageConversionModule" />
+    <!-- HotKeys: the game reads the keyboard through Unity's Input System. -->
+    <GameInterop Include="Unity.InputSystem" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Mjolnir.SDK.UI.Tests" />
+  </ItemGroup>
+
+  <!-- The module's own texts (SdkTexts), embedded as lang/<language>.toml. -->
+  <ItemGroup>
+    <EmbeddedResource Include="lang\*.toml" LogicalName="lang/%(Filename)%(Extension)" />
+  </ItemGroup>
+
+</Project>

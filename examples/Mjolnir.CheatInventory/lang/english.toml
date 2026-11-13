@@ -1,0 +1,37 @@
+# Cheat Inventory's texts in English (the SDK's Localization); every other language falls back to these.
+
+found = "Found: {0}"
+
+[menu]
+open = "Item window"
+
+[window]
+title = "Items"
+
+[category]
+all = "All items"
+every = "Every category"
+whole = "All of «{0}»"
+header = "Category"
+
+[search]
+header = "Find"
+placeholder = "An item's name"
+
+
+[page]
+number = "{0} of {1}"
+previous = "‹ Back"
+next = "Next ›"
+
+[world]
+only = "Items are given to a player in a world: load a save to take them."
+
+[row]
+details = "{0} · up to {1} in a stack"
+give = "Add"
+
+[given]
+all = "+{0} {1}"
+some = "+{0} {1}: {2} did not fit"
+none = "{0}: no room in the inventory"

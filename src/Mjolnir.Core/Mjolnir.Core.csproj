@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>Mjolnir.Core</AssemblyName>
+    <RootNamespace>Mjolnir.Core</RootNamespace>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <!-- Emits Mjolnir.Core.runtimeconfig.json, which Mjolnir.Native hands to hostfxr, and copies the
+         package dependencies next to Mjolnir.Core.dll (deploy.ps1 ships them to Mjolnir\core). -->
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <RollForward>LatestPatch</RollForward>
+    <Version>$(MjolnirPlatformVersion)</Version>
+  </PropertyGroup>
+
+  <!-- IL2CPP interop runtime + Harmony support. Versions and why: Directory.Packages.props. -->
+  <ItemGroup>
+    <PackageReference Include="Il2CppInterop.Runtime" />
+    <PackageReference Include="Il2CppInterop.HarmonySupport" />
+    <PackageReference Include="HarmonyX" />
+  </ItemGroup>
+
+  <!-- Core is closed: its only public types are Bootstrap and NativeContext (the native contract). Mjolnir.SDK
+       builds the mod API on Core's internals (runtime events, logging, fault isolation) and implements the
+       contracts in Mods/Contracts.cs; Core never references the SDK. The SDK's modules
+       (Mjolnir.SDK.UI…) reach Core only through the SDK, so this list does not grow with them. -->
+  <ItemGroup>
+    <InternalsVisibleTo Include="Mjolnir.SDK" />
+    <InternalsVisibleTo Include="Mjolnir.Core.Tests" />
+    <InternalsVisibleTo Include="Mjolnir.SDK.Tests" />
+  </ItemGroup>
+
+  <!-- Phase B uses Unity types (GameInterop: Directory.Build.targets). UnityEngine.CoreModule carries its own
+       System.Runtime.InteropServices.UnmanagedCallersOnlyAttribute, which clashes with .NET's in Bootstrap.Start: it is
+       visible only through `extern alias unity`. -->
+  <ItemGroup>
+    <GameInterop Include="Il2Cppmscorlib" />
+    <GameInterop Include="UnityEngine.CoreModule" Aliases="unity" />
+  </ItemGroup>
+
+</Project>

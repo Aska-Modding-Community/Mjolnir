@@ -1,0 +1,96 @@
+#nullable enable
+Mjolnir.SDK.Content.Buildings
+Mjolnir.SDK.Content.EffectsExtensions
+Mjolnir.SDK.Content.EffectsExtensions.extension(Mjolnir.SDK.Effects!)
+Mjolnir.SDK.Content.ItemCategory
+Mjolnir.SDK.Content.ItemCategory.AssetName.get -> string!
+Mjolnir.SDK.Content.ItemCategory.Children.get -> System.Collections.Generic.IReadOnlyList<Mjolnir.SDK.Content.ItemCategory!>!
+Mjolnir.SDK.Content.ItemCategory.Contains(Mjolnir.SDK.Content.ItemCategory? category) -> bool
+Mjolnir.SDK.Content.ItemCategory.DisplayName.get -> string!
+Mjolnir.SDK.Content.ItemCategory.Id.get -> int
+Mjolnir.SDK.Content.ItemCategory.Parent.get -> Mjolnir.SDK.Content.ItemCategory?
+Mjolnir.SDK.Content.ItemCategory.Root.get -> Mjolnir.SDK.Content.ItemCategory!
+Mjolnir.SDK.Content.ItemDefinition
+Mjolnir.SDK.Content.ItemDefinition.AssetName.get -> string!
+Mjolnir.SDK.Content.ItemDefinition.Category.get -> Mjolnir.SDK.Content.ItemCategory?
+Mjolnir.SDK.Content.ItemDefinition.Description.get -> string!
+Mjolnir.SDK.Content.ItemDefinition.DisplayName.get -> string!
+Mjolnir.SDK.Content.ItemDefinition.Icon.get -> UnityEngine.Sprite?
+Mjolnir.SDK.Content.ItemDefinition.Id.get -> int
+Mjolnir.SDK.Content.ItemDefinition.ModId.get -> string?
+Mjolnir.SDK.Content.ItemDefinition.StackSize.get -> int
+Mjolnir.SDK.Content.Items
+Mjolnir.SDK.Content.ModBuilding
+Mjolnir.SDK.Content.ModBuilding.AssetName.get -> string!
+Mjolnir.SDK.Content.ModBuilding.BasedOn.get -> string!
+Mjolnir.SDK.Content.ModBuilding.IconPath.get -> string?
+Mjolnir.SDK.Content.ModBuilding.Id.get -> int
+Mjolnir.SDK.Content.ModBuilding.ModId.get -> string!
+Mjolnir.SDK.Content.ModBuilding.Name.get -> string!
+Mjolnir.SDK.Content.ModBuilding.Needs(Mjolnir.SDK.Content.ModItem! item, int count) -> Mjolnir.SDK.Content.ModBuilding!
+Mjolnir.SDK.Content.ModBuilding.Needs(string! item, int count) -> Mjolnir.SDK.Content.ModBuilding!
+Mjolnir.SDK.Content.ModBuilding.Parts.get -> System.Collections.Generic.IReadOnlyList<Mjolnir.SDK.Content.RecipePart>!
+Mjolnir.SDK.Content.ModEffect
+Mjolnir.SDK.Content.ModEffect.BasedOn.get -> string!
+Mjolnir.SDK.Content.ModEffect.IconPath.get -> string?
+Mjolnir.SDK.Content.ModEffect.ModId.get -> string!
+Mjolnir.SDK.Content.ModEffect.Modifies(string! stat, float amount, Mjolnir.SDK.ModifierKind kind = Mjolnir.SDK.ModifierKind.Add) -> Mjolnir.SDK.Content.ModEffect!
+Mjolnir.SDK.Content.ModEffect.Name.get -> string!
+Mjolnir.SDK.Content.ModEffect.PerSecond(string! stat, float amount) -> Mjolnir.SDK.Content.ModEffect!
+Mjolnir.SDK.Content.ModItem
+Mjolnir.SDK.Content.ModItem.AssetName.get -> string!
+Mjolnir.SDK.Content.ModItem.BasedOn.get -> string!
+Mjolnir.SDK.Content.ModItem.IconPath.get -> string?
+Mjolnir.SDK.Content.ModItem.Id.get -> int
+Mjolnir.SDK.Content.ModItem.ModId.get -> string!
+Mjolnir.SDK.Content.ModItem.ModelAsset.get -> string?
+Mjolnir.SDK.Content.ModItem.ModelPath.get -> string?
+Mjolnir.SDK.Content.ModItem.Name.get -> string!
+Mjolnir.SDK.Content.ModItem.StackSize.get -> int?
+Mjolnir.SDK.Content.ModItem.WithModel(string! bundle, string! asset) -> Mjolnir.SDK.Content.ModItem!
+Mjolnir.SDK.Content.ModRecipe
+Mjolnir.SDK.Content.ModRecipe.AssetName.get -> string!
+Mjolnir.SDK.Content.ModRecipe.BasedOn.get -> string!
+Mjolnir.SDK.Content.ModRecipe.Id.get -> int
+Mjolnir.SDK.Content.ModRecipe.MadeAt(string! place) -> Mjolnir.SDK.Content.ModRecipe!
+Mjolnir.SDK.Content.ModRecipe.ModId.get -> string!
+Mjolnir.SDK.Content.ModRecipe.Needs(Mjolnir.SDK.Content.ModItem! item, int count) -> Mjolnir.SDK.Content.ModRecipe!
+Mjolnir.SDK.Content.ModRecipe.Needs(string! item, int count) -> Mjolnir.SDK.Content.ModRecipe!
+Mjolnir.SDK.Content.ModRecipe.Parts.get -> System.Collections.Generic.IReadOnlyList<Mjolnir.SDK.Content.RecipePart>!
+Mjolnir.SDK.Content.ModRecipe.Places.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Mjolnir.SDK.Content.ModRecipe.Quantity.get -> int
+Mjolnir.SDK.Content.ModRecipe.Result.get -> Mjolnir.SDK.Content.ModItem!
+Mjolnir.SDK.Content.RecipePart
+Mjolnir.SDK.Content.RecipePart.Count.get -> int
+Mjolnir.SDK.Content.RecipePart.Count.init -> void
+Mjolnir.SDK.Content.RecipePart.Deconstruct(out string! Item, out int Count) -> void
+Mjolnir.SDK.Content.RecipePart.Equals(Mjolnir.SDK.Content.RecipePart other) -> bool
+Mjolnir.SDK.Content.RecipePart.Item.get -> string!
+Mjolnir.SDK.Content.RecipePart.Item.init -> void
+Mjolnir.SDK.Content.RecipePart.RecipePart() -> void
+Mjolnir.SDK.Content.RecipePart.RecipePart(string! Item, int Count) -> void
+Mjolnir.SDK.Content.Recipes
+const Mjolnir.SDK.Content.ModRecipe.ByHand = "hand" -> string!
+const Mjolnir.SDK.Content.ModRecipe.DefaultBase = "Item_Binders_BasicRope" -> string!
+override Mjolnir.SDK.Content.ItemCategory.ToString() -> string!
+override Mjolnir.SDK.Content.ItemDefinition.ToString() -> string!
+override Mjolnir.SDK.Content.ModBuilding.ToString() -> string!
+override Mjolnir.SDK.Content.ModItem.ToString() -> string!
+override Mjolnir.SDK.Content.ModRecipe.ToString() -> string!
+override Mjolnir.SDK.Content.RecipePart.GetHashCode() -> int
+static Mjolnir.SDK.Content.Buildings.Add(string! name, string! basedOn, string? icon = null) -> Mjolnir.SDK.Content.ModBuilding!
+static Mjolnir.SDK.Content.EffectsExtensions.Add(string! name, string! basedOn = "Effect_Leisure", string? icon = null) -> Mjolnir.SDK.Content.ModEffect!
+static Mjolnir.SDK.Content.EffectsExtensions.extension(Mjolnir.SDK.Effects!).Add(string! name, string! basedOn = "Effect_Leisure", string? icon = null) -> Mjolnir.SDK.Content.ModEffect!
+static Mjolnir.SDK.Content.Items.Add(string! name, string! basedOn, string? icon = null, int? stackSize = null) -> Mjolnir.SDK.Content.ModItem!
+static Mjolnir.SDK.Content.Items.All.get -> System.Collections.Generic.IReadOnlyList<Mjolnir.SDK.Content.ItemDefinition!>!
+static Mjolnir.SDK.Content.Items.CanGive.get -> bool
+static Mjolnir.SDK.Content.Items.Categories.get -> System.Collections.Generic.IReadOnlyList<Mjolnir.SDK.Content.ItemCategory!>!
+static Mjolnir.SDK.Content.Items.Find(string! assetName) -> Mjolnir.SDK.Content.ItemDefinition?
+static Mjolnir.SDK.Content.Items.Give(Mjolnir.SDK.Content.ItemDefinition! item, int count = 1) -> int
+static Mjolnir.SDK.Content.Items.Give(Mjolnir.SDK.Content.ModItem! item, int count = 1) -> int
+static Mjolnir.SDK.Content.Items.Give(string! item, int count = 1) -> int
+static Mjolnir.SDK.Content.RecipePart.operator !=(Mjolnir.SDK.Content.RecipePart left, Mjolnir.SDK.Content.RecipePart right) -> bool
+static Mjolnir.SDK.Content.RecipePart.operator ==(Mjolnir.SDK.Content.RecipePart left, Mjolnir.SDK.Content.RecipePart right) -> bool
+static Mjolnir.SDK.Content.Recipes.Add(Mjolnir.SDK.Content.ModItem! result, int quantity = 1, string? basedOn = null) -> Mjolnir.SDK.Content.ModRecipe!
+~override Mjolnir.SDK.Content.RecipePart.Equals(object obj) -> bool
+~override Mjolnir.SDK.Content.RecipePart.ToString() -> string

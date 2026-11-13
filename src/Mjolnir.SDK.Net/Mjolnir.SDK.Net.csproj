@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Mjolnir.SDK.Net, the SDK module for multiplayer: the mod-compatibility handshake (a client whose mods differ from the
+       host's is refused with the differences listed) and message channels between players' mods. Mods that send messages
+       reference it besides Mjolnir.SDK; the handshake runs for every session whoever references it. It reaches Core only
+       through Mjolnir.SDK (NetModule is started by SdkModules). deploy.ps1 ships it to Mjolnir\core next to the SDK. -->
+  <PropertyGroup>
+    <AssemblyName>Mjolnir.SDK.Net</AssemblyName>
+    <RootNamespace>Mjolnir.SDK.Net</RootNamespace>
+    <Version>$(MjolnirPlatformVersion)</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mjolnir.SDK\Mjolnir.SDK.csproj" />
+  </ItemGroup>
+
+  <!-- The game's session and players (Assembly-CSharp, SandSailorStudio: its menus; TextMeshPro and UGUI:
+       its dialog, fitted to a long message) and Photon Fusion: the runner
+       (Fusion.Runtime, Fusion.Common) and session properties (Fusion.Realtime). -->
+  <ItemGroup>
+    <GameInterop Include="Il2Cppmscorlib;UnityEngine.CoreModule;Assembly-CSharp;SandSailorStudio;Unity.TextMeshPro;UnityEngine.UI;UnityEngine.UIModule" />
+    <GameInterop Include="Fusion.Runtime;Fusion.Common;Fusion.Realtime" />
+  </ItemGroup>
+
+  <!-- The module's own texts (NetTexts), embedded as lang/<language>.toml. -->
+  <ItemGroup>
+    <EmbeddedResource Include="lang\*.toml" LogicalName="lang/%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Mjolnir.SDK.Net.Tests" />
+  </ItemGroup>
+
+</Project>

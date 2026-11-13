@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Mjolnir.SDK.Stats, the SDK module that connects CharacterStats to the game. Mods do not reference
+       it: what they use is in Mjolnir.SDK (CharacterStats, Skill, CharacterEffects, StatusEffects), so that the player module
+       and the villager module can both hand it out. This one holds the game's side and the console's stats, skill, effects,
+       effect and uneffect. It reaches Core only through Mjolnir.SDK (StatsModule is started by SdkModules). deploy.ps1 ships
+       it to Mjolnir\core next to the SDK. -->
+  <PropertyGroup>
+    <AssemblyName>Mjolnir.SDK.Stats</AssemblyName>
+    <RootNamespace>Mjolnir.SDK.Stats</RootNamespace>
+    <Version>$(MjolnirPlatformVersion)</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mjolnir.SDK\Mjolnir.SDK.csproj" />
+  </ItemGroup>
+
+  <!-- Characters, their status effects and movesets (Assembly-CSharp), attributes (SandSailorStudio). A character is a Photon
+       Fusion network object: Fusion.Runtime and Fusion.Common. -->
+  <ItemGroup>
+    <GameInterop Include="Il2Cppmscorlib;UnityEngine.CoreModule;Assembly-CSharp;SandSailorStudio" />
+    <GameInterop Include="Fusion.Runtime;Fusion.Common" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Mjolnir.SDK.Stats.Tests" />
+  </ItemGroup>
+
+</Project>

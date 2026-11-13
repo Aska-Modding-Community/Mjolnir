@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Loader smoke test (steps 4–6), not a real mod. deploy.ps1 -SmokeMod ships only Mjolnir.SmokeMod.dll/.pdb to
+       Mjolnir\Mods\Mjolnir.SmokeMod; everything it references comes from Mjolnir\core and Mjolnir\interop at runtime. -->
+  <PropertyGroup>
+    <AssemblyName>Mjolnir.SmokeMod</AssemblyName>
+    <RootNamespace>Mjolnir.SmokeMod</RootNamespace>
+    <Version>0.1.0</Version>
+    <IsMjolnirMod>true</IsMjolnirMod>
+  </PropertyGroup>
+
+  <!-- The game's types it patches and probes. -->
+  <ItemGroup>
+    <GameInterop Include="Assembly-CSharp;Fusion.Runtime;Fusion.Realtime;SandSailorStudio" />
+  </ItemGroup>
+
+</Project>

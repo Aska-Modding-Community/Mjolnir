@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Unit tests for the Mjolnir.SDK.UI module that need no game: the UI model on a fake backend (properties, bindings,
+       the live tree, controls, layout plans), the Mods window's settings page, the menu button registry, the module's
+       entry and its public API boundary. Run with `dotnet test tests/Mjolnir.SDK.UI.Tests`. -->
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+  </ItemGroup>
+
+  <!-- Both, copied next to the tests: SdkModuleTests looks for the module next to Mjolnir.SDK.dll. -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Mjolnir.SDK\Mjolnir.SDK.csproj" />
+    <ProjectReference Include="..\..\src\Mjolnir.SDK.UI\Mjolnir.SDK.UI.csproj" />
+  </ItemGroup>
+
+  <!-- The interop assemblies the UI references, loaded by the test host; no test touches the IL2CPP runtime. -->
+  <ItemGroup>
+    <GameInterop Include="Il2Cppmscorlib;UnityEngine.CoreModule;Assembly-CSharp;SandSailorStudio" />
+    <GameInterop Include="Unity.TextMeshPro;UnityEngine.UI;UnityEngine.UIModule;UnityEngine.TextRenderingModule" />
+    <GameInterop Include="UnityEngine.ImageConversionModule;Unity.InputSystem" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Shared\ApiSurface.cs" Link="Shared\ApiSurface.cs" />
+  </ItemGroup>
+
+</Project>

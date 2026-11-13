@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Example mod: the game's own animations played by name on the player and on villagers (Mjolnir.SDK's Animations and
+       CharacterAnimator), a reference for mod authors: a toast villagers answer through a job, a dodge with root motion, a
+       wave through the upper-body mask. It ships no clips of its own: the Mjolnir kit lists the game's clips to choose from.
+       deploy.ps1 -Examples ships Mjolnir.AnimationsExample.dll/.pdb and lang/ to Mjolnir\Mods\Mjolnir.AnimationsExample. -->
+  <PropertyGroup>
+    <AssemblyName>Mjolnir.AnimationsExample</AssemblyName>
+    <RootNamespace>Mjolnir.AnimationsExample</RootNamespace>
+    <Version>1.1.0</Version>
+    <IsMjolnirMod>true</IsMjolnirMod>
+  </PropertyGroup>
+
+  <!-- The animation module plays the clips (the API is the main library's); the player, villagers and hotkeys. -->
+  <ItemGroup>
+    <MjolnirSdk Include="Mjolnir.SDK.Animation;Mjolnir.SDK.Player;Mjolnir.SDK.AI;Mjolnir.SDK.UI" />
+  </ItemGroup>
+
+  <!-- Next to the .dll: its texts. -->
+  <ItemGroup>
+    <None Update="lang\*.toml" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,22 @@
+# What Unity makes again by itself, and the bundles the kit builds (tools/build-bundles.ps1 copies them to the mods).
+/Library/
+/Temp/
+/Logs/
+/UserSettings/
+/Build/
+/obj/
+*.csproj
+*.sln
+*.slnx
+# The game's skeletons, imported from the player's own game (Mjolnir > Import Rigs): the game's, not ours.
+/Assets/Mjolnir/Rigs/
+/Assets/Mjolnir/Rigs.meta
+# Clips the bundle build takes out of mods' model files (BundleBuilder.ClipsFolder): made again by every build.
+/Assets/Mjolnir/Clips/
+/Assets/Mjolnir/Clips.meta
+# The preview stage (PreviewStage): made again by the kit when missing.
+/Assets/Mjolnir/Preview/
+/Assets/Mjolnir/Preview.meta
+# The game's own clips (Mjolnir > Rigs > Import from the Game, when the game wrote them): the game's, not ours.
+/Assets/Mjolnir/GameClips/
+/Assets/Mjolnir/GameClips.meta

@@ -1,0 +1,74 @@
+#nullable enable
+*REMOVED*static Mjolnir.SDK.Content.Buildings.Add(string! name, string! basedOn, string? icon = null) -> Mjolnir.SDK.Content.ModBuilding!
+Mjolnir.SDK.Content.ItemEffect
+Mjolnir.SDK.Content.ItemEffect.<Clone>$() -> Mjolnir.SDK.Content.ItemEffect!
+Mjolnir.SDK.Content.ItemEffect.Chance.get -> float
+Mjolnir.SDK.Content.ItemEffect.Chance.init -> void
+Mjolnir.SDK.Content.ItemEffect.Deconstruct(out string! Effect, out System.TimeSpan? Duration, out float Chance) -> void
+Mjolnir.SDK.Content.ItemEffect.Duration.get -> System.TimeSpan?
+Mjolnir.SDK.Content.ItemEffect.Duration.init -> void
+Mjolnir.SDK.Content.ItemEffect.Effect.get -> string!
+Mjolnir.SDK.Content.ItemEffect.Effect.init -> void
+Mjolnir.SDK.Content.ItemEffect.Equals(Mjolnir.SDK.Content.ItemEffect? other) -> bool
+Mjolnir.SDK.Content.ItemEffect.ItemEffect(string! Effect, System.TimeSpan? Duration, float Chance) -> void
+Mjolnir.SDK.Content.ItemKind
+Mjolnir.SDK.Content.ItemKind.Arrow = 7 -> Mjolnir.SDK.Content.ItemKind
+Mjolnir.SDK.Content.ItemKind.Boots = 11 -> Mjolnir.SDK.Content.ItemKind
+Mjolnir.SDK.Content.ItemKind.Bow = 6 -> Mjolnir.SDK.Content.ItemKind
+Mjolnir.SDK.Content.ItemKind.Cape = 13 -> Mjolnir.SDK.Content.ItemKind
+Mjolnir.SDK.Content.ItemKind.Chest = 9 -> Mjolnir.SDK.Content.ItemKind
+Mjolnir.SDK.Content.ItemKind.Food = 2 -> Mjolnir.SDK.Content.ItemKind
+Mjolnir.SDK.Content.ItemKind.Gloves = 12 -> Mjolnir.SDK.Content.ItemKind
+Mjolnir.SDK.Content.ItemKind.Helmet = 8 -> Mjolnir.SDK.Content.ItemKind
+Mjolnir.SDK.Content.ItemKind.LargeMaterial = 1 -> Mjolnir.SDK.Content.ItemKind
+Mjolnir.SDK.Content.ItemKind.Material = 0 -> Mjolnir.SDK.Content.ItemKind
+Mjolnir.SDK.Content.ItemKind.OneHandedWeapon = 3 -> Mjolnir.SDK.Content.ItemKind
+Mjolnir.SDK.Content.ItemKind.Pants = 10 -> Mjolnir.SDK.Content.ItemKind
+Mjolnir.SDK.Content.ItemKind.Shield = 5 -> Mjolnir.SDK.Content.ItemKind
+Mjolnir.SDK.Content.ItemKind.TwoHandedWeapon = 4 -> Mjolnir.SDK.Content.ItemKind
+Mjolnir.SDK.Content.ModBuilding.BuildEffort.get -> float?
+Mjolnir.SDK.Content.ModBuilding.Category.get -> string?
+Mjolnir.SDK.Content.ModBuilding.ConstructionModelAsset.get -> string?
+Mjolnir.SDK.Content.ModBuilding.ConstructionModelPath.get -> string?
+Mjolnir.SDK.Content.ModBuilding.LevelsGround.get -> bool?
+Mjolnir.SDK.Content.ModBuilding.ModelAsset.get -> string?
+Mjolnir.SDK.Content.ModBuilding.ModelPath.get -> string?
+Mjolnir.SDK.Content.ModBuilding.Needs(Mjolnir.SDK.Content.ModItem! item, int count, int stage) -> Mjolnir.SDK.Content.ModBuilding!
+Mjolnir.SDK.Content.ModBuilding.Needs(string! item, int count, int stage) -> Mjolnir.SDK.Content.ModBuilding!
+Mjolnir.SDK.Content.ModBuilding.PartsAt(int stage) -> System.Collections.Generic.IReadOnlyList<Mjolnir.SDK.Content.RecipePart>!
+Mjolnir.SDK.Content.ModBuilding.StagesWithParts.get -> int
+Mjolnir.SDK.Content.ModBuilding.WithBuildEffort(float effort) -> Mjolnir.SDK.Content.ModBuilding!
+Mjolnir.SDK.Content.ModBuilding.WithCategory(string! category) -> Mjolnir.SDK.Content.ModBuilding!
+Mjolnir.SDK.Content.ModBuilding.WithConstructionModel(string! bundle, string! asset) -> Mjolnir.SDK.Content.ModBuilding!
+Mjolnir.SDK.Content.ModBuilding.WithConstructionModel(string! bundle, string! asset, int stage) -> Mjolnir.SDK.Content.ModBuilding!
+Mjolnir.SDK.Content.ModBuilding.WithGroundLevelling(bool levels = true) -> Mjolnir.SDK.Content.ModBuilding!
+Mjolnir.SDK.Content.ModBuilding.WithModel(string! bundle, string! asset) -> Mjolnir.SDK.Content.ModBuilding!
+Mjolnir.SDK.Content.ModBuilding.WithModel(string! bundle, string! asset, int stage) -> Mjolnir.SDK.Content.ModBuilding!
+Mjolnir.SDK.Content.Models
+const Mjolnir.SDK.Content.ModBuilding.DefaultBase = "Item_Decoration_DecorativeBirch" -> string!
+const Mjolnir.SDK.Content.ModBuilding.DefaultBuildEffort = 10 -> float
+Mjolnir.SDK.Content.ModItem.AppliesOnHit(Mjolnir.SDK.EffectInfo! effect, System.TimeSpan duration, float chance = 1) -> Mjolnir.SDK.Content.ModItem!
+Mjolnir.SDK.Content.ModItem.AppliesOnHit(string! effect, System.TimeSpan duration, float chance = 1) -> Mjolnir.SDK.Content.ModItem!
+Mjolnir.SDK.Content.ModItem.AppliesWhenEaten(Mjolnir.SDK.EffectInfo! effect, System.TimeSpan duration) -> Mjolnir.SDK.Content.ModItem!
+Mjolnir.SDK.Content.ModItem.AppliesWhenEaten(string! effect, System.TimeSpan duration) -> Mjolnir.SDK.Content.ModItem!
+Mjolnir.SDK.Content.ModItem.AppliesWhileEquipped(Mjolnir.SDK.EffectInfo! effect) -> Mjolnir.SDK.Content.ModItem!
+Mjolnir.SDK.Content.ModItem.AppliesWhileEquipped(string! effect) -> Mjolnir.SDK.Content.ModItem!
+Mjolnir.SDK.Content.ModItem.Attributes.get -> System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, float>>!
+Mjolnir.SDK.Content.ModItem.EatenEffects.get -> System.Collections.Generic.IReadOnlyList<Mjolnir.SDK.Content.ItemEffect!>!
+Mjolnir.SDK.Content.ModItem.EquippedEffects.get -> System.Collections.Generic.IReadOnlyList<Mjolnir.SDK.Content.ItemEffect!>!
+Mjolnir.SDK.Content.ModItem.HitEffects.get -> System.Collections.Generic.IReadOnlyList<Mjolnir.SDK.Content.ItemEffect!>!
+Mjolnir.SDK.Content.ModItem.Kind.get -> Mjolnir.SDK.Content.ItemKind?
+Mjolnir.SDK.Content.ModItem.MaximumDamage.get -> float?
+Mjolnir.SDK.Content.ModItem.MinimumDamage.get -> float?
+Mjolnir.SDK.Content.ModItem.WithArmor(float armor) -> Mjolnir.SDK.Content.ModItem!
+Mjolnir.SDK.Content.ModItem.WithAttribute(string! attribute, float value) -> Mjolnir.SDK.Content.ModItem!
+Mjolnir.SDK.Content.ModItem.WithDamage(float minimum, float maximum) -> Mjolnir.SDK.Content.ModItem!
+Mjolnir.SDK.Content.ModItem.WithDurability(float durability) -> Mjolnir.SDK.Content.ModItem!
+override Mjolnir.SDK.Content.ItemEffect.Equals(object? obj) -> bool
+override Mjolnir.SDK.Content.ItemEffect.GetHashCode() -> int
+override Mjolnir.SDK.Content.ItemEffect.ToString() -> string!
+static Mjolnir.SDK.Content.Buildings.Add(string! name, string? basedOn = null, string? icon = null) -> Mjolnir.SDK.Content.ModBuilding!
+static Mjolnir.SDK.Content.ItemEffect.operator !=(Mjolnir.SDK.Content.ItemEffect? left, Mjolnir.SDK.Content.ItemEffect? right) -> bool
+static Mjolnir.SDK.Content.ItemEffect.operator ==(Mjolnir.SDK.Content.ItemEffect? left, Mjolnir.SDK.Content.ItemEffect? right) -> bool
+static Mjolnir.SDK.Content.Items.Add(string! name, Mjolnir.SDK.Content.ItemKind kind, string? icon = null, int? stackSize = null) -> Mjolnir.SDK.Content.ModItem!
+static Mjolnir.SDK.Content.Models.Spawn(string! bundle, string! asset, UnityEngine.Vector3 position, UnityEngine.Quaternion rotation) -> UnityEngine.GameObject?

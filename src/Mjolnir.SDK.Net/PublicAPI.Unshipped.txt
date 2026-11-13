@@ -1,0 +1,29 @@
+#nullable enable
+Mjolnir.SDK.Net.NetChannel
+Mjolnir.SDK.Net.NetChannel.ModId.get -> string!
+Mjolnir.SDK.Net.NetChannel.Name.get -> string!
+Mjolnir.SDK.Net.NetChannel.Received -> System.EventHandler<Mjolnir.SDK.Net.NetMessageEventArgs!>?
+Mjolnir.SDK.Net.NetChannel.Send(Mjolnir.SDK.Net.NetPlayer! to, byte[]! data) -> bool
+Mjolnir.SDK.Net.NetChannel.SendToAll(byte[]! data) -> int
+Mjolnir.SDK.Net.NetChannel.SendToHost(byte[]! data) -> bool
+Mjolnir.SDK.Net.NetMessageEventArgs
+Mjolnir.SDK.Net.NetMessageEventArgs.Data.get -> byte[]!
+Mjolnir.SDK.Net.NetMessageEventArgs.NetMessageEventArgs(Mjolnir.SDK.Net.NetPlayer! sender, byte[]! data) -> void
+Mjolnir.SDK.Net.NetMessageEventArgs.Sender.get -> Mjolnir.SDK.Net.NetPlayer!
+Mjolnir.SDK.Net.NetPlayer
+Mjolnir.SDK.Net.NetPlayer.Id.get -> int
+Mjolnir.SDK.Net.NetPlayer.IsHost.get -> bool
+Mjolnir.SDK.Net.NetPlayer.IsLocal.get -> bool
+Mjolnir.SDK.Net.NetPlayerEventArgs
+Mjolnir.SDK.Net.NetPlayerEventArgs.NetPlayerEventArgs(Mjolnir.SDK.Net.NetPlayer! player) -> void
+Mjolnir.SDK.Net.NetPlayerEventArgs.Player.get -> Mjolnir.SDK.Net.NetPlayer!
+Mjolnir.SDK.Net.Network
+override Mjolnir.SDK.Net.NetChannel.ToString() -> string!
+override Mjolnir.SDK.Net.NetPlayer.ToString() -> string!
+static Mjolnir.SDK.Net.Network.Channel(string! name) -> Mjolnir.SDK.Net.NetChannel!
+static Mjolnir.SDK.Net.Network.IsHost.get -> bool
+static Mjolnir.SDK.Net.Network.IsMultiplayer.get -> bool
+static Mjolnir.SDK.Net.Network.LocalPlayer.get -> Mjolnir.SDK.Net.NetPlayer?
+static Mjolnir.SDK.Net.Network.PlayerJoined -> System.EventHandler<Mjolnir.SDK.Net.NetPlayerEventArgs!>?
+static Mjolnir.SDK.Net.Network.PlayerLeft -> System.EventHandler<Mjolnir.SDK.Net.NetPlayerEventArgs!>?
+static Mjolnir.SDK.Net.Network.Players.get -> System.Collections.Generic.IReadOnlyList<Mjolnir.SDK.Net.NetPlayer!>!

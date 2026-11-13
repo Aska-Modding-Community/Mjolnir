@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Unit tests for Mjolnir.SDK, the main library, that need no game: configs, the Mod base class, Map, ModCall, the
+       Dispatcher, the public API boundary. The UI module has its own (tests/Mjolnir.SDK.UI.Tests).
+       Run with `dotnet test tests/Mjolnir.SDK.Tests`. -->
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Mjolnir.SDK\Mjolnir.SDK.csproj" />
+  </ItemGroup>
+
+  <!-- SDK signatures use Unity types (Mod.OnSceneLoaded), so the interop assemblies the SDK references must load in the
+       test host (copied, as in every test project); no test touches the IL2CPP runtime behind them. -->
+  <ItemGroup>
+    <GameInterop Include="Il2Cppmscorlib;UnityEngine.CoreModule" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Shared\ApiSurface.cs" Link="Shared\ApiSurface.cs" />
+  </ItemGroup>
+
+</Project>

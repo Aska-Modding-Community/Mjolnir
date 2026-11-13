@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Unit tests for the Mjolnir.SDK.AI module that need no game: the villagers as residents on fake villagers (coming,
+       going, what they do), the jobs mods add and their steps, a run through a job's steps, the module's entry and its
+       public API boundary. Run with `dotnet test tests/Mjolnir.SDK.AI.Tests`. -->
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+  </ItemGroup>
+
+  <!-- Both, copied next to the tests: SdkModuleTests looks for the module next to Mjolnir.SDK.dll. -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Mjolnir.SDK\Mjolnir.SDK.csproj" />
+    <ProjectReference Include="..\..\src\Mjolnir.SDK.AI\Mjolnir.SDK.AI.csproj" />
+  </ItemGroup>
+
+  <!-- The interop assemblies the module references, loaded by the test host; no test touches the IL2CPP runtime. -->
+  <ItemGroup>
+    <GameInterop Include="Il2Cppmscorlib;UnityEngine.CoreModule;Assembly-CSharp;SandSailorStudio" />
+    <GameInterop Include="Fusion.Runtime;Fusion.Common" />
+    <GameInterop Include="UnityEngine.PhysicsModule" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Shared\ApiSurface.cs" Link="Shared\ApiSurface.cs" />
+  </ItemGroup>
+
+</Project>

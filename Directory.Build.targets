@@ -1,0 +1,23 @@
+<Project>
+
+  <!-- Imported after every csproj body, so the item lists below are complete.
+
+       GameInterop: an interop assembly by name (tools/gen-interop.ps1, $(InteropDir)), e.g.
+         <GameInterop Include="UnityEngine.UI;Unity.TextMeshPro" />
+       MjolnirSdk: a platform assembly a mod builds against, e.g. <MjolnirSdk Include="Mjolnir.SDK.UI" />. Mods only:
+         the platform ships in Mjolnir\core, so a mod never carries a copy (Private=false). The SDK, its modules and the
+         test projects reference each other with plain ProjectReferences.
+       IsMjolnirMod: a mod project; it gets Mjolnir.SDK and the interop assemblies Mod's signatures use. -->
+
+  <ItemGroup Condition="'$(IsMjolnirMod)' == 'true'">
+    <MjolnirSdk Include="Mjolnir.SDK" />
+    <GameInterop Include="Il2Cppmscorlib;UnityEngine.CoreModule" />
+  </ItemGroup>
+
+  <!-- The references carry the source items' metadata (Private, Aliases); Visible is set back, so they show as usual. -->
+  <ItemGroup>
+    <Reference Include="@(GameInterop->Distinct())" HintPath="$(InteropDir)\%(Identity).dll" Visible="true" />
+    <ProjectReference Include="@(MjolnirSdk->Distinct()->'$(MSBuildThisFileDirectory)src\%(Identity)\%(Identity).csproj')" Private="false" Visible="true" />
+  </ItemGroup>
+
+</Project>

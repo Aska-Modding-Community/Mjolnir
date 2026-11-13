@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Unit tests for the parts of Mjolnir.Core that need no game: versions, dependency order, configs.
+       Run with `dotnet test tests/Mjolnir.Core.Tests`. -->
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Mjolnir.Core\Mjolnir.Core.csproj" />
+  </ItemGroup>
+
+</Project>

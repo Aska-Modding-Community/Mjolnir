@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Step 0 tool: GameAssembly.dll + global-metadata.dat -> Cpp2IL dummy assemblies -> Il2CppInterop interop assemblies. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>Mjolnir.InteropGen</AssemblyName>
+    <RootNamespace>Mjolnir.InteropGen</RootNamespace>
+    <!-- The progress window's look (common controls 6, per-monitor DPI): ProgressWindow. -->
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Cpp2IL → Il2CppInterop.Generator. Versions and why: Directory.Packages.props. -->
+    <PackageReference Include="Samboy063.Cpp2IL.Core" />
+    <PackageReference Include="Il2CppInterop.Generator" />
+  </ItemGroup>
+
+</Project>

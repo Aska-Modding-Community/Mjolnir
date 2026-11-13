@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Example mod: the Mjolnir.SDK.UI module, a reference for mod authors, with its texts in two languages through the
+       SDK's Localization. It needs no game types at all: the SDK hides them. deploy.ps1 -Examples ships
+       Mjolnir.UiExample.dll/.pdb, icon.png and lang/ to Mjolnir\Mods\Mjolnir.UiExample. -->
+  <PropertyGroup>
+    <AssemblyName>Mjolnir.UiExample</AssemblyName>
+    <RootNamespace>Mjolnir.UiExample</RootNamespace>
+    <Version>2.0.0</Version>
+    <IsMjolnirMod>true</IsMjolnirMod>
+  </PropertyGroup>
+
+  <!-- The UI module, and the raw UGUI the example puts into UiCustom (UnityEngine.UI). -->
+  <ItemGroup>
+    <MjolnirSdk Include="Mjolnir.SDK.UI" />
+    <GameInterop Include="UnityEngine.UI;UnityEngine.UIModule" />
+  </ItemGroup>
+
+  <!-- Next to the .dll: the mod's picture in the Mods window (icon.png, found without any setting) and its texts
+       (lang/<language>.toml, read by the SDK's Localization). -->
+  <ItemGroup>
+    <None Update="icon.png" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="lang\*.toml" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,8 @@
+# The Villagers Example's texts in English, the fallback of every language without a file of its own. The Mods window's
+# texts ([mod], [config.<section>.<key>]) are those of the code; russian.toml translates them.
+
+greeting = "{0} greets you."
+
+[mod]
+name = "Villagers Example"
+description = "Villagers walk up to the player and greet them."

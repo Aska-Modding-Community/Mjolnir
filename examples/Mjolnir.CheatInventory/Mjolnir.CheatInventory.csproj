@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Example mod: the item catalog of Mjolnir.SDK.Content (Items.All, Items.Give) in a window of Mjolnir.SDK.UI, a reference
+       for mod authors. It needs no game types and no Harmony patch of its own. deploy.ps1 -Examples ships
+       Mjolnir.CheatInventory.dll/.pdb and lang/ to Mjolnir\Mods\Mjolnir.CheatInventory. -->
+  <PropertyGroup>
+    <AssemblyName>Mjolnir.CheatInventory</AssemblyName>
+    <RootNamespace>Mjolnir.CheatInventory</RootNamespace>
+    <Version>1.0.0</Version>
+    <IsMjolnirMod>true</IsMjolnirMod>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <MjolnirSdk Include="Mjolnir.SDK.Content;Mjolnir.SDK.UI" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="lang\*.toml" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

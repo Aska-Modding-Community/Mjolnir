@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Unit tests for the Mjolnir.SDK.World module that need no game: the clock on a fake (reading it, setting the hour,
+       stopping it, other threads, no world), the console's time, the module's entry and its public API boundary. Run with
+       `dotnet test tests/Mjolnir.SDK.World.Tests`. -->
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+  </ItemGroup>
+
+  <!-- Both, copied next to the tests: SdkModuleTests looks for the module next to Mjolnir.SDK.dll. -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Mjolnir.SDK\Mjolnir.SDK.csproj" />
+    <ProjectReference Include="..\..\src\Mjolnir.SDK.World\Mjolnir.SDK.World.csproj" />
+  </ItemGroup>
+
+  <!-- The interop assemblies the module references, loaded by the test host; no test touches the IL2CPP runtime. -->
+  <ItemGroup>
+    <GameInterop Include="Il2Cppmscorlib;UnityEngine.CoreModule;Assembly-CSharp;SandSailorStudio" />
+    <GameInterop Include="Fusion.Runtime;Fusion.Common" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Shared\ApiSurface.cs" Link="Shared\ApiSurface.cs" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,4 @@
+<Project>
+  <!-- The Unity projects under unity/ generate their own .csproj files: the repository's Directory.Build.props (net10.0,
+       interop references, analyzers) is not for them, so the search for it stops here. -->
+</Project>

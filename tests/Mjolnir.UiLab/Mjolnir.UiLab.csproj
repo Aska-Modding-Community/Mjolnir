@@ -1,0 +1,56 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- In-game test of the SDK's modules (step 8), not a real mod: deployed only by deploy.ps1 -UiLab. -->
+  <PropertyGroup>
+    <AssemblyName>Mjolnir.UiLab</AssemblyName>
+    <RootNamespace>Mjolnir.UiLab</RootNamespace>
+    <Version>0.6.0</Version>
+    <IsMjolnirMod>true</IsMjolnirMod>
+  </PropertyGroup>
+
+  <!-- The UI module, and the game's UI it drives like a player (clicks, screenshots, the F8 key). -->
+  <ItemGroup>
+    <MjolnirSdk Include="Mjolnir.SDK.UI" />
+    <GameInterop Include="Assembly-CSharp;SandSailorStudio;Unity.InputSystem;Unity.TextMeshPro" />
+    <GameInterop Include="UnityEngine.UI;UnityEngine.UIModule;UnityEngine.ScreenCaptureModule;UnityEngine.TextRenderingModule" />
+  </ItemGroup>
+
+  <!-- The "player" scenario: the player module, checked against the character it reads directly. The character is a
+       Photon Fusion network object (Fusion.Runtime: its NetworkBehaviour base and PlayerRef). -->
+  <ItemGroup>
+    <MjolnirSdk Include="Mjolnir.SDK.Player" />
+    <MjolnirSdk Include="Mjolnir.SDK.Content" />
+    <MjolnirSdk Include="Mjolnir.SDK.AI" />
+    <MjolnirSdk Include="Mjolnir.SDK.World" />
+    <MjolnirSdk Include="Mjolnir.SDK.Net" />
+    <MjolnirSdk Include="Mjolnir.SDK.Animation" />
+    <MjolnirSdk Include="Mjolnir.SDK.Camera" />
+    <MjolnirSdk Include="Mjolnir.SDK.Terrain" />
+    <GameInterop Include="Fusion.Runtime;Fusion.Common" />
+    <GameInterop Include="UnityEngine.AudioModule" />
+    <GameInterop Include="Cinemachine;Unity.RenderPipelines.Core.Runtime" />
+  </ItemGroup>
+
+  <!-- The "localization" scenario: the game's localization manager, which keeps its keys in a HashSet
+       (Il2CppSystem.Core). -->
+  <ItemGroup>
+    <GameInterop Include="Il2CppSystem.Core" />
+  </ItemGroup>
+
+  <!-- The "consoleresearch" scenario: the ground under a point, found by a ray (UnityEngine.PhysicsModule) and by the
+       game's terrain sampler (its tiles' Terrain, UnityEngine.TerrainModule). -->
+  <ItemGroup>
+    <GameInterop Include="UnityEngine.PhysicsModule;UnityEngine.TerrainModule" />
+    <!-- The villagers research: a villager's NavMeshAgent. -->
+    <GameInterop Include="UnityEngine.AIModule" />
+    <!-- The "animations" research: animators, clips and playable graphs. -->
+    <GameInterop Include="UnityEngine.AnimationModule;UnityEngine.AssetBundleModule" />
+    <!-- The "bodies" research: textures encoded as PNG. -->
+    <GameInterop Include="UnityEngine.ImageConversionModule" />
+    <!-- The "terrain research" scenario: a heightmap tool's biome type (the vegetation system's). -->
+    <GameInterop Include="AwesomeTechnologies.VegetationStudioPro.Runtime" />
+    <!-- The "terrain probe3" scenario: an object's position in the vegetation data. -->
+    <GameInterop Include="Unity.Collections;Unity.Mathematics" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,5 @@
+# The player example's texts in Russian.
+
+[banner]
+died = "Вы погибли"
+revived = "Снова на ногах"

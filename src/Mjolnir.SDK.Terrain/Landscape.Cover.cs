@@ -1,0 +1,131 @@
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using UnityEngine;
+
+namespace Mjolnir.SDK.Terrain;
+
+// What covers the ground: its biome (what grows on it) and its grass, and outlines drawn on it.
+public static partial class Landscape
+{
+    /// <summary>The metres across a cell of the biome map: the game keeps one biome for each such square of the world.</summary>
+    public const float BiomeCellSize = 4f;
+
+    /// <summary>
+    /// The biomes the part of the world the player is in grows plants of its own on, in the game's order; empty when no world
+    /// is loaded, or off the main thread. A mod paints with one of these to grow what grows elsewhere in that part.
+    /// </summary>
+    public static IReadOnlyList<LandscapeBiome> Biomes => Live() is { } source ? source.Biomes : [];
+
+    /// <summary>The biome of the ground at a point; null where it is not loaded, or off the main thread.</summary>
+    public static LandscapeBiome? BiomeAt(float x, float z) =>
+        Live() is { } source && source.IsLoaded(x, z) && source.TryGetBiome(x, z, out var biome) ? biome : null;
+
+    /// <summary>
+    /// The biome of <see cref="Biomes"/> named <paramref name="name"/> (its <see cref="LandscapeBiome.Name"/>, in any case:
+    /// "BirchForest"); null when the part of the world the player is in grows nothing of that name, or off the main thread.
+    /// </summary>
+    public static LandscapeBiome? FindBiome(string name)
+    {
+        ArgumentNullException.ThrowIfNull(name);
+        foreach (var biome in Biomes)
+            if (string.Equals(biome.Name, name, StringComparison.OrdinalIgnoreCase)) return biome;
+        return null;
+    }
+
+    /// <summary>
+    /// Makes <paramref name="biome"/> the ground's biome in the area, so what grows there changes to it at once: its height,
+    /// kind and grass's clearing stay. The game keeps a biome for each square of <see cref="BiomeCellSize"/> metres, so a
+    /// square takes it where its middle lies in the area (its weight there at least a half): an area smaller than a square
+    /// may change none, and the area's blend only widens it. Saved with the world and sent to the other players.
+    /// </summary>
+    /// <param name="area">Where.</param>
+    /// <param name="biome">Which biome; one of <see cref="Biomes"/> grows that part's own plants.</param>
+    /// <param name="options">How; only <see cref="LandscapeOptions.KeepOffBuildings"/> and <see cref="LandscapeOptions.OnlyOn"/>
+    /// (the kind at a square's middle) count. The trees, bushes and stones standing there stay.</param>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="biome"/> is no biome (its number below 0).</exception>
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static LandscapeResult PaintBiome(LandscapeArea area, LandscapeBiome biome, LandscapeOptions? options = null)
+    {
+        if (biome.Id < 0) throw new ArgumentOutOfRangeException(nameof(biome), biome.Id, "No such biome.");
+        var how = Narrowed(options);
+        int id = biome.Id;
+        return Write(Owner(CallingMod.Of(Assembly.GetCallingAssembly())), LandscapeOperation.PaintBiome, area, how, 0, samples =>
+        {
+            if (!(samples.BiomeStep > 0)) return false;
+            for (int r = 0; r < samples.Size; r++)
+                for (int c = 0; c < samples.Size; c++)
+                {
+                    var (mx, mz) = samples.BiomeCellMiddle(samples.X(c), samples.Z(r));
+                    if (area.Weight(mx, mz) < 0.5f) continue;
+                    int i = samples.Index(r, c);
+                    if (how.OnlyOn is { } only && KindNear(samples, mx, mz, i) != only) continue;
+                    if (samples.Biomes[i] == id) continue;
+                    samples.Biomes[i] = id;
+                    samples.BiomeChanged[i] = true;
+                }
+            return true;
+        });
+    }
+
+    /// <summary>
+    /// Gives the ground in the area its own kind and its grass back: where it is at least half in the area it becomes
+    /// <see cref="GroundKind.Natural"/> again and is no longer marked cleared, so the grass of its biome grows there again at
+    /// once. Roads, paths and dug earth in the area go with it (<see cref="LandscapeOptions.OnlyOn"/> keeps them); its height
+    /// stays. The bushes and saplings a change took do not come back.
+    /// </summary>
+    /// <param name="area">Where.</param>
+    /// <param name="options">How; only <see cref="LandscapeOptions.KeepOffBuildings"/> and <see cref="LandscapeOptions.OnlyOn"/> count.</param>
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static LandscapeResult RestoreVegetation(LandscapeArea area, LandscapeOptions? options = null)
+    {
+        var how = Narrowed(options);
+        return Write(Owner(CallingMod.Of(Assembly.GetCallingAssembly())), LandscapeOperation.RestoreVegetation, area, how, 0, samples =>
+        {
+            for (int r = 0; r < samples.Size; r++)
+                for (int c = 0; c < samples.Size; c++)
+                {
+                    if (area.Weight(samples.X(c), samples.Z(r)) < 0.5f) continue;
+                    int i = samples.Index(r, c);
+                    if (how.OnlyOn is { } only && samples.Kinds[i] != only) continue;
+                    if (samples.Kinds[i] == GroundKind.Natural && !samples.Cleared[i]) continue;
+                    samples.Kinds[i] = GroundKind.Natural;
+                    samples.Cleared[i] = false;
+                    samples.Touched[i] = true;
+                }
+            return true;
+        });
+    }
+
+    /// <summary>
+    /// Draws the area's outline on the ground in <paramref name="color"/>, following the ground's heights: its edge as a line,
+    /// and the outer edge of a rectangle's or a circle's blend as a thinner one. It stays until disposed; a mod moves it with
+    /// <see cref="LandscapeOutline.Area"/> (a brush under the cursor). It is drawn on this machine only, in no save, and hidden
+    /// while no world is loaded. May be called from any thread: it shows from the next frame.
+    /// </summary>
+    /// <param name="area">What to outline.</param>
+    /// <param name="color">The line's colour.</param>
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static LandscapeOutline ShowOutline(LandscapeArea area, Color color) =>
+        LandscapeOutline.Add(CallingMod.Of(Assembly.GetCallingAssembly()), area, color);
+
+    // A change of the ground's cover: only the buildings and the kind it is limited to count, and it takes no object.
+    private static LandscapeOptions Narrowed(LandscapeOptions? options) => new()
+    {
+        ClearVegetation = false,
+        KeepKind = true,
+        KeepOffBuildings = (options ?? LandscapeOptions.Default).KeepOffBuildings,
+        OnlyOn = options?.OnlyOn,
+    };
+
+    // The kind of the sample nearest a point, or the given sample's where the point lies outside what was read.
+    private static GroundKind KindNear(LandscapeSamples samples, float x, float z, int fallback)
+    {
+        int k = samples.Nearest(x, z);
+        return samples.Kinds[k >= 0 ? k : fallback];
+    }
+
+    /// <summary>The module's tick on the main thread: the outlines drawn, moved and taken away.</summary>
+    internal static void Tick() => LandscapeOutline.Tick(Live());
+}

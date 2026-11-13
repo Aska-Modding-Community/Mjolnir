@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Mjolnir.SDK.Animation, the SDK module that connects CharacterAnimator and Animations (Mjolnir.SDK) to the game:
+       a clip played over a character's own animation through a playable graph of its own, masks,
+       the game's emotes, root motion through the game's movement, the player's walking held, the skeletons written for the
+       Mjolnir kit, mods' animations from their AssetBundles (Animations.Add) and the console's anims, anim, emote. Mods that add
+       animations reference it; playing one needs only Mjolnir.SDK. It reaches Core only through Mjolnir.SDK (AnimationModule
+       is started by SdkModules). deploy.ps1 ships it and its bundles\ (Mjolnir's masks) to Mjolnir\core. -->
+  <PropertyGroup>
+    <AssemblyName>Mjolnir.SDK.Animation</AssemblyName>
+    <RootNamespace>Mjolnir.SDK.Animation</RootNamespace>
+    <Version>$(MjolnirPlatformVersion)</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mjolnir.SDK\Mjolnir.SDK.csproj" />
+  </ItemGroup>
+
+  <!-- Characters, their geometry, emotes and movement (Assembly-CSharp), their network objects (Fusion), animators, clips and
+       playable graphs (UnityEngine.AnimationModule), mods' bundles (UnityEngine.AssetBundleModule). -->
+  <ItemGroup>
+    <GameInterop Include="Il2Cppmscorlib;UnityEngine.CoreModule;UnityEngine.AnimationModule;UnityEngine.AssetBundleModule" />
+    <GameInterop Include="Assembly-CSharp;SandSailorStudio;Fusion.Runtime;Fusion.Common" />
+    <!-- The characters' models for the Mjolnir kit: textures encoded as PNG. -->
+    <GameInterop Include="UnityEngine.ImageConversionModule" />
+  </ItemGroup>
+
+  <!-- Mjolnir's own masks (AnimationMask.UpperBody), built by the Mjolnir kit (tools/build-bundles.ps1). -->
+  <ItemGroup>
+    <None Update="bundles\*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Mjolnir.SDK.Animation.Tests" />
+  </ItemGroup>
+
+</Project>

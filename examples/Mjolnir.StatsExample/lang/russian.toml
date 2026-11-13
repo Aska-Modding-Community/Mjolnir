@@ -1,0 +1,22 @@
+# Тексты Stats Example на русском.
+
+[mod]
+name = "Пример характеристик"
+description = "Игрок учится быстрее и получает благословение на каждом уровне."
+
+[sections]
+Stats = "Характеристики"
+
+[config.Stats.Experience]
+name = "Опыт"
+description = "Во сколько раз игрок получает больше опыта."
+
+[config.Stats.BlessingSeconds]
+name = "Благословение"
+description = "Сколько секунд длится благословение."
+
+[effect.blessing]
+name = "Благословение"
+description = "Сила прибавляется, а раны затягиваются сами."
+added = "Вы чувствуете благословение."
+removed = "Благословение прошло."

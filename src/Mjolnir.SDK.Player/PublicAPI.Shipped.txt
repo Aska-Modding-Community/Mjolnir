@@ -1,0 +1,36 @@
+#nullable enable
+Mjolnir.SDK.Player.LocalPlayer
+Mjolnir.SDK.Player.PlayerStat
+Mjolnir.SDK.Player.PlayerStat.Changed -> System.EventHandler<Mjolnir.SDK.ValueChangedEventArgs<float>!>?
+Mjolnir.SDK.Player.PlayerStat.Fraction.get -> float
+Mjolnir.SDK.Player.PlayerStat.Maximum.get -> float
+Mjolnir.SDK.Player.PlayerStat.Value.get -> float
+Mjolnir.SDK.Player.PlayerStat.Value.set -> void
+Mjolnir.SDK.Player.StaminaDrainingEventArgs
+Mjolnir.SDK.Player.StaminaDrainingEventArgs.Amount.get -> float
+Mjolnir.SDK.Player.StaminaDrainingEventArgs.Amount.set -> void
+Mjolnir.SDK.Player.StaminaDrainingEventArgs.StaminaDrainingEventArgs(float amount, Mjolnir.SDK.Player.StaminaUse use) -> void
+Mjolnir.SDK.Player.StaminaDrainingEventArgs.Use.get -> Mjolnir.SDK.Player.StaminaUse
+Mjolnir.SDK.Player.StaminaStat
+Mjolnir.SDK.Player.StaminaStat.Draining -> System.EventHandler<Mjolnir.SDK.Player.StaminaDrainingEventArgs!>?
+Mjolnir.SDK.Player.StaminaUse
+Mjolnir.SDK.Player.StaminaUse.Combat = 2 -> Mjolnir.SDK.Player.StaminaUse
+Mjolnir.SDK.Player.StaminaUse.Default = 0 -> Mjolnir.SDK.Player.StaminaUse
+Mjolnir.SDK.Player.StaminaUse.Harvest = 1 -> Mjolnir.SDK.Player.StaminaUse
+override Mjolnir.SDK.Player.PlayerStat.ToString() -> string!
+static Mjolnir.SDK.Player.LocalPlayer.Despawned -> System.EventHandler?
+static Mjolnir.SDK.Player.LocalPlayer.Died -> System.EventHandler?
+static Mjolnir.SDK.Player.LocalPlayer.Food.get -> Mjolnir.SDK.Player.PlayerStat!
+static Mjolnir.SDK.Player.LocalPlayer.Health.get -> Mjolnir.SDK.Player.PlayerStat!
+static Mjolnir.SDK.Player.LocalPlayer.IsDead.get -> bool
+static Mjolnir.SDK.Player.LocalPlayer.IsSpawned.get -> bool
+static Mjolnir.SDK.Player.LocalPlayer.Name.get -> string?
+static Mjolnir.SDK.Player.LocalPlayer.Position.get -> UnityEngine.Vector3
+static Mjolnir.SDK.Player.LocalPlayer.Revived -> System.EventHandler?
+static Mjolnir.SDK.Player.LocalPlayer.Sheet.get -> Mjolnir.SDK.CharacterSheet!
+static Mjolnir.SDK.Player.LocalPlayer.Spawned -> System.EventHandler?
+static Mjolnir.SDK.Player.LocalPlayer.Stamina.get -> Mjolnir.SDK.Player.StaminaStat!
+static Mjolnir.SDK.Player.LocalPlayer.Teleport(UnityEngine.Vector3 position) -> bool
+static Mjolnir.SDK.Player.LocalPlayer.TeleportToGroundAsync(float x, float z) -> System.Threading.Tasks.Task<bool>!
+static Mjolnir.SDK.Player.LocalPlayer.Warmth.get -> Mjolnir.SDK.Player.PlayerStat!
+static Mjolnir.SDK.Player.LocalPlayer.Water.get -> Mjolnir.SDK.Player.PlayerStat!

@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Mjolnir.SDK.Content, the SDK module for content. It connects the SDK's localization (the
+       Localization class of Mjolnir.SDK) to the game: the game's language, its strings, and the
+       mods' strings put into the game's own dictionaries; and it adds the mods' items, recipes and buildings to the
+       game's item database (Items, Recipes, Buildings). A mod that adds items references it besides Mjolnir.SDK. It
+       reaches Core only through Mjolnir.SDK (ContentModule is started by SdkModules). deploy.ps1 ships it to
+       Mjolnir\core next to the SDK. -->
+  <PropertyGroup>
+    <AssemblyName>Mjolnir.SDK.Content</AssemblyName>
+    <RootNamespace>Mjolnir.SDK.Content</RootNamespace>
+    <Version>$(MjolnirPlatformVersion)</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mjolnir.SDK\Mjolnir.SDK.csproj" />
+  </ItemGroup>
+
+  <!-- The game's localization manager (SandSailorStudio): its key set is an Il2CppSystem.Core HashSet, and its Loc
+       overloads take TextMeshPro texts. -->
+  <ItemGroup>
+    <GameInterop Include="Il2Cppmscorlib;UnityEngine.CoreModule;Il2CppSystem.Core;SandSailorStudio;Unity.TextMeshPro" />
+    <!-- Items: the game's crafting and players (Assembly-CSharp), item pictures read from files; the crafting tables
+         in a station's structure are network behaviours (Fusion.Runtime). -->
+    <GameInterop Include="Assembly-CSharp;UnityEngine.ImageConversionModule;Fusion.Runtime" />
+    <!-- Mods' models: AssetBundles and the colliders fitted around a model. -->
+    <GameInterop Include="UnityEngine.AssetBundleModule;UnityEngine.PhysicsModule" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Mjolnir.SDK.Content.Tests" />
+  </ItemGroup>
+
+</Project>

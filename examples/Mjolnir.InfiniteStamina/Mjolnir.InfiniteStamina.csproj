@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Example mod: a reference for mod authors. deploy.ps1 -Examples ships only
+       Mjolnir.InfiniteStamina.dll/.pdb to Mjolnir\Mods\Mjolnir.InfiniteStamina; everything it references comes
+       from Mjolnir\core and Mjolnir\interop at runtime. -->
+  <PropertyGroup>
+    <AssemblyName>Mjolnir.InfiniteStamina</AssemblyName>
+    <RootNamespace>Mjolnir.InfiniteStamina</RootNamespace>
+    <Version>1.0.0</Version>
+    <!-- A mod: Mjolnir.SDK (Mod, ModConfig, ModLogger; Core, Il2CppInterop and HarmonyX come with it) and the interop
+         assemblies Mod's signatures use (Directory.Build.targets). -->
+    <IsMjolnirMod>true</IsMjolnirMod>
+  </PropertyGroup>
+
+  <!-- The game's types it patches. -->
+  <ItemGroup>
+    <GameInterop Include="Assembly-CSharp;Fusion.Runtime;SandSailorStudio" />
+  </ItemGroup>
+
+</Project>

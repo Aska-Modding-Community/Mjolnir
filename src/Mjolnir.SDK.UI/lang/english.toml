@@ -1,0 +1,78 @@
+# The UI module's own texts in English, the fallback of every language without a file here. Embedded in
+# Mjolnir.SDK.UI.dll (lang/<language>.toml, Steam's language names) and read through the SDK's Localization. Words the
+# game already has (Close, Settings, Reset, Cancel, On, Off) come from the game's own strings instead.
+
+[mods]
+disabled = "Disabled after an error: see Mjolnir/LogOutput.log"
+reset = "Reset every setting of this mod to its default?"
+restart = "Restart the game to apply the changed settings."
+# The list: turning mods on and off takes effect at the next start.
+apply = "Restart the game to turn the mods on or off."
+none = "No mods installed: put them in Mjolnir/Mods, each in a folder of its own."
+off = "Turned off"
+turns_off = "Turns off after a restart"
+turns_on = "Turns on after a restart"
+failed = "Failed to load: see Mjolnir/LogOutput.log"
+not_loaded = "Not loaded: {0}"
+# {0} the mods that need it, {1} the mod being turned off.
+required_by = "{0} cannot load without {1}. Turn off {1} anyway?"
+required_by_many = "{0} cannot load without {1}. Turn off {1} anyway?"
+# {0} the mod being turned on, {1} the turned-off mods it needs.
+requires = "{0} cannot load without {1}, which is turned off. Turn on {1} too?"
+requires_many = "{0} cannot load without {1}, which are turned off. Turn them on too?"
+turn_off = "Turn off"
+turn_on_too = "Turn on"
+only_this = "Only this mod"
+
+# Why a mod was not loaded: {0} the mod it names (with the version range asked for), {1} the installed version.
+[mods.reason]
+duplicate = "another mod has the same id, {0}"
+missing = "needs {0}, which is not installed"
+wrong_version = "needs {0}, but {1} is installed"
+dependency_not_loaded = "needs {0}, which did not load"
+dependency_turned_off = "needs {0}, which is turned off"
+dependency_failed = "needs {0}, which failed to load"
+self_dependency = "depends on itself"
+cycle = "its dependencies go round in a circle: {0}"
+
+# The platform's own settings (Mjolnir/Config/mjolnir.toml), on its row's page.
+[sections]
+UI = "Interface"
+Kit = "Mjolnir kit"
+Console = "Console"
+
+[config.UI.Menus]
+name = "Interface scale"
+description = "Mod windows; the game's menus and dialogs up to 100 %, in percent"
+
+[config.UI.Hud]
+name = "HUD scale"
+description = "The HUD and its notifications, on top of the game's own HUD scale, in percent"
+
+[config.Console.Key]
+name = "Console key"
+description = "Opens and closes the developer console"
+
+[setting]
+restart = "{0} (applies after a restart)"
+restart_alone = "Applies after a restart."
+
+[dialog]
+ok = "OK"
+cancel = "Cancel"
+
+[hotkey]
+press = "Press a key…"
+none = "None"
+
+[console]
+title = "Console"
+placeholder = "A command, then Enter (help lists them)"
+
+[config.Kit.Models]
+name = "Characters' models for the kit"
+description = "Writes the characters' models and textures to Mjolnir/ModKit for the Mjolnir kit's previews (about 160 MB, only on this computer); for mod makers"
+
+[config.Kit.Animations]
+name = "The game's animations for the kit"
+description = "Writes the game's own animation clips of the people to Mjolnir/ModKit for the Mjolnir kit (about 50 MB, only on this computer); for mod makers"

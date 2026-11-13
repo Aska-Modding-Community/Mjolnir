@@ -1,0 +1,18 @@
+# Тексты Villagers Example на русском.
+
+greeting = "{0} приветствует вас."
+
+[mod]
+name = "Villagers Example"
+description = "Жители подходят к игроку и здороваются."
+
+[sections]
+Greeting = "Приветствие"
+
+[config.Greeting.Range]
+name = "Расстояние"
+description = "На каком расстоянии от игрока житель его замечает, в метрах."
+
+[config.Greeting.Minutes]
+name = "Минут между приветствиями"
+description = "Сколько житель ждёт, прежде чем снова поздороваться с игроком, в минутах."

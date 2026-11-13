@@ -1,0 +1,5 @@
+# The player example's texts in English, the fallback of every language without a file of its own.
+
+[banner]
+died = "You died"
+revived = "Back on your feet"

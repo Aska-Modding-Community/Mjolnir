@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Isolation and dependency test (steps 5–6), not a real mod: deployed with Mjolnir.SmokeMod by deploy.ps1 -SmokeMod. -->
+  <PropertyGroup>
+    <AssemblyName>Mjolnir.FaultMod</AssemblyName>
+    <RootNamespace>Mjolnir.FaultMod</RootNamespace>
+    <Version>0.1.0</Version>
+    <IsMjolnirMod>true</IsMjolnirMod>
+  </PropertyGroup>
+
+</Project>

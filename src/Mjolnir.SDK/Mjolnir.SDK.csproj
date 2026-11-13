@@ -1,0 +1,57 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- The main library of the modding API: Mod, manifests, Config, ModRegistry, the
+       Dispatcher, localization, the developer console's commands, and the host of the SDK's modules (SdkModules). Every
+       mod references it. It builds on Mjolnir.Core's internals (InternalsVisibleTo) and implements Core's mod contracts;
+       Core never references it. The game facades are separate assemblies, the SDK's modules (Mjolnir.SDK.UI, Player,
+       Content, later Net): they reach Core only through this library's internal platform layer (Platform.cs).
+       deploy.ps1 ships it to Mjolnir\core. -->
+  <PropertyGroup>
+    <AssemblyName>Mjolnir.SDK</AssemblyName>
+    <RootNamespace>Mjolnir.SDK</RootNamespace>
+    <Version>$(MjolnirPlatformVersion)</Version>
+    <!-- A class library does not copy NuGet assemblies; deploy.ps1 takes Tomlyn.dll from this bin. -->
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Il2CppInterop and HarmonyX come from Core (versions: Directory.Packages.props). -->
+    <ProjectReference Include="..\Mjolnir.Core\Mjolnir.Core.csproj" />
+    <!-- Reads mod configs (Config/ModConfig). -->
+    <PackageReference Include="Tomlyn" />
+  </ItemGroup>
+
+  <!-- Mod's signatures (OnSceneLoaded) and GameLoop's headless check. Game and UI assemblies belong to the modules that
+       need them; public SDK signatures never use game types (SdkArchitectureTests). -->
+  <ItemGroup>
+    <GameInterop Include="Il2Cppmscorlib;UnityEngine.CoreModule" />
+  </ItemGroup>
+
+  <!-- The SDK's own modules see its internals (the module contract); mods never do. -->
+  <ItemGroup>
+    <InternalsVisibleTo Include="Mjolnir.SDK.Tests" />
+    <InternalsVisibleTo Include="Mjolnir.SDK.UI" />
+    <InternalsVisibleTo Include="Mjolnir.SDK.UI.Tests" />
+    <InternalsVisibleTo Include="Mjolnir.SDK.Player" />
+    <InternalsVisibleTo Include="Mjolnir.SDK.Player.Tests" />
+    <InternalsVisibleTo Include="Mjolnir.SDK.Content" />
+    <InternalsVisibleTo Include="Mjolnir.SDK.Content.Tests" />
+    <InternalsVisibleTo Include="Mjolnir.SDK.AI" />
+    <InternalsVisibleTo Include="Mjolnir.SDK.AI.Tests" />
+    <InternalsVisibleTo Include="Mjolnir.SDK.World" />
+    <InternalsVisibleTo Include="Mjolnir.SDK.World.Tests" />
+    <InternalsVisibleTo Include="Mjolnir.SDK.Net" />
+    <InternalsVisibleTo Include="Mjolnir.SDK.Net.Tests" />
+    <InternalsVisibleTo Include="Mjolnir.SDK.Stats" />
+    <InternalsVisibleTo Include="Mjolnir.SDK.Stats.Tests" />
+    <InternalsVisibleTo Include="Mjolnir.SDK.Animation" />
+    <InternalsVisibleTo Include="Mjolnir.SDK.Animation.Tests" />
+    <InternalsVisibleTo Include="Mjolnir.SDK.Combat" />
+    <InternalsVisibleTo Include="Mjolnir.SDK.Combat.Tests" />
+    <InternalsVisibleTo Include="Mjolnir.SDK.Camera" />
+    <InternalsVisibleTo Include="Mjolnir.SDK.Camera.Tests" />
+    <InternalsVisibleTo Include="Mjolnir.SDK.Terrain" />
+    <InternalsVisibleTo Include="Mjolnir.SDK.Terrain.Tests" />
+  </ItemGroup>
+
+</Project>

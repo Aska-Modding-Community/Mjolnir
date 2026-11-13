@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Mjolnir.SDK.Player, the SDK module for the local player: their character in the
+       loaded world, its health, stamina, food, water and warmth as bindable stats, spawn and death events, and the stamina
+       cost before it is spent. Mods that use it reference it besides Mjolnir.SDK. It reaches Core only through
+       Mjolnir.SDK (PlayerModule is started by SdkModules). deploy.ps1 ships it to Mjolnir\core next to the SDK. -->
+  <PropertyGroup>
+    <AssemblyName>Mjolnir.SDK.Player</AssemblyName>
+    <RootNamespace>Mjolnir.SDK.Player</RootNamespace>
+    <Version>$(MjolnirPlatformVersion)</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mjolnir.SDK\Mjolnir.SDK.csproj" />
+  </ItemGroup>
+
+  <!-- The player's character and its attributes (Assembly-CSharp, SandSailorStudio). The character is a Photon Fusion
+       network object: its NetworkBehaviour base and PlayerRef come from Fusion.Runtime and Fusion.Common. -->
+  <ItemGroup>
+    <GameInterop Include="Il2Cppmscorlib;UnityEngine.CoreModule;Assembly-CSharp;SandSailorStudio" />
+    <GameInterop Include="Fusion.Runtime;Fusion.Common" />
+  </ItemGroup>
+
+  <!-- The ground under a place, found by a ray for a teleport onto it (UnityEngine.PhysicsModule). -->
+  <ItemGroup>
+    <GameInterop Include="UnityEngine.PhysicsModule" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Mjolnir.SDK.Player.Tests" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Example mod: the Mjolnir.SDK.Player module (with Mjolnir.SDK.UI for its HUD bars), a reference for mod authors. It
+       needs no game types and no Harmony patch of its own: the SDK hides them. deploy.ps1 -Examples ships
+       Mjolnir.PlayerExample.dll/.pdb to Mjolnir\Mods\Mjolnir.PlayerExample. -->
+  <PropertyGroup>
+    <AssemblyName>Mjolnir.PlayerExample</AssemblyName>
+    <RootNamespace>Mjolnir.PlayerExample</RootNamespace>
+    <Version>1.0.0</Version>
+    <IsMjolnirMod>true</IsMjolnirMod>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <MjolnirSdk Include="Mjolnir.SDK.Player;Mjolnir.SDK.UI" />
+  </ItemGroup>
+
+</Project>

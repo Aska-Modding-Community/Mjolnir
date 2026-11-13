@@ -1,0 +1,22 @@
+# The Items Example's texts in English, the fallback of every language without a file of its own. An item's texts are
+# [item.<name>] name, description and lore, a building's [building.<name>] name, description and lore; the SDK gives them to
+# the game under the keys it makes for them.
+
+[mod]
+name = "Items Example"
+description = "Items, recipes and a building of a mod's own."
+
+[item.twine]
+name = "Twine"
+description = "Thin cord twisted from rope fibres. Lighter than rope, and twenty fit in one slot."
+lore = "Coiled so it does not tangle: pull the loose end and it comes off as long as you need."
+
+[item.twine_spool]
+name = "Twine spool"
+description = "Five twines wound round a stick, made at the workshop. Ten spools fit in one slot."
+lore = "A workshop keeps its twine on spools, ready for the next lashing."
+
+[building.twine_arch]
+name = "Twine arch"
+description = "Decoration"
+lore = "Two posts and a bent top, bound with twine instead of rope. It holds as well, and twine is easier to spare."

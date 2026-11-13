@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Mjolnir.SDK.World, the SDK module for the world around the player: today its clock
+       (WorldTime: the hour, night, the days passed, stopping the clock). Mods that use it reference it besides Mjolnir.SDK.
+       It reaches Core only through Mjolnir.SDK (WorldModule is started by SdkModules). deploy.ps1 ships it to Mjolnir\core
+       next to the SDK. -->
+  <PropertyGroup>
+    <AssemblyName>Mjolnir.SDK.World</AssemblyName>
+    <RootNamespace>Mjolnir.SDK.World</RootNamespace>
+    <Version>$(MjolnirPlatformVersion)</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mjolnir.SDK\Mjolnir.SDK.csproj" />
+  </ItemGroup>
+
+  <!-- The game's weather system, which keeps the clock (Assembly-CSharp), a Photon Fusion network object: Fusion.Runtime
+       and Fusion.Common. -->
+  <ItemGroup>
+    <GameInterop Include="Il2Cppmscorlib;UnityEngine.CoreModule;Assembly-CSharp;SandSailorStudio" />
+    <GameInterop Include="Fusion.Runtime;Fusion.Common" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Mjolnir.SDK.World.Tests" />
+  </ItemGroup>
+
+</Project>

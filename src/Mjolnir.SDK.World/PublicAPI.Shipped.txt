@@ -1,0 +1,9 @@
+#nullable enable
+Mjolnir.SDK.World.WorldTime
+static Mjolnir.SDK.World.WorldTime.DaysPassed.get -> int
+static Mjolnir.SDK.World.WorldTime.Hour.get -> float
+static Mjolnir.SDK.World.WorldTime.Hour.set -> void
+static Mjolnir.SDK.World.WorldTime.IsAvailable.get -> bool
+static Mjolnir.SDK.World.WorldTime.IsNight.get -> bool
+static Mjolnir.SDK.World.WorldTime.IsRunning.get -> bool
+static Mjolnir.SDK.World.WorldTime.IsRunning.set -> void

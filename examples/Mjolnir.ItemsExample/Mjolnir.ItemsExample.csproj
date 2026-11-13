@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Example mod: items, recipes (by hand and at a station) and a building of a mod's own through the Mjolnir.SDK.Content
+       module, a reference for mod authors. It needs no game types and no Harmony patch of its own: the SDK hides them. deploy.ps1 -Examples ships
+       Mjolnir.ItemsExample.dll/.pdb, icon.png, items/, bundles/ and lang/ to Mjolnir\Mods\Mjolnir.ItemsExample. The bundle
+       bundles/models is built by the Mjolnir kit (unity/Mjolnir.ModKit, tools/build-bundles.ps1). -->
+  <PropertyGroup>
+    <AssemblyName>Mjolnir.ItemsExample</AssemblyName>
+    <RootNamespace>Mjolnir.ItemsExample</RootNamespace>
+    <Version>1.0.0</Version>
+    <IsMjolnirMod>true</IsMjolnirMod>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <MjolnirSdk Include="Mjolnir.SDK.Content" />
+  </ItemGroup>
+
+  <!-- Next to the .dll: the mod's picture in the Mods window, its item pictures, its bundle of models and its texts (the
+       items' names among them). -->
+  <ItemGroup>
+    <None Update="icon.png" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="items\*.png" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="bundles\*" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="lang\*.toml" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,3 @@
+#nullable enable
+static Mjolnir.SDK.Player.LocalPlayer.Animator.get -> Mjolnir.SDK.CharacterAnimator!
+static Mjolnir.SDK.Player.LocalPlayer.Combatant.get -> Mjolnir.SDK.Combatant!

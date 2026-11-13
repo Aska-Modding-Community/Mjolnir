@@ -1,0 +1,274 @@
+#nullable enable
+Mjolnir.SDK.ActiveEffect
+Mjolnir.SDK.ActiveEffect.Duration.get -> System.TimeSpan?
+Mjolnir.SDK.ActiveEffect.Effect.get -> Mjolnir.SDK.EffectInfo!
+Mjolnir.SDK.ActiveEffect.Stacks.get -> int
+Mjolnir.SDK.ActiveEffect.TimeLeft.get -> System.TimeSpan?
+Mjolnir.SDK.BindableExtensions
+Mjolnir.SDK.CharacterEffects
+Mjolnir.SDK.CharacterEffects.Active.get -> System.Collections.Generic.IReadOnlyList<Mjolnir.SDK.ActiveEffect!>!
+Mjolnir.SDK.CharacterEffects.Added -> System.EventHandler<Mjolnir.SDK.EffectChangedEventArgs!>?
+Mjolnir.SDK.CharacterEffects.Apply(Mjolnir.SDK.EffectInfo! effect, System.TimeSpan? duration = null) -> bool
+Mjolnir.SDK.CharacterEffects.Has(Mjolnir.SDK.EffectInfo! effect) -> bool
+Mjolnir.SDK.CharacterEffects.Remove(Mjolnir.SDK.EffectInfo! effect) -> bool
+Mjolnir.SDK.CharacterEffects.Removed -> System.EventHandler<Mjolnir.SDK.EffectChangedEventArgs!>?
+Mjolnir.SDK.CharacterSheet
+Mjolnir.SDK.CharacterSheet.Dexterity.get -> Mjolnir.SDK.CharacterStat!
+Mjolnir.SDK.CharacterSheet.Effects.get -> Mjolnir.SDK.CharacterEffects!
+Mjolnir.SDK.CharacterSheet.Find(string! assetName) -> Mjolnir.SDK.CharacterStat?
+Mjolnir.SDK.CharacterSheet.Intelligence.get -> Mjolnir.SDK.CharacterStat!
+Mjolnir.SDK.CharacterSheet.IsAvailable.get -> bool
+Mjolnir.SDK.CharacterSheet.MaxStamina.get -> Mjolnir.SDK.CharacterStat!
+Mjolnir.SDK.CharacterSheet.Skill(Mjolnir.SDK.SkillKind kind) -> Mjolnir.SDK.Skill!
+Mjolnir.SDK.CharacterSheet.Skills.get -> System.Collections.Generic.IReadOnlyList<Mjolnir.SDK.Skill!>!
+Mjolnir.SDK.CharacterSheet.StaminaRegeneration.get -> Mjolnir.SDK.CharacterStat!
+Mjolnir.SDK.CharacterSheet.Stats.get -> System.Collections.Generic.IReadOnlyList<Mjolnir.SDK.CharacterStat!>!
+Mjolnir.SDK.CharacterSheet.Strength.get -> Mjolnir.SDK.CharacterStat!
+Mjolnir.SDK.CharacterSheet.Vitality.get -> Mjolnir.SDK.CharacterStat!
+Mjolnir.SDK.CharacterStat
+Mjolnir.SDK.CharacterStat.AddModifier(float amount, Mjolnir.SDK.ModifierKind kind = Mjolnir.SDK.ModifierKind.Add) -> Mjolnir.SDK.StatModifier!
+Mjolnir.SDK.CharacterStat.AssetName.get -> string!
+Mjolnir.SDK.CharacterStat.BaseValue.get -> float
+Mjolnir.SDK.CharacterStat.BaseValue.set -> void
+Mjolnir.SDK.CharacterStat.Changed -> System.EventHandler<Mjolnir.SDK.ValueChangedEventArgs<float>!>?
+Mjolnir.SDK.CharacterStat.Description.get -> string!
+Mjolnir.SDK.CharacterStat.DisplayName.get -> string!
+Mjolnir.SDK.CharacterStat.Fraction.get -> float
+Mjolnir.SDK.CharacterStat.IsPool.get -> bool
+Mjolnir.SDK.CharacterStat.Maximum.get -> float
+Mjolnir.SDK.CharacterStat.Minimum.get -> float
+Mjolnir.SDK.CharacterStat.Value.get -> float
+Mjolnir.SDK.CharacterStat.Value.set -> void
+Mjolnir.SDK.Config.ConfigEntry<T>
+Mjolnir.SDK.Config.ConfigEntry<T>.Changed -> System.EventHandler<Mjolnir.SDK.ValueChangedEventArgs<T>!>?
+Mjolnir.SDK.Config.ConfigEntry<T>.DefaultValue.get -> T
+Mjolnir.SDK.Config.ConfigEntry<T>.Description.get -> string?
+Mjolnir.SDK.Config.ConfigEntry<T>.DisplayName.get -> string?
+Mjolnir.SDK.Config.ConfigEntry<T>.IsRestartRequired.get -> bool
+Mjolnir.SDK.Config.ConfigEntry<T>.Key.get -> string!
+Mjolnir.SDK.Config.ConfigEntry<T>.Order.get -> int
+Mjolnir.SDK.Config.ConfigEntry<T>.Section.get -> string!
+Mjolnir.SDK.Config.ConfigEntry<T>.Value.get -> T
+Mjolnir.SDK.Config.ConfigEntry<T>.Value.set -> void
+Mjolnir.SDK.Config.ConfigEntry<T>.WithDisplayName(string! displayName) -> Mjolnir.SDK.Config.ConfigEntry<T>!
+Mjolnir.SDK.Config.ConfigEntry<T>.WithOrder(int order) -> Mjolnir.SDK.Config.ConfigEntry<T>!
+Mjolnir.SDK.Config.ConfigEntry<T>.WithRange(T min, T max) -> Mjolnir.SDK.Config.ConfigEntry<T>!
+Mjolnir.SDK.Config.ConfigEntry<T>.WithRestartRequired() -> Mjolnir.SDK.Config.ConfigEntry<T>!
+Mjolnir.SDK.Config.ModConfig
+Mjolnir.SDK.Config.ModConfig.Bind<T>(string! section, string! key, T defaultValue, string? description = null) -> Mjolnir.SDK.Config.ConfigEntry<T>!
+Mjolnir.SDK.Config.ModConfig.FilePath.get -> string!
+Mjolnir.SDK.Config.ModConfig.Save() -> void
+Mjolnir.SDK.DevCommand
+Mjolnir.SDK.DevCommand.Description.get -> string!
+Mjolnir.SDK.DevCommand.FullName.get -> string!
+Mjolnir.SDK.DevCommand.ModId.get -> string!
+Mjolnir.SDK.DevCommand.Name.get -> string!
+Mjolnir.SDK.DevCommand.Syntax.get -> string?
+Mjolnir.SDK.DevCommand.Usage.get -> string!
+Mjolnir.SDK.DevCommandContext
+Mjolnir.SDK.DevCommandContext.Arguments.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Mjolnir.SDK.DevCommandContext.Command.get -> Mjolnir.SDK.DevCommand!
+Mjolnir.SDK.DevCommandContext.Error(string! text) -> void
+Mjolnir.SDK.DevCommandContext.GetFloat(int index) -> float
+Mjolnir.SDK.DevCommandContext.GetFloat(int index, float fallback) -> float
+Mjolnir.SDK.DevCommandContext.GetInt(int index) -> int
+Mjolnir.SDK.DevCommandContext.GetInt(int index, int fallback) -> int
+Mjolnir.SDK.DevCommandContext.GetRest(int index) -> string!
+Mjolnir.SDK.DevCommandContext.GetString(int index) -> string!
+Mjolnir.SDK.DevCommandContext.Line.get -> string!
+Mjolnir.SDK.DevCommandContext.Print(string! text) -> void
+Mjolnir.SDK.DevCommandException
+Mjolnir.SDK.DevCommandException.DevCommandException(string! message) -> void
+Mjolnir.SDK.DevConsole
+Mjolnir.SDK.EffectChangedEventArgs
+Mjolnir.SDK.EffectChangedEventArgs.Effect.get -> Mjolnir.SDK.EffectInfo!
+Mjolnir.SDK.EffectChangedEventArgs.Stacks.get -> int
+Mjolnir.SDK.EffectInfo
+Mjolnir.SDK.EffectInfo.AssetName.get -> string!
+Mjolnir.SDK.EffectInfo.Description.get -> string!
+Mjolnir.SDK.EffectInfo.DisplayName.get -> string!
+Mjolnir.SDK.EffectInfo.Id.get -> int
+Mjolnir.SDK.EffectInfo.Kind.get -> string!
+Mjolnir.SDK.Effects
+Mjolnir.SDK.ExperienceGainingEventArgs
+Mjolnir.SDK.ExperienceGainingEventArgs.Amount.get -> float
+Mjolnir.SDK.ExperienceGainingEventArgs.Amount.set -> void
+Mjolnir.SDK.ExperienceGainingEventArgs.Sheet.get -> Mjolnir.SDK.CharacterSheet!
+Mjolnir.SDK.ExperienceGainingEventArgs.Skill.get -> Mjolnir.SDK.Skill!
+Mjolnir.SDK.IBindable<T>
+Mjolnir.SDK.IBindable<T>.Value.get -> T
+Mjolnir.SDK.IBindable<T>.Value.set -> void
+Mjolnir.SDK.IReadOnlyBindable<T>
+Mjolnir.SDK.IReadOnlyBindable<T>.Changed -> System.EventHandler<Mjolnir.SDK.ValueChangedEventArgs<T>!>?
+Mjolnir.SDK.IReadOnlyBindable<T>.Value.get -> T
+Mjolnir.SDK.KeyGesture
+Mjolnir.SDK.KeyGesture.Equals(Mjolnir.SDK.KeyGesture other) -> bool
+Mjolnir.SDK.KeyGesture.IsNone.get -> bool
+Mjolnir.SDK.KeyGesture.Key.get -> string!
+Mjolnir.SDK.KeyGesture.Key.init -> void
+Mjolnir.SDK.KeyGesture.KeyGesture() -> void
+Mjolnir.SDK.KeyGesture.KeyGesture(string! key, Mjolnir.SDK.KeyModifiers modifiers = Mjolnir.SDK.KeyModifiers.None) -> void
+Mjolnir.SDK.KeyGesture.Modifiers.get -> Mjolnir.SDK.KeyModifiers
+Mjolnir.SDK.KeyGesture.Modifiers.init -> void
+Mjolnir.SDK.KeyModifiers
+Mjolnir.SDK.KeyModifiers.Alt = 1 -> Mjolnir.SDK.KeyModifiers
+Mjolnir.SDK.KeyModifiers.Control = 2 -> Mjolnir.SDK.KeyModifiers
+Mjolnir.SDK.KeyModifiers.None = 0 -> Mjolnir.SDK.KeyModifiers
+Mjolnir.SDK.KeyModifiers.Shift = 4 -> Mjolnir.SDK.KeyModifiers
+Mjolnir.SDK.Localization
+Mjolnir.SDK.Mod
+Mjolnir.SDK.Mod.Config.get -> Mjolnir.SDK.Config.ModConfig!
+Mjolnir.SDK.Mod.Harmony.get -> HarmonyLib.Harmony!
+Mjolnir.SDK.Mod.Log.get -> Mjolnir.SDK.ModLogger!
+Mjolnir.SDK.Mod.Manifest.get -> Mjolnir.SDK.ModManifest!
+Mjolnir.SDK.Mod.Mod() -> void
+Mjolnir.SDK.ModDependencyAttribute
+Mjolnir.SDK.ModDependencyAttribute.DependencyId.get -> string!
+Mjolnir.SDK.ModDependencyAttribute.ModDependencyAttribute(string! dependencyId, string! versionRange = "*") -> void
+Mjolnir.SDK.ModDependencyAttribute.Optional.get -> bool
+Mjolnir.SDK.ModDependencyAttribute.Optional.set -> void
+Mjolnir.SDK.ModDependencyAttribute.VersionRange.get -> string!
+Mjolnir.SDK.ModDependencyInfo
+Mjolnir.SDK.ModDependencyInfo.<Clone>$() -> Mjolnir.SDK.ModDependencyInfo!
+Mjolnir.SDK.ModDependencyInfo.Deconstruct(out string! Id, out string! VersionRange, out bool Optional) -> void
+Mjolnir.SDK.ModDependencyInfo.Equals(Mjolnir.SDK.ModDependencyInfo? other) -> bool
+Mjolnir.SDK.ModDependencyInfo.Id.get -> string!
+Mjolnir.SDK.ModDependencyInfo.Id.init -> void
+Mjolnir.SDK.ModDependencyInfo.ModDependencyInfo(string! Id, string! VersionRange, bool Optional) -> void
+Mjolnir.SDK.ModDependencyInfo.Optional.get -> bool
+Mjolnir.SDK.ModDependencyInfo.Optional.init -> void
+Mjolnir.SDK.ModDependencyInfo.VersionRange.get -> string!
+Mjolnir.SDK.ModDependencyInfo.VersionRange.init -> void
+Mjolnir.SDK.ModLogger
+Mjolnir.SDK.ModLogger.Debug(string! message) -> void
+Mjolnir.SDK.ModLogger.Error(string! message) -> void
+Mjolnir.SDK.ModLogger.Info(string! message) -> void
+Mjolnir.SDK.ModLogger.Warn(string! message) -> void
+Mjolnir.SDK.ModManifest
+Mjolnir.SDK.ModManifest.Assembly.get -> System.Reflection.Assembly!
+Mjolnir.SDK.ModManifest.Author.get -> string?
+Mjolnir.SDK.ModManifest.Dependencies.get -> System.Collections.Generic.IReadOnlyList<Mjolnir.SDK.ModDependencyInfo!>!
+Mjolnir.SDK.ModManifest.Description.get -> string?
+Mjolnir.SDK.ModManifest.IconPath.get -> string?
+Mjolnir.SDK.ModManifest.Id.get -> string!
+Mjolnir.SDK.ModManifest.IsDisabled.get -> bool
+Mjolnir.SDK.ModManifest.Location.get -> string!
+Mjolnir.SDK.ModManifest.Name.get -> string!
+Mjolnir.SDK.ModManifest.Network.get -> Mjolnir.SDK.NetworkCompatibility
+Mjolnir.SDK.ModManifest.Version.get -> System.Version!
+Mjolnir.SDK.ModManifest.VersionText.get -> string!
+Mjolnir.SDK.ModManifestAttribute
+Mjolnir.SDK.ModManifestAttribute.Author.get -> string?
+Mjolnir.SDK.ModManifestAttribute.Author.set -> void
+Mjolnir.SDK.ModManifestAttribute.Description.get -> string?
+Mjolnir.SDK.ModManifestAttribute.Description.set -> void
+Mjolnir.SDK.ModManifestAttribute.Icon.get -> string?
+Mjolnir.SDK.ModManifestAttribute.Icon.set -> void
+Mjolnir.SDK.ModManifestAttribute.Id.get -> string!
+Mjolnir.SDK.ModManifestAttribute.ModManifestAttribute(string! id, string! name, string! version) -> void
+Mjolnir.SDK.ModManifestAttribute.Name.get -> string!
+Mjolnir.SDK.ModManifestAttribute.Network.get -> Mjolnir.SDK.NetworkCompatibility
+Mjolnir.SDK.ModManifestAttribute.Network.set -> void
+Mjolnir.SDK.ModManifestAttribute.Version.get -> string!
+Mjolnir.SDK.ModRegistry
+Mjolnir.SDK.ModifierKind
+Mjolnir.SDK.ModifierKind.Add = 0 -> Mjolnir.SDK.ModifierKind
+Mjolnir.SDK.ModifierKind.Multiply = 1 -> Mjolnir.SDK.ModifierKind
+Mjolnir.SDK.ModifierKind.Percent = 2 -> Mjolnir.SDK.ModifierKind
+Mjolnir.SDK.NetworkCompatibility
+Mjolnir.SDK.NetworkCompatibility.ClientOnly = 1 -> Mjolnir.SDK.NetworkCompatibility
+Mjolnir.SDK.NetworkCompatibility.Everyone = 0 -> Mjolnir.SDK.NetworkCompatibility
+Mjolnir.SDK.NetworkCompatibility.ServerOnly = 2 -> Mjolnir.SDK.NetworkCompatibility
+Mjolnir.SDK.Skill
+Mjolnir.SDK.Skill.AddExperience(float amount) -> bool
+Mjolnir.SDK.Skill.DisplayName.get -> string!
+Mjolnir.SDK.Skill.Experience.get -> Mjolnir.SDK.CharacterStat!
+Mjolnir.SDK.Skill.ExperienceMultiplier.get -> Mjolnir.SDK.CharacterStat!
+Mjolnir.SDK.Skill.Kind.get -> Mjolnir.SDK.SkillKind
+Mjolnir.SDK.Skill.Level.get -> Mjolnir.SDK.CharacterStat!
+Mjolnir.SDK.Skill.Rank.get -> Mjolnir.SDK.SkillRank
+Mjolnir.SDK.SkillKind
+Mjolnir.SDK.SkillKind.Blacksmithing = 9 -> Mjolnir.SDK.SkillKind
+Mjolnir.SDK.SkillKind.Building = 4 -> Mjolnir.SDK.SkillKind
+Mjolnir.SDK.SkillKind.Carpentry = 10 -> Mjolnir.SDK.SkillKind
+Mjolnir.SDK.SkillKind.Cooking = 14 -> Mjolnir.SDK.SkillKind
+Mjolnir.SDK.SkillKind.Crafting = 2 -> Mjolnir.SDK.SkillKind
+Mjolnir.SDK.SkillKind.DogCombat = 16 -> Mjolnir.SDK.SkillKind
+Mjolnir.SDK.SkillKind.Farming = 11 -> Mjolnir.SDK.SkillKind
+Mjolnir.SDK.SkillKind.Firekeeping = 5 -> Mjolnir.SDK.SkillKind
+Mjolnir.SDK.SkillKind.Fishing = 8 -> Mjolnir.SDK.SkillKind
+Mjolnir.SDK.SkillKind.Gathering = 3 -> Mjolnir.SDK.SkillKind
+Mjolnir.SDK.SkillKind.Hunting = 6 -> Mjolnir.SDK.SkillKind
+Mjolnir.SDK.SkillKind.MeleeCombat = 12 -> Mjolnir.SDK.SkillKind
+Mjolnir.SDK.SkillKind.RangedCombat = 13 -> Mjolnir.SDK.SkillKind
+Mjolnir.SDK.SkillKind.Shamanism = 15 -> Mjolnir.SDK.SkillKind
+Mjolnir.SDK.SkillKind.Skinning = 7 -> Mjolnir.SDK.SkillKind
+Mjolnir.SDK.SkillKind.StoneHarvest = 1 -> Mjolnir.SDK.SkillKind
+Mjolnir.SDK.SkillKind.WoodHarvest = 0 -> Mjolnir.SDK.SkillKind
+Mjolnir.SDK.SkillRank
+Mjolnir.SDK.SkillRank.Adept = 2 -> Mjolnir.SDK.SkillRank
+Mjolnir.SDK.SkillRank.Apprentice = 1 -> Mjolnir.SDK.SkillRank
+Mjolnir.SDK.SkillRank.Master = 3 -> Mjolnir.SDK.SkillRank
+Mjolnir.SDK.SkillRank.Novice = 0 -> Mjolnir.SDK.SkillRank
+Mjolnir.SDK.StatModifier
+Mjolnir.SDK.StatModifier.Amount.get -> float
+Mjolnir.SDK.StatModifier.Amount.set -> void
+Mjolnir.SDK.StatModifier.Dispose() -> void
+Mjolnir.SDK.StatModifier.Kind.get -> Mjolnir.SDK.ModifierKind
+Mjolnir.SDK.Threading.Dispatcher
+Mjolnir.SDK.Threading.Dispatcher.CheckAccess() -> bool
+Mjolnir.SDK.Threading.Dispatcher.Post(System.Action! action) -> void
+Mjolnir.SDK.Threading.Dispatcher.VerifyAccess() -> void
+Mjolnir.SDK.TranslatedText
+Mjolnir.SDK.TranslatedText.Changed -> System.EventHandler<Mjolnir.SDK.ValueChangedEventArgs<string!>!>?
+Mjolnir.SDK.TranslatedText.Key.get -> string!
+Mjolnir.SDK.TranslatedText.Value.get -> string!
+Mjolnir.SDK.ValueChangedEventArgs<T>
+Mjolnir.SDK.ValueChangedEventArgs<T>.NewValue.get -> T
+Mjolnir.SDK.ValueChangedEventArgs<T>.OldValue.get -> T
+Mjolnir.SDK.ValueChangedEventArgs<T>.ValueChangedEventArgs(T oldValue, T newValue) -> void
+override Mjolnir.SDK.CharacterStat.ToString() -> string!
+override Mjolnir.SDK.Config.ConfigEntry<T>.ToString() -> string!
+override Mjolnir.SDK.DevCommand.ToString() -> string!
+override Mjolnir.SDK.EffectInfo.ToString() -> string!
+override Mjolnir.SDK.KeyGesture.GetHashCode() -> int
+override Mjolnir.SDK.KeyGesture.ToString() -> string!
+override Mjolnir.SDK.ModDependencyInfo.Equals(object? obj) -> bool
+override Mjolnir.SDK.ModDependencyInfo.GetHashCode() -> int
+override Mjolnir.SDK.ModDependencyInfo.ToString() -> string!
+override Mjolnir.SDK.ModManifest.ToString() -> string!
+override Mjolnir.SDK.TranslatedText.ToString() -> string!
+static Mjolnir.SDK.BindableExtensions.Map<TSource, TResult>(this Mjolnir.SDK.IBindable<TSource>! source, System.Func<TSource, TResult>! to, System.Func<TResult, TSource>! from) -> Mjolnir.SDK.IBindable<TResult>!
+static Mjolnir.SDK.BindableExtensions.Map<TSource, TResult>(this Mjolnir.SDK.IReadOnlyBindable<TSource>! source, System.Func<TSource, TResult>! to) -> Mjolnir.SDK.IReadOnlyBindable<TResult>!
+static Mjolnir.SDK.DevConsole.Add(string! name, string! description, System.Action<Mjolnir.SDK.DevCommandContext!>! run, string? syntax = null) -> Mjolnir.SDK.DevCommand!
+static Mjolnir.SDK.DevConsole.Commands.get -> System.Collections.Generic.IReadOnlyList<Mjolnir.SDK.DevCommand!>!
+static Mjolnir.SDK.DevConsole.Execute(string! line) -> void
+static Mjolnir.SDK.DevConsole.Print(string! text) -> void
+static Mjolnir.SDK.DevConsole.Remove(Mjolnir.SDK.DevCommand! command) -> void
+static Mjolnir.SDK.Effects.All.get -> System.Collections.Generic.IReadOnlyList<Mjolnir.SDK.EffectInfo!>!
+static Mjolnir.SDK.Effects.Find(string! assetName) -> Mjolnir.SDK.EffectInfo?
+static Mjolnir.SDK.KeyGesture.None.get -> Mjolnir.SDK.KeyGesture
+static Mjolnir.SDK.KeyGesture.Parse(string! text) -> Mjolnir.SDK.KeyGesture
+static Mjolnir.SDK.KeyGesture.TryParse(string? text, out Mjolnir.SDK.KeyGesture gesture) -> bool
+static Mjolnir.SDK.KeyGesture.operator !=(Mjolnir.SDK.KeyGesture left, Mjolnir.SDK.KeyGesture right) -> bool
+static Mjolnir.SDK.KeyGesture.operator ==(Mjolnir.SDK.KeyGesture left, Mjolnir.SDK.KeyGesture right) -> bool
+static Mjolnir.SDK.Localization.Culture.get -> System.Globalization.CultureInfo!
+static Mjolnir.SDK.Localization.Get(string! key, params object?[]! args) -> string!
+static Mjolnir.SDK.Localization.GetBindable(string! key, params object?[]! args) -> Mjolnir.SDK.TranslatedText!
+static Mjolnir.SDK.Localization.Language.get -> string!
+static Mjolnir.SDK.Localization.LanguageChanged -> System.EventHandler<Mjolnir.SDK.ValueChangedEventArgs<string!>!>?
+static Mjolnir.SDK.ModDependencyInfo.operator !=(Mjolnir.SDK.ModDependencyInfo? left, Mjolnir.SDK.ModDependencyInfo? right) -> bool
+static Mjolnir.SDK.ModDependencyInfo.operator ==(Mjolnir.SDK.ModDependencyInfo? left, Mjolnir.SDK.ModDependencyInfo? right) -> bool
+static Mjolnir.SDK.ModRegistry.IsLoaded(string! id) -> bool
+static Mjolnir.SDK.ModRegistry.Loaded.get -> System.Collections.Generic.IReadOnlyList<Mjolnir.SDK.ModManifest!>!
+static Mjolnir.SDK.ModRegistry.TryGet(string! id, out Mjolnir.SDK.ModManifest! manifest) -> bool
+static Mjolnir.SDK.Skill.ExperienceGaining -> System.EventHandler<Mjolnir.SDK.ExperienceGainingEventArgs!>?
+static Mjolnir.SDK.Threading.Dispatcher.MainThread.get -> Mjolnir.SDK.Threading.Dispatcher!
+static Mjolnir.SDK.Threading.Dispatcher.UIThread.get -> Mjolnir.SDK.Threading.Dispatcher!
+virtual Mjolnir.SDK.Mod.OnFixedUpdate() -> void
+virtual Mjolnir.SDK.Mod.OnGameReady() -> void
+virtual Mjolnir.SDK.Mod.OnLateUpdate() -> void
+virtual Mjolnir.SDK.Mod.OnLoad() -> void
+virtual Mjolnir.SDK.Mod.OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode mode) -> void
+virtual Mjolnir.SDK.Mod.OnUpdate() -> void
+~override Mjolnir.SDK.KeyGesture.Equals(object obj) -> bool

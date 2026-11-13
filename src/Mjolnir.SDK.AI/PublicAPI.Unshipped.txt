@@ -1,0 +1,52 @@
+#nullable enable
+Mjolnir.SDK.AI.InteractionUsedEventArgs
+Mjolnir.SDK.AI.InteractionUsedEventArgs.Interaction.get -> Mjolnir.SDK.AI.ModInteraction!
+Mjolnir.SDK.AI.InteractionUsedEventArgs.InteractionUsedEventArgs(Mjolnir.SDK.AI.ModInteraction! interaction, Mjolnir.SDK.AI.Resident? resident) -> void
+Mjolnir.SDK.AI.InteractionUsedEventArgs.IsPlayer.get -> bool
+Mjolnir.SDK.AI.InteractionUsedEventArgs.Resident.get -> Mjolnir.SDK.AI.Resident?
+Mjolnir.SDK.AI.InteractionUsingEventArgs
+Mjolnir.SDK.AI.InteractionUsingEventArgs.Interaction.get -> Mjolnir.SDK.AI.ModInteraction!
+Mjolnir.SDK.AI.InteractionUsingEventArgs.InteractionUsingEventArgs(Mjolnir.SDK.AI.ModInteraction! interaction, Mjolnir.SDK.AI.Resident? resident) -> void
+Mjolnir.SDK.AI.InteractionUsingEventArgs.IsPlayer.get -> bool
+Mjolnir.SDK.AI.InteractionUsingEventArgs.Resident.get -> Mjolnir.SDK.AI.Resident?
+Mjolnir.SDK.AI.Interactions
+Mjolnir.SDK.AI.ModInteraction
+Mjolnir.SDK.AI.ModInteraction.Distance.get -> float
+Mjolnir.SDK.AI.ModInteraction.Distance.set -> void
+Mjolnir.SDK.AI.ModInteraction.HoldTime.get -> System.TimeSpan
+Mjolnir.SDK.AI.ModInteraction.HoldTime.set -> void
+Mjolnir.SDK.AI.ModInteraction.Icon.get -> UnityEngine.Sprite?
+Mjolnir.SDK.AI.ModInteraction.Icon.set -> void
+Mjolnir.SDK.AI.ModInteraction.IsAvailable.get -> bool
+Mjolnir.SDK.AI.ModInteraction.IsEnabled.get -> bool
+Mjolnir.SDK.AI.ModInteraction.IsEnabled.set -> void
+Mjolnir.SDK.AI.ModInteraction.IsFree.get -> bool
+Mjolnir.SDK.AI.ModInteraction.MaxUsers.get -> int
+Mjolnir.SDK.AI.ModInteraction.MaxUsers.set -> void
+Mjolnir.SDK.AI.ModInteraction.ModId.get -> string!
+Mjolnir.SDK.AI.ModInteraction.Name.get -> string!
+Mjolnir.SDK.AI.ModInteraction.PlayerCanUse.get -> bool
+Mjolnir.SDK.AI.ModInteraction.PlayerCanUse.set -> void
+Mjolnir.SDK.AI.ModInteraction.Position.get -> UnityEngine.Vector3
+Mjolnir.SDK.AI.ModInteraction.Target.get -> UnityEngine.GameObject?
+Mjolnir.SDK.AI.ModInteraction.Text.get -> string?
+Mjolnir.SDK.AI.ModInteraction.Text.set -> void
+Mjolnir.SDK.AI.ModInteraction.Used -> System.EventHandler<Mjolnir.SDK.AI.InteractionUsedEventArgs!>?
+Mjolnir.SDK.AI.ModInteraction.UserCount.get -> int
+Mjolnir.SDK.AI.ModInteraction.Using -> System.EventHandler<Mjolnir.SDK.AI.InteractionUsingEventArgs!>?
+Mjolnir.SDK.AI.ModInteraction.WithDistance(float distance) -> Mjolnir.SDK.AI.ModInteraction!
+Mjolnir.SDK.AI.ModInteraction.WithHoldTime(System.TimeSpan holdTime) -> Mjolnir.SDK.AI.ModInteraction!
+Mjolnir.SDK.AI.ModInteraction.WithIcon(UnityEngine.Sprite? icon) -> Mjolnir.SDK.AI.ModInteraction!
+Mjolnir.SDK.AI.ModInteraction.WithMaxUsers(int maxUsers) -> Mjolnir.SDK.AI.ModInteraction!
+Mjolnir.SDK.AI.ModInteraction.WithText(string? text) -> Mjolnir.SDK.AI.ModInteraction!
+Mjolnir.SDK.AI.Resident.Animator.get -> Mjolnir.SDK.CharacterAnimator!
+Mjolnir.SDK.AI.Resident.Combatant.get -> Mjolnir.SDK.Combatant!
+Mjolnir.SDK.AI.ResidentJob.Play(Mjolnir.SDK.AnimationInfo! animation, Mjolnir.SDK.AnimationOptions? options = null, System.TimeSpan? duration = null) -> Mjolnir.SDK.AI.ResidentJob!
+Mjolnir.SDK.AI.ResidentJob.Play(string! animation, Mjolnir.SDK.AnimationOptions? options = null, System.TimeSpan? duration = null) -> Mjolnir.SDK.AI.ResidentJob!
+Mjolnir.SDK.AI.ResidentJob.Use(System.Func<Mjolnir.SDK.AI.Resident!, Mjolnir.SDK.AI.ModInteraction?>! interaction, System.TimeSpan duration, string? animation = null, Mjolnir.SDK.AnimationOptions? options = null) -> Mjolnir.SDK.AI.ResidentJob!
+override Mjolnir.SDK.AI.ModInteraction.ToString() -> string!
+static Mjolnir.SDK.AI.Interactions.Add(UnityEngine.GameObject! target, string! name) -> Mjolnir.SDK.AI.ModInteraction!
+static Mjolnir.SDK.AI.Interactions.AddToBuildings(string! building, string! name, System.Action<Mjolnir.SDK.AI.ModInteraction!>! setUp) -> void
+static Mjolnir.SDK.AI.Interactions.All.get -> System.Collections.Generic.IReadOnlyList<Mjolnir.SDK.AI.ModInteraction!>!
+static Mjolnir.SDK.AI.Interactions.Nearest(UnityEngine.Vector3 position, string! name, float radius = Infinity) -> Mjolnir.SDK.AI.ModInteraction?
+static Mjolnir.SDK.AI.Interactions.Remove(Mjolnir.SDK.AI.ModInteraction! interaction) -> bool

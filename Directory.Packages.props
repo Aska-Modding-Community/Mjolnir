@@ -1,0 +1,53 @@
+<Project>
+
+  <!-- Central package management: every NuGet version of the solution is pinned here, and csproj files reference
+       packages without a Version. Il2CppInterop, HarmonyX and the .NET runtime are bumped only together, after a
+       console check and an in-game check. -->
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <!-- One version for the runtime (Mjolnir.Core) and the generator (tools/Mjolnir.InteropGen): the interop
+         assemblies must come from the same Il2CppInterop as the runtime that loads them. -->
+    <Il2CppInteropVersion>1.5.3</Il2CppInteropVersion>
+  </PropertyGroup>
+
+  <!-- Runtime: Mjolnir.Core, Mjolnir.SDK. -->
+  <ItemGroup>
+    <!-- Both Il2CppInterop packages target net6.0 and run on CoreCLR 10. -->
+    <PackageVersion Include="Il2CppInterop.Runtime" Version="$(Il2CppInteropVersion)" />
+    <PackageVersion Include="Il2CppInterop.HarmonySupport" Version="$(Il2CppInteropVersion)" />
+    <!-- Not the 2.10.x that HarmonySupport was built against: its MonoMod 22.x kills CoreCLR 10 with a fatal
+         error in Harmony's static constructor. 2.16.x runs on MonoMod.Core. -->
+    <PackageVersion Include="HarmonyX" Version="2.16.1" />
+    <!-- Mod configs (Mjolnir.SDK.Config); BSD-2-Clause, no dependencies on net10.0. -->
+    <PackageVersion Include="Tomlyn" Version="2.10.1" />
+  </ItemGroup>
+
+  <!-- Offline interop generation: tools/Mjolnir.InteropGen. Both use AsmResolver.DotNet 6.0.0-beta.5; Cpp2IL reads
+       metadata v39 from pre-release.21 on. -->
+  <ItemGroup>
+    <PackageVersion Include="Samboy063.Cpp2IL.Core" Version="2022.1.0-pre-release.21" />
+    <PackageVersion Include="Il2CppInterop.Generator" Version="$(Il2CppInteropVersion)" />
+  </ItemGroup>
+
+  <!-- Static code map of GameAssembly.dll: tools/Mjolnir.CodeMap. AsmResolver reads the Cpp2IL dummy assemblies (same
+       version Cpp2IL uses), Iced decodes x64. Core's own Iced comes transitively from Il2CppInterop and is not pinned. -->
+  <ItemGroup>
+    <PackageVersion Include="AsmResolver.DotNet" Version="6.0.0-beta.5" />
+    <PackageVersion Include="Iced" Version="1.21.0" />
+  </ItemGroup>
+
+  <!-- The SDK's declared public API (PublicAPI.*.txt, Directory.Build.props): 5.0.0 is built for the Roslyn 5.0
+       compiler of the first .NET 10 SDK band and loads on every .NET 10 SDK; a newer 5.x needs that SDK band or
+       later (5.6.0 needs 10.0.3xx). -->
+  <ItemGroup>
+    <PackageVersion Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="5.0.0" />
+  </ItemGroup>
+
+  <!-- Unit tests: tests/Mjolnir.Core.Tests, tests/Mjolnir.SDK.Tests, tests/Mjolnir.SDK.UI.Tests. -->
+  <ItemGroup>
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageVersion Include="xunit" Version="2.9.3" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.4" />
+  </ItemGroup>
+
+</Project>

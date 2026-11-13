@@ -1,0 +1,21 @@
+# The Equipment Example's texts in English, the fallback of every language without a file of its own. An item's texts are
+# [item.<name>] name, description and lore; the SDK gives them to the game under the keys it makes for them.
+
+[mod]
+name = "Equipment Example"
+description = "A weapon, armour and food of a mod's own."
+
+[item.rune_sword]
+name = "Rune Sword"
+description = "A one-handed sword cut with runes of fire. Now and then a blow sets its target alight."
+lore = "The smith swore the runes were only for show. The singed apron says otherwise."
+
+[item.rune_hood]
+name = "Rune Hood"
+description = "A thick hood stitched with runes. Keeps out the cold and lends its wearer vigour."
+lore = "Woven on the longest night of the year, by a fire that was never let go out."
+
+[item.honey_cake]
+name = "Honey Cake"
+description = "A sweet cake baked with honey. Leaves whoever eats it energized for a while."
+lore = "Made for feast days, and eaten long before them."

@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Mjolnir.SDK.AI, the SDK module for villagers: the villagers of the loaded world
+       (Residents, Resident), spawning one, jobs of a mod's own that villagers take by priority among the game's own
+       quests (ResidentJob: walk, wait, play, use, run the mod's code), and interactions of a mod's own that the player and
+       villagers use (Interactions, ModInteraction). Mods that use it reference it besides Mjolnir.SDK. It reaches
+       Core only through Mjolnir.SDK (AiModule is started by SdkModules). deploy.ps1 ships it to Mjolnir\core next to the
+       SDK. -->
+  <PropertyGroup>
+    <AssemblyName>Mjolnir.SDK.AI</AssemblyName>
+    <RootNamespace>Mjolnir.SDK.AI</RootNamespace>
+    <Version>$(MjolnirPlatformVersion)</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mjolnir.SDK\Mjolnir.SDK.csproj" />
+  </ItemGroup>
+
+  <!-- The villagers, their quests and state machines (Assembly-CSharp, SandSailorStudio). A villager is a Photon Fusion
+       network object, its quest runner a simulation behaviour: Fusion.Runtime and Fusion.Common. An interaction's box is a
+       collider: UnityEngine.PhysicsModule. -->
+  <ItemGroup>
+    <GameInterop Include="Il2Cppmscorlib;UnityEngine.CoreModule;Assembly-CSharp;SandSailorStudio" />
+    <GameInterop Include="Fusion.Runtime;Fusion.Common" />
+    <GameInterop Include="UnityEngine.PhysicsModule" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Mjolnir.SDK.AI.Tests" />
+  </ItemGroup>
+
+</Project>

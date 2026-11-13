@@ -1,0 +1,20 @@
+# Тексты Animations Example на русском.
+
+[mod]
+name = "Пример анимаций"
+description = "Анимации самой игры: тост, на который отвечают жители, рывок вперёд, взмах рукой на ходу."
+
+[sections]
+Keys = "Клавиши"
+
+[config.Keys.Toast]
+name = "Тост"
+description = "Игрок поднимает тост, жители рядом отвечают тем же."
+
+[config.Keys.Dodge]
+name = "Рывок"
+description = "Рывок вперёд: анимация сама двигает игрока."
+
+[config.Keys.Wave]
+name = "Взмах"
+description = "Взмах рукой, не останавливаясь."

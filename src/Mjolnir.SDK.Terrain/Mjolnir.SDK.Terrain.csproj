@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Mjolnir.SDK.Terrain, the SDK module for the ground of the world: reading its height, its kind and the water, and
+       changing it with the game's own heightmap tool (raise, lower, level, paint, clear the vegetation), so a change is saved,
+       sent to the other players and walked on as the game's own. Mods that use it reference it besides Mjolnir.SDK. It
+       reaches Core only through Mjolnir.SDK (TerrainModule is started by SdkModules). deploy.ps1 ships it to Mjolnir\core
+       next to the SDK. -->
+  <PropertyGroup>
+    <AssemblyName>Mjolnir.SDK.Terrain</AssemblyName>
+    <RootNamespace>Mjolnir.SDK.Terrain</RootNamespace>
+    <Version>$(MjolnirPlatformVersion)</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mjolnir.SDK\Mjolnir.SDK.csproj" />
+  </ItemGroup>
+
+  <!-- The game's terrain surface manager, heightmap tool and world data (Assembly-CSharp), its terrain sampler and
+       streaming (SandSailorStudio), Unity's terrain and physics (the buildings in an area), and the vegetation system's
+       biome type on the tool. -->
+  <ItemGroup>
+    <GameInterop Include="Il2Cppmscorlib;UnityEngine.CoreModule;UnityEngine.PhysicsModule;UnityEngine.TerrainModule;Assembly-CSharp;SandSailorStudio;Fusion.Runtime;AwesomeTechnologies.VegetationStudioPro.Runtime;Unity.Collections;Unity.Mathematics" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Mjolnir.SDK.Terrain.Tests" />
+  </ItemGroup>
+
+</Project>

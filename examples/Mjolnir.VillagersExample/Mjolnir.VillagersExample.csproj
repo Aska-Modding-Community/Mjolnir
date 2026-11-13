@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Example mod: the Mjolnir.SDK.AI module, a job of a mod's own for the game's villagers (with Mjolnir.SDK.Player for
+       the player's place and Mjolnir.SDK.UI for the greeting), a reference for mod authors. It needs no game types and no
+       Harmony patch of its own: the SDK hides them. deploy.ps1 -Examples ships Mjolnir.VillagersExample.dll/.pdb and its
+       lang folder to Mjolnir\Mods\Mjolnir.VillagersExample. -->
+  <PropertyGroup>
+    <AssemblyName>Mjolnir.VillagersExample</AssemblyName>
+    <RootNamespace>Mjolnir.VillagersExample</RootNamespace>
+    <Version>1.0.0</Version>
+    <IsMjolnirMod>true</IsMjolnirMod>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <MjolnirSdk Include="Mjolnir.SDK.AI;Mjolnir.SDK.Player;Mjolnir.SDK.UI" />
+  </ItemGroup>
+
+  <!-- Next to the .dll: its texts (the greeting, and in Russian its settings in the Mods window). -->
+  <ItemGroup>
+    <None Update="lang\*.toml" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>
