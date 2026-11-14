@@ -85,11 +85,13 @@ internal sealed class InstalledMods
     /// <param name="mods">The installed mods, in the order to show them.</param>
     /// <param name="listPath">The mod list's file; empty for none (nothing can be turned on or off).</param>
     /// <param name="turnedOff">The ids turned off at this start.</param>
-    internal InstalledMods(IReadOnlyList<InstalledMod> mods, string listPath, IEnumerable<string> turnedOff)
+    /// <param name="otherLoader">Another mod loader installed beside Mjolnir, null for none.</param>
+    internal InstalledMods(IReadOnlyList<InstalledMod> mods, string listPath, IEnumerable<string> turnedOff, string? otherLoader = null)
     {
         All = mods;
         _listPath = listPath;
         _turnedOff = new HashSet<string>(turnedOff, Ids);
+        OtherLoader = otherLoader;
     }
 
     /// <summary>The mods of this start, from Core's catalog (filled in phase A), on first use.</summary>
@@ -97,6 +99,12 @@ internal sealed class InstalledMods
 
     /// <summary>Loaded mods in load order, then the others by name.</summary>
     public IReadOnlyList<InstalledMod> All { get; }
+
+    /// <summary>
+    /// The name of another mod loader installed beside Mjolnir ("BepInEx"), null for none. It is not running — two
+    /// loaders cannot share one game — and its mods are not loaded, which nothing else tells the player.
+    /// </summary>
+    public string? OtherLoader { get; }
 
     /// <summary>The player's choice for the next start.</summary>
     public bool IsEnabled(InstalledMod mod)
@@ -170,7 +178,7 @@ internal sealed class InstalledMods
             others.Add(new InstalledMod(ManifestOf(record), state, ProblemOf(record.Skip)));
         }
         running.AddRange(others.OrderBy(m => m.Manifest.Name, StringComparer.CurrentCultureIgnoreCase));
-        return new InstalledMods(running, ModCatalog.ListPath, ModCatalog.TurnedOffAtStart);
+        return new InstalledMods(running, ModCatalog.ListPath, ModCatalog.TurnedOffAtStart, Core.OtherLoader.Found?.Name);
     }
 
     // A mod that did not load has no Mod object: its manifest is made here, its attribute read from its class (only the

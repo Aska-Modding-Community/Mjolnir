@@ -41,6 +41,7 @@ public static unsafe class Bootstrap
             AssemblyLoadContext.Default.Resolving += ResolveFromLoaderDirs;
 
             Log.Info("Core", $"Mjolnir.Core {typeof(Bootstrap).Assembly.GetName().Version} on .NET {Environment.Version}");
+            OtherLoader.Detect(Paths.GameDir); // another loader beside us starts nothing and says nothing: this line is all the player gets
             Directory.CreateDirectory(Paths.ConfigDir);
             Game = IdentifyGame();
 

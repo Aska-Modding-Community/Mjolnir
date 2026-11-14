@@ -9,6 +9,8 @@ restart = "Restart the game to apply the changed settings."
 # The list: turning mods on and off takes effect at the next start.
 apply = "Restart the game to turn the mods on or off."
 none = "No mods installed: put them in Mjolnir/Mods, each in a folder of its own."
+# Another mod loader installed in the game's folder: {0} its name.
+other_loader = "{0} is installed beside Mjolnir. Two mod loaders cannot share one game: {0} is not running and its mods are not loaded. Keep one of the two."
 off = "Turned off"
 turns_off = "Turns off after a restart"
 turns_on = "Turns on after a restart"

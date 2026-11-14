@@ -94,7 +94,8 @@ internal static class ModsWindow
     /// The list (no Unity: unit-tested): a row per installed mod, named <c>Mod &lt;id&gt;</c>, with its status line and an
     /// Off/On selector, and <paramref name="settingsText"/> on a button for a running mod with settings. Turning off a mod
     /// that mods which are on cannot load without, or turning on a mod that needs turned-off ones, asks first through
-    /// <paramref name="confirm"/>.
+    /// <paramref name="confirm"/>. Above the rows, in amber, a line about another mod loader installed beside Mjolnir
+    /// (<see cref="InstalledMods.OtherLoader"/>), which is not running and whose mods are not loaded.
     /// </summary>
     /// <param name="mods">The installed mods.</param>
     /// <param name="settingsText">The Settings button's word.</param>
@@ -104,6 +105,10 @@ internal static class ModsWindow
         var rows = mods.All.ToDictionary(mod => mod, mod => Row(mods, mod, settingsText));
         foreach (var (mod, row) in rows) row.Toggled += (_, _) => _ = Toggle(mods, mod, rows, confirm);
         var content = new UiStackPanel();
+        // Another loader beside Mjolnir never starts and never says so: the player would otherwise look for the fault
+        // in their own mods.
+        if (mods.OtherLoader is { } other)
+            content.Children.Add(new UiTextBlock { Name = "OtherLoader", Text = Amber(SdkTexts.Get("mods.other_loader", other)) });
         if (mods.All.Count == 0) content.Children.Add(new UiTextBlock { Name = "NoMods", Text = SdkTexts.Get("mods.none") });
         content.Children.Add(mods.All.Select(mod => rows[mod]));
         return content;

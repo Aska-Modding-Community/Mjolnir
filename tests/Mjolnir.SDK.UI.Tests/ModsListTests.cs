@@ -47,6 +47,18 @@ public sealed class ModsListTests : ViewTestBase, IDisposable
     private static ModRow RowOf(UiStackPanel list, string id) => list.Children.OfType<ModRow>().Single(r => r.Name == $"Mod {id}");
 
     [Fact]
+    public void AnotherLoaderBesideMjolnirIsNamedAboveTheRows()
+    {
+        Assert.DoesNotContain(List(Mods([Running])).Children, c => c.Name == "OtherLoader");
+
+        var list = List(new InstalledMods([Running], Path.Combine(_root, "mod-list.json"), [], "BepInEx"));
+        var line = list.Children.OfType<UiTextBlock>().Single(t => t.Name == "OtherLoader");
+        Assert.Contains("BepInEx", line.Text);
+        Assert.Contains("<color=", line.Text); // in amber, like a mod's problems
+        Assert.Equal("OtherLoader", list.Children[0].Name); // above the mods, not lost under them
+    }
+
+    [Fact]
     public void EveryInstalledModHasARowWithWhatBecameOfIt()
     {
         var list = List(Mods([Running, Off, Missing, NeedsOff, Failed], "off"));
