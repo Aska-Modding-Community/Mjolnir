@@ -18,6 +18,8 @@ Mjolnir.SDK.Player.StaminaUse.Combat = 2 -> Mjolnir.SDK.Player.StaminaUse
 Mjolnir.SDK.Player.StaminaUse.Default = 0 -> Mjolnir.SDK.Player.StaminaUse
 Mjolnir.SDK.Player.StaminaUse.Harvest = 1 -> Mjolnir.SDK.Player.StaminaUse
 override Mjolnir.SDK.Player.PlayerStat.ToString() -> string!
+static Mjolnir.SDK.Player.LocalPlayer.Animator.get -> Mjolnir.SDK.CharacterAnimator!
+static Mjolnir.SDK.Player.LocalPlayer.Combatant.get -> Mjolnir.SDK.Combatant!
 static Mjolnir.SDK.Player.LocalPlayer.Despawned -> System.EventHandler?
 static Mjolnir.SDK.Player.LocalPlayer.Died -> System.EventHandler?
 static Mjolnir.SDK.Player.LocalPlayer.Food.get -> Mjolnir.SDK.Player.PlayerStat!

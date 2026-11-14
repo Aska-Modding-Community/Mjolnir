@@ -1,1 +1,224 @@
 #nullable enable
+Mjolnir.SDK.Terrain.GroundKind
+Mjolnir.SDK.Terrain.GroundKind.Bedrock = 2 -> Mjolnir.SDK.Terrain.GroundKind
+Mjolnir.SDK.Terrain.GroundKind.Dirt = 1 -> Mjolnir.SDK.Terrain.GroundKind
+Mjolnir.SDK.Terrain.GroundKind.Natural = 0 -> Mjolnir.SDK.Terrain.GroundKind
+Mjolnir.SDK.Terrain.GroundKind.Path = 3 -> Mjolnir.SDK.Terrain.GroundKind
+Mjolnir.SDK.Terrain.GroundKind.Road = 4 -> Mjolnir.SDK.Terrain.GroundKind
+Mjolnir.SDK.Terrain.Landscape
+Mjolnir.SDK.Terrain.LandscapeArea
+Mjolnir.SDK.Terrain.LandscapeArea.Blend.get -> float
+Mjolnir.SDK.Terrain.LandscapeArea.Bounds.get -> UnityEngine.Rect
+Mjolnir.SDK.Terrain.LandscapeArea.Brush.get -> Mjolnir.SDK.Terrain.LandscapeBrush?
+Mjolnir.SDK.Terrain.LandscapeArea.Center.get -> UnityEngine.Vector3
+Mjolnir.SDK.Terrain.LandscapeArea.Depth.get -> float
+Mjolnir.SDK.Terrain.LandscapeArea.Equals(Mjolnir.SDK.Terrain.LandscapeArea other) -> bool
+Mjolnir.SDK.Terrain.LandscapeArea.Falloff.get -> Mjolnir.SDK.Terrain.LandscapeFalloff
+Mjolnir.SDK.Terrain.LandscapeArea.LandscapeArea() -> void
+Mjolnir.SDK.Terrain.LandscapeArea.Points.get -> System.Collections.Generic.IReadOnlyList<UnityEngine.Vector3>!
+Mjolnir.SDK.Terrain.LandscapeArea.Rotation.get -> float
+Mjolnir.SDK.Terrain.LandscapeArea.Width.get -> float
+Mjolnir.SDK.Terrain.LandscapeBiome
+Mjolnir.SDK.Terrain.LandscapeBiome.Equals(Mjolnir.SDK.Terrain.LandscapeBiome other) -> bool
+Mjolnir.SDK.Terrain.LandscapeBiome.Id.get -> int
+Mjolnir.SDK.Terrain.LandscapeBiome.LandscapeBiome() -> void
+Mjolnir.SDK.Terrain.LandscapeBiome.Name.get -> string!
+Mjolnir.SDK.Terrain.LandscapeBrush
+Mjolnir.SDK.Terrain.LandscapeBrush.Large = 3 -> Mjolnir.SDK.Terrain.LandscapeBrush
+Mjolnir.SDK.Terrain.LandscapeBrush.Medium = 1 -> Mjolnir.SDK.Terrain.LandscapeBrush
+Mjolnir.SDK.Terrain.LandscapeBrush.Small = 0 -> Mjolnir.SDK.Terrain.LandscapeBrush
+Mjolnir.SDK.Terrain.LandscapeBrush.Soft = 2 -> Mjolnir.SDK.Terrain.LandscapeBrush
+Mjolnir.SDK.Terrain.LandscapeChangedEventArgs
+Mjolnir.SDK.Terrain.LandscapeChangedEventArgs.Area.get -> UnityEngine.Rect
+Mjolnir.SDK.Terrain.LandscapeChangedEventArgs.IsRemote.get -> bool
+Mjolnir.SDK.Terrain.LandscapeChangedEventArgs.ModId.get -> string?
+Mjolnir.SDK.Terrain.LandscapeChangedEventArgs.Operation.get -> Mjolnir.SDK.Terrain.LandscapeOperation?
+Mjolnir.SDK.Terrain.LandscapeChangedEventArgs.Source.get -> Mjolnir.SDK.Terrain.LandscapeSource
+Mjolnir.SDK.Terrain.LandscapeChangingEventArgs
+Mjolnir.SDK.Terrain.LandscapeChangingEventArgs.Area.get -> UnityEngine.Rect
+Mjolnir.SDK.Terrain.LandscapeChangingEventArgs.ModId.get -> string?
+Mjolnir.SDK.Terrain.LandscapeChangingEventArgs.Operation.get -> Mjolnir.SDK.Terrain.LandscapeOperation
+Mjolnir.SDK.Terrain.LandscapeChangingEventArgs.Source.get -> Mjolnir.SDK.Terrain.LandscapeSource
+Mjolnir.SDK.Terrain.LandscapeFalloff
+Mjolnir.SDK.Terrain.LandscapeFalloff.Linear = 1 -> Mjolnir.SDK.Terrain.LandscapeFalloff
+Mjolnir.SDK.Terrain.LandscapeFalloff.Smooth = 0 -> Mjolnir.SDK.Terrain.LandscapeFalloff
+Mjolnir.SDK.Terrain.LandscapeHeights
+Mjolnir.SDK.Terrain.LandscapeHeights.Average.get -> float
+Mjolnir.SDK.Terrain.LandscapeHeights.Equals(Mjolnir.SDK.Terrain.LandscapeHeights other) -> bool
+Mjolnir.SDK.Terrain.LandscapeHeights.IsKnown.get -> bool
+Mjolnir.SDK.Terrain.LandscapeHeights.LandscapeHeights() -> void
+Mjolnir.SDK.Terrain.LandscapeHeights.Maximum.get -> float
+Mjolnir.SDK.Terrain.LandscapeHeights.Minimum.get -> float
+Mjolnir.SDK.Terrain.LandscapeObjects
+Mjolnir.SDK.Terrain.LandscapeObjects.Keep = 1 -> Mjolnir.SDK.Terrain.LandscapeObjects
+Mjolnir.SDK.Terrain.LandscapeObjects.Remove = 0 -> Mjolnir.SDK.Terrain.LandscapeObjects
+Mjolnir.SDK.Terrain.LandscapeObjects.Settle = 2 -> Mjolnir.SDK.Terrain.LandscapeObjects
+Mjolnir.SDK.Terrain.LandscapeOperation
+Mjolnir.SDK.Terrain.LandscapeOperation.ClearVegetation = 4 -> Mjolnir.SDK.Terrain.LandscapeOperation
+Mjolnir.SDK.Terrain.LandscapeOperation.Level = 2 -> Mjolnir.SDK.Terrain.LandscapeOperation
+Mjolnir.SDK.Terrain.LandscapeOperation.Lower = 1 -> Mjolnir.SDK.Terrain.LandscapeOperation
+Mjolnir.SDK.Terrain.LandscapeOperation.Paint = 3 -> Mjolnir.SDK.Terrain.LandscapeOperation
+Mjolnir.SDK.Terrain.LandscapeOperation.PaintBiome = 10 -> Mjolnir.SDK.Terrain.LandscapeOperation
+Mjolnir.SDK.Terrain.LandscapeOperation.Paste = 9 -> Mjolnir.SDK.Terrain.LandscapeOperation
+Mjolnir.SDK.Terrain.LandscapeOperation.Raise = 0 -> Mjolnir.SDK.Terrain.LandscapeOperation
+Mjolnir.SDK.Terrain.LandscapeOperation.Restore = 8 -> Mjolnir.SDK.Terrain.LandscapeOperation
+Mjolnir.SDK.Terrain.LandscapeOperation.RestoreVegetation = 11 -> Mjolnir.SDK.Terrain.LandscapeOperation
+Mjolnir.SDK.Terrain.LandscapeOperation.Shape = 7 -> Mjolnir.SDK.Terrain.LandscapeOperation
+Mjolnir.SDK.Terrain.LandscapeOperation.Slope = 6 -> Mjolnir.SDK.Terrain.LandscapeOperation
+Mjolnir.SDK.Terrain.LandscapeOperation.Smooth = 5 -> Mjolnir.SDK.Terrain.LandscapeOperation
+Mjolnir.SDK.Terrain.LandscapeOptions
+Mjolnir.SDK.Terrain.LandscapeOptions.ClearVegetation.get -> bool
+Mjolnir.SDK.Terrain.LandscapeOptions.ClearVegetation.init -> void
+Mjolnir.SDK.Terrain.LandscapeOptions.KeepKind.get -> bool
+Mjolnir.SDK.Terrain.LandscapeOptions.KeepKind.init -> void
+Mjolnir.SDK.Terrain.LandscapeOptions.KeepOffBuildings.get -> bool
+Mjolnir.SDK.Terrain.LandscapeOptions.KeepOffBuildings.init -> void
+Mjolnir.SDK.Terrain.LandscapeOptions.Kind.get -> Mjolnir.SDK.Terrain.GroundKind?
+Mjolnir.SDK.Terrain.LandscapeOptions.Kind.init -> void
+Mjolnir.SDK.Terrain.LandscapeOptions.LandscapeOptions() -> void
+Mjolnir.SDK.Terrain.LandscapeOptions.Objects.get -> Mjolnir.SDK.Terrain.LandscapeObjects
+Mjolnir.SDK.Terrain.LandscapeOptions.Objects.init -> void
+Mjolnir.SDK.Terrain.LandscapeOptions.OnlyOn.get -> Mjolnir.SDK.Terrain.GroundKind?
+Mjolnir.SDK.Terrain.LandscapeOptions.OnlyOn.init -> void
+Mjolnir.SDK.Terrain.LandscapeOptions.UpdateNavigation.get -> bool
+Mjolnir.SDK.Terrain.LandscapeOptions.UpdateNavigation.init -> void
+Mjolnir.SDK.Terrain.LandscapeOutline
+Mjolnir.SDK.Terrain.LandscapeOutline.Area.get -> Mjolnir.SDK.Terrain.LandscapeArea
+Mjolnir.SDK.Terrain.LandscapeOutline.Area.set -> void
+Mjolnir.SDK.Terrain.LandscapeOutline.Color.get -> UnityEngine.Color
+Mjolnir.SDK.Terrain.LandscapeOutline.Color.set -> void
+Mjolnir.SDK.Terrain.LandscapeOutline.Dispose() -> void
+Mjolnir.SDK.Terrain.LandscapeOutline.IsVisible.get -> bool
+Mjolnir.SDK.Terrain.LandscapeOutline.IsVisible.set -> void
+Mjolnir.SDK.Terrain.LandscapeResult
+Mjolnir.SDK.Terrain.LandscapeResult.Blocked = 4 -> Mjolnir.SDK.Terrain.LandscapeResult
+Mjolnir.SDK.Terrain.LandscapeResult.Cancelled = 8 -> Mjolnir.SDK.Terrain.LandscapeResult
+Mjolnir.SDK.Terrain.LandscapeResult.Done = 0 -> Mjolnir.SDK.Terrain.LandscapeResult
+Mjolnir.SDK.Terrain.LandscapeResult.Failed = 9 -> Mjolnir.SDK.Terrain.LandscapeResult
+Mjolnir.SDK.Terrain.LandscapeResult.NotAvailable = 2 -> Mjolnir.SDK.Terrain.LandscapeResult
+Mjolnir.SDK.Terrain.LandscapeResult.NotLoaded = 3 -> Mjolnir.SDK.Terrain.LandscapeResult
+Mjolnir.SDK.Terrain.LandscapeResult.Queued = 1 -> Mjolnir.SDK.Terrain.LandscapeResult
+Mjolnir.SDK.Terrain.LandscapeResult.TooHigh = 6 -> Mjolnir.SDK.Terrain.LandscapeResult
+Mjolnir.SDK.Terrain.LandscapeResult.TooSteep = 5 -> Mjolnir.SDK.Terrain.LandscapeResult
+Mjolnir.SDK.Terrain.LandscapeResult.Underwater = 7 -> Mjolnir.SDK.Terrain.LandscapeResult
+Mjolnir.SDK.Terrain.LandscapeSnapshot
+Mjolnir.SDK.Terrain.LandscapeSnapshot.Area.get -> Mjolnir.SDK.Terrain.LandscapeArea
+Mjolnir.SDK.Terrain.LandscapeSnapshot.CenterHeight.get -> float
+Mjolnir.SDK.Terrain.LandscapeSnapshot.HeightAt(float x, float z) -> float
+Mjolnir.SDK.Terrain.LandscapeSnapshot.PasteAt(UnityEngine.Vector3 center, float rotation = 0, float heightOffset = 0, Mjolnir.SDK.Terrain.LandscapeOptions? options = null) -> Mjolnir.SDK.Terrain.LandscapeResult
+Mjolnir.SDK.Terrain.LandscapeSnapshot.Restore(Mjolnir.SDK.Terrain.LandscapeOptions? options = null) -> Mjolnir.SDK.Terrain.LandscapeResult
+Mjolnir.SDK.Terrain.LandscapeSource
+Mjolnir.SDK.Terrain.LandscapeSource.Building = 2 -> Mjolnir.SDK.Terrain.LandscapeSource
+Mjolnir.SDK.Terrain.LandscapeSource.Mod = 3 -> Mjolnir.SDK.Terrain.LandscapeSource
+Mjolnir.SDK.Terrain.LandscapeSource.Other = 5 -> Mjolnir.SDK.Terrain.LandscapeSource
+Mjolnir.SDK.Terrain.LandscapeSource.Player = 0 -> Mjolnir.SDK.Terrain.LandscapeSource
+Mjolnir.SDK.Terrain.LandscapeSource.Remote = 4 -> Mjolnir.SDK.Terrain.LandscapeSource
+Mjolnir.SDK.Terrain.LandscapeSource.Resident = 1 -> Mjolnir.SDK.Terrain.LandscapeSource
+Mjolnir.SDK.Terrain.LevellingField
+Mjolnir.SDK.Terrain.LevellingField.Center.get -> UnityEngine.Vector3
+Mjolnir.SDK.Terrain.LevellingField.Depth.get -> float
+Mjolnir.SDK.Terrain.LevellingField.Finish() -> bool
+Mjolnir.SDK.Terrain.LevellingField.Height.get -> float
+Mjolnir.SDK.Terrain.LevellingField.HeightDifference.get -> float
+Mjolnir.SDK.Terrain.LevellingField.IsGone.get -> bool
+Mjolnir.SDK.Terrain.LevellingField.IsLevelled.get -> bool
+Mjolnir.SDK.Terrain.LevellingField.LevelNow() -> int
+Mjolnir.SDK.Terrain.LevellingField.LevelledTiles.get -> int
+Mjolnir.SDK.Terrain.LevellingField.Remove() -> bool
+Mjolnir.SDK.Terrain.LevellingField.Tiles.get -> int
+Mjolnir.SDK.Terrain.LevellingField.Width.get -> float
+Mjolnir.SDK.Terrain.LevellingFields
+Mjolnir.SDK.Terrain.NaturalObject
+Mjolnir.SDK.Terrain.NaturalObject.AssetName.get -> string!
+Mjolnir.SDK.Terrain.NaturalObject.Gather(int charges = 1) -> int
+Mjolnir.SDK.Terrain.NaturalObject.GatherCount.get -> int
+Mjolnir.SDK.Terrain.NaturalObject.Health.get -> float
+Mjolnir.SDK.Terrain.NaturalObject.HeightOverGround.get -> float
+Mjolnir.SDK.Terrain.NaturalObject.IsGone.get -> bool
+Mjolnir.SDK.Terrain.NaturalObject.IsHarvestable.get -> bool
+Mjolnir.SDK.Terrain.NaturalObject.IsRemovable.get -> bool
+Mjolnir.SDK.Terrain.NaturalObject.Kind.get -> Mjolnir.SDK.Terrain.NaturalObjectKind
+Mjolnir.SDK.Terrain.NaturalObject.MoveTo(UnityEngine.Vector3 position) -> bool
+Mjolnir.SDK.Terrain.NaturalObject.Position.get -> UnityEngine.Vector3
+Mjolnir.SDK.Terrain.NaturalObject.Quantity.get -> int
+Mjolnir.SDK.Terrain.NaturalObject.Remove() -> bool
+Mjolnir.SDK.Terrain.NaturalObject.ResourceName.get -> string!
+Mjolnir.SDK.Terrain.NaturalObject.Settle() -> bool
+Mjolnir.SDK.Terrain.NaturalObjectKind
+Mjolnir.SDK.Terrain.NaturalObjectKind.Grass = 0 -> Mjolnir.SDK.Terrain.NaturalObjectKind
+Mjolnir.SDK.Terrain.NaturalObjectKind.Item = 5 -> Mjolnir.SDK.Terrain.NaturalObjectKind
+Mjolnir.SDK.Terrain.NaturalObjectKind.LargeObject = 4 -> Mjolnir.SDK.Terrain.NaturalObjectKind
+Mjolnir.SDK.Terrain.NaturalObjectKind.Object = 3 -> Mjolnir.SDK.Terrain.NaturalObjectKind
+Mjolnir.SDK.Terrain.NaturalObjectKind.Other = 6 -> Mjolnir.SDK.Terrain.NaturalObjectKind
+Mjolnir.SDK.Terrain.NaturalObjectKind.Plant = 1 -> Mjolnir.SDK.Terrain.NaturalObjectKind
+Mjolnir.SDK.Terrain.NaturalObjectKind.Tree = 2 -> Mjolnir.SDK.Terrain.NaturalObjectKind
+Mjolnir.SDK.Terrain.NaturalObjects
+const Mjolnir.SDK.Terrain.Landscape.BiomeCellSize = 4 -> float
+const Mjolnir.SDK.Terrain.Landscape.MaximumHeight = 160 -> float
+const Mjolnir.SDK.Terrain.Landscape.MaximumStep = 10 -> float
+const Mjolnir.SDK.Terrain.LandscapeArea.MaximumBlend = 16 -> float
+const Mjolnir.SDK.Terrain.LandscapeArea.MaximumMaskSamples = 1024 -> int
+const Mjolnir.SDK.Terrain.LandscapeArea.MaximumPoints = 256 -> int
+const Mjolnir.SDK.Terrain.LandscapeArea.MaximumSide = 64 -> float
+const Mjolnir.SDK.Terrain.LevellingFields.MaximumTiles = 256 -> int
+const Mjolnir.SDK.Terrain.LevellingFields.TileSize = 2 -> float
+const Mjolnir.SDK.Terrain.NaturalObjects.MaximumRadius = 64 -> float
+override Mjolnir.SDK.Terrain.LandscapeArea.Equals(object? obj) -> bool
+override Mjolnir.SDK.Terrain.LandscapeArea.GetHashCode() -> int
+override Mjolnir.SDK.Terrain.LandscapeArea.ToString() -> string!
+override Mjolnir.SDK.Terrain.LandscapeBiome.Equals(object? obj) -> bool
+override Mjolnir.SDK.Terrain.LandscapeBiome.GetHashCode() -> int
+override Mjolnir.SDK.Terrain.LandscapeBiome.ToString() -> string!
+override Mjolnir.SDK.Terrain.LandscapeHeights.Equals(object? obj) -> bool
+override Mjolnir.SDK.Terrain.LandscapeHeights.GetHashCode() -> int
+override Mjolnir.SDK.Terrain.LandscapeHeights.ToString() -> string!
+override Mjolnir.SDK.Terrain.LandscapeOutline.ToString() -> string!
+override Mjolnir.SDK.Terrain.LandscapeSnapshot.ToString() -> string!
+override Mjolnir.SDK.Terrain.LevellingField.ToString() -> string!
+override Mjolnir.SDK.Terrain.NaturalObject.ToString() -> string!
+static Mjolnir.SDK.Terrain.Landscape.BiomeAt(float x, float z) -> Mjolnir.SDK.Terrain.LandscapeBiome?
+static Mjolnir.SDK.Terrain.Landscape.Biomes.get -> System.Collections.Generic.IReadOnlyList<Mjolnir.SDK.Terrain.LandscapeBiome>!
+static Mjolnir.SDK.Terrain.Landscape.Capture(Mjolnir.SDK.Terrain.LandscapeArea area) -> Mjolnir.SDK.Terrain.LandscapeSnapshot?
+static Mjolnir.SDK.Terrain.Landscape.Check(Mjolnir.SDK.Terrain.LandscapeArea area, Mjolnir.SDK.Terrain.LandscapeOperation operation) -> Mjolnir.SDK.Terrain.LandscapeResult
+static Mjolnir.SDK.Terrain.Landscape.ClearVegetation(Mjolnir.SDK.Terrain.LandscapeArea area, Mjolnir.SDK.Terrain.LandscapeOptions? options = null) -> Mjolnir.SDK.Terrain.LandscapeResult
+static Mjolnir.SDK.Terrain.Landscape.FindBiome(string! name) -> Mjolnir.SDK.Terrain.LandscapeBiome?
+static Mjolnir.SDK.Terrain.Landscape.GroundChanged -> System.EventHandler<Mjolnir.SDK.Terrain.LandscapeChangedEventArgs!>?
+static Mjolnir.SDK.Terrain.Landscape.GroundChanging -> System.EventHandler<Mjolnir.SDK.Terrain.LandscapeChangingEventArgs!>?
+static Mjolnir.SDK.Terrain.Landscape.HeightAt(float x, float z) -> float
+static Mjolnir.SDK.Terrain.Landscape.IsAvailable.get -> bool
+static Mjolnir.SDK.Terrain.Landscape.IsCleared(float x, float z) -> bool
+static Mjolnir.SDK.Terrain.Landscape.IsLoaded(float x, float z) -> bool
+static Mjolnir.SDK.Terrain.Landscape.IsUnderwater(float x, float z) -> bool
+static Mjolnir.SDK.Terrain.Landscape.KindAt(float x, float z) -> Mjolnir.SDK.Terrain.GroundKind
+static Mjolnir.SDK.Terrain.Landscape.Level(Mjolnir.SDK.Terrain.LandscapeArea area, float height, Mjolnir.SDK.Terrain.LandscapeOptions? options = null) -> Mjolnir.SDK.Terrain.LandscapeResult
+static Mjolnir.SDK.Terrain.Landscape.Lower(Mjolnir.SDK.Terrain.LandscapeArea area, float depth, Mjolnir.SDK.Terrain.LandscapeOptions? options = null) -> Mjolnir.SDK.Terrain.LandscapeResult
+static Mjolnir.SDK.Terrain.Landscape.Measure(Mjolnir.SDK.Terrain.LandscapeArea area) -> Mjolnir.SDK.Terrain.LandscapeHeights
+static Mjolnir.SDK.Terrain.Landscape.NormalAt(float x, float z) -> UnityEngine.Vector3
+static Mjolnir.SDK.Terrain.Landscape.Paint(Mjolnir.SDK.Terrain.LandscapeArea area, Mjolnir.SDK.Terrain.GroundKind kind, Mjolnir.SDK.Terrain.LandscapeOptions? options = null) -> Mjolnir.SDK.Terrain.LandscapeResult
+static Mjolnir.SDK.Terrain.Landscape.PaintBiome(Mjolnir.SDK.Terrain.LandscapeArea area, Mjolnir.SDK.Terrain.LandscapeBiome biome, Mjolnir.SDK.Terrain.LandscapeOptions? options = null) -> Mjolnir.SDK.Terrain.LandscapeResult
+static Mjolnir.SDK.Terrain.Landscape.Raise(Mjolnir.SDK.Terrain.LandscapeArea area, float height, Mjolnir.SDK.Terrain.LandscapeOptions? options = null) -> Mjolnir.SDK.Terrain.LandscapeResult
+static Mjolnir.SDK.Terrain.Landscape.RestoreVegetation(Mjolnir.SDK.Terrain.LandscapeArea area, Mjolnir.SDK.Terrain.LandscapeOptions? options = null) -> Mjolnir.SDK.Terrain.LandscapeResult
+static Mjolnir.SDK.Terrain.Landscape.Shape(Mjolnir.SDK.Terrain.LandscapeArea area, System.Func<float, float, float, float>! height, Mjolnir.SDK.Terrain.LandscapeOptions? options = null) -> Mjolnir.SDK.Terrain.LandscapeResult
+static Mjolnir.SDK.Terrain.Landscape.ShowOutline(Mjolnir.SDK.Terrain.LandscapeArea area, UnityEngine.Color color) -> Mjolnir.SDK.Terrain.LandscapeOutline!
+static Mjolnir.SDK.Terrain.Landscape.Slope(Mjolnir.SDK.Terrain.LandscapeArea area, UnityEngine.Vector3 from, UnityEngine.Vector3 to, Mjolnir.SDK.Terrain.LandscapeOptions? options = null) -> Mjolnir.SDK.Terrain.LandscapeResult
+static Mjolnir.SDK.Terrain.Landscape.Smooth(Mjolnir.SDK.Terrain.LandscapeArea area, float strength = 0.5, Mjolnir.SDK.Terrain.LandscapeOptions? options = null) -> Mjolnir.SDK.Terrain.LandscapeResult
+static Mjolnir.SDK.Terrain.Landscape.TryGetHeight(float x, float z, out float height) -> bool
+static Mjolnir.SDK.Terrain.Landscape.WaterLevel.get -> float
+static Mjolnir.SDK.Terrain.LandscapeArea.Circle(UnityEngine.Vector3 center, float radius, float blend = 1, Mjolnir.SDK.Terrain.LandscapeFalloff falloff = Mjolnir.SDK.Terrain.LandscapeFalloff.Smooth) -> Mjolnir.SDK.Terrain.LandscapeArea
+static Mjolnir.SDK.Terrain.LandscapeArea.Mask(UnityEngine.Vector3 center, float[,]! weights, float width, float depth, float rotation = 0) -> Mjolnir.SDK.Terrain.LandscapeArea
+static Mjolnir.SDK.Terrain.LandscapeArea.Point(UnityEngine.Vector3 center, Mjolnir.SDK.Terrain.LandscapeBrush brush = Mjolnir.SDK.Terrain.LandscapeBrush.Medium) -> Mjolnir.SDK.Terrain.LandscapeArea
+static Mjolnir.SDK.Terrain.LandscapeArea.Polygon(System.Collections.Generic.IEnumerable<UnityEngine.Vector3>! points, float blend = 1, Mjolnir.SDK.Terrain.LandscapeFalloff falloff = Mjolnir.SDK.Terrain.LandscapeFalloff.Smooth) -> Mjolnir.SDK.Terrain.LandscapeArea
+static Mjolnir.SDK.Terrain.LandscapeArea.Rectangle(UnityEngine.Vector3 center, float width, float depth, float rotation = 0, float blend = 1, Mjolnir.SDK.Terrain.LandscapeFalloff falloff = Mjolnir.SDK.Terrain.LandscapeFalloff.Smooth) -> Mjolnir.SDK.Terrain.LandscapeArea
+static Mjolnir.SDK.Terrain.LandscapeArea.operator !=(Mjolnir.SDK.Terrain.LandscapeArea left, Mjolnir.SDK.Terrain.LandscapeArea right) -> bool
+static Mjolnir.SDK.Terrain.LandscapeArea.operator ==(Mjolnir.SDK.Terrain.LandscapeArea left, Mjolnir.SDK.Terrain.LandscapeArea right) -> bool
+static Mjolnir.SDK.Terrain.LandscapeBiome.operator !=(Mjolnir.SDK.Terrain.LandscapeBiome left, Mjolnir.SDK.Terrain.LandscapeBiome right) -> bool
+static Mjolnir.SDK.Terrain.LandscapeBiome.operator ==(Mjolnir.SDK.Terrain.LandscapeBiome left, Mjolnir.SDK.Terrain.LandscapeBiome right) -> bool
+static Mjolnir.SDK.Terrain.LandscapeHeights.operator !=(Mjolnir.SDK.Terrain.LandscapeHeights left, Mjolnir.SDK.Terrain.LandscapeHeights right) -> bool
+static Mjolnir.SDK.Terrain.LandscapeHeights.operator ==(Mjolnir.SDK.Terrain.LandscapeHeights left, Mjolnir.SDK.Terrain.LandscapeHeights right) -> bool
+static Mjolnir.SDK.Terrain.LandscapeOptions.Default.get -> Mjolnir.SDK.Terrain.LandscapeOptions!
+static Mjolnir.SDK.Terrain.LevellingFields.All.get -> System.Collections.Generic.IReadOnlyList<Mjolnir.SDK.Terrain.LevellingField!>!
+static Mjolnir.SDK.Terrain.LevellingFields.Nearest(UnityEngine.Vector3 center, float radius = 16) -> Mjolnir.SDK.Terrain.LevellingField?
+static Mjolnir.SDK.Terrain.LevellingFields.Place(Mjolnir.SDK.Terrain.LandscapeArea area) -> Mjolnir.SDK.Terrain.LevellingField?
+static Mjolnir.SDK.Terrain.NaturalObjects.Around(UnityEngine.Vector3 center, float radius) -> System.Collections.Generic.IReadOnlyList<Mjolnir.SDK.Terrain.NaturalObject!>!
+static Mjolnir.SDK.Terrain.NaturalObjects.In(Mjolnir.SDK.Terrain.LandscapeArea area) -> System.Collections.Generic.IReadOnlyList<Mjolnir.SDK.Terrain.NaturalObject!>!
+static Mjolnir.SDK.Terrain.NaturalObjects.Nearest(UnityEngine.Vector3 center, float radius = 8) -> Mjolnir.SDK.Terrain.NaturalObject?

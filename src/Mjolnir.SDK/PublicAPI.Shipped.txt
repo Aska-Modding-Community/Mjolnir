@@ -4,7 +4,57 @@ Mjolnir.SDK.ActiveEffect.Duration.get -> System.TimeSpan?
 Mjolnir.SDK.ActiveEffect.Effect.get -> Mjolnir.SDK.EffectInfo!
 Mjolnir.SDK.ActiveEffect.Stacks.get -> int
 Mjolnir.SDK.ActiveEffect.TimeLeft.get -> System.TimeSpan?
+Mjolnir.SDK.AnimationEndedEventArgs
+Mjolnir.SDK.AnimationEndedEventArgs.AnimationEndedEventArgs(bool wasStopped) -> void
+Mjolnir.SDK.AnimationEndedEventArgs.WasStopped.get -> bool
+Mjolnir.SDK.AnimationInfo
+Mjolnir.SDK.AnimationInfo.FullName.get -> string!
+Mjolnir.SDK.AnimationInfo.Length.get -> System.TimeSpan
+Mjolnir.SDK.AnimationInfo.ModId.get -> string?
+Mjolnir.SDK.AnimationInfo.Name.get -> string!
+Mjolnir.SDK.AnimationMask
+Mjolnir.SDK.AnimationMask.ModId.get -> string?
+Mjolnir.SDK.AnimationMask.Name.get -> string!
+Mjolnir.SDK.AnimationOptions
+Mjolnir.SDK.AnimationOptions.AnimationOptions() -> void
+Mjolnir.SDK.AnimationOptions.Duration.get -> System.TimeSpan?
+Mjolnir.SDK.AnimationOptions.Duration.init -> void
+Mjolnir.SDK.AnimationOptions.FadeIn.get -> System.TimeSpan
+Mjolnir.SDK.AnimationOptions.FadeIn.init -> void
+Mjolnir.SDK.AnimationOptions.FadeOut.get -> System.TimeSpan
+Mjolnir.SDK.AnimationOptions.FadeOut.init -> void
+Mjolnir.SDK.AnimationOptions.Loop.get -> bool
+Mjolnir.SDK.AnimationOptions.Loop.init -> void
+Mjolnir.SDK.AnimationOptions.Mask.get -> Mjolnir.SDK.AnimationMask?
+Mjolnir.SDK.AnimationOptions.Mask.init -> void
+Mjolnir.SDK.AnimationOptions.MoveSpeed.get -> float?
+Mjolnir.SDK.AnimationOptions.MoveSpeed.init -> void
+Mjolnir.SDK.AnimationOptions.RootMotion.get -> bool
+Mjolnir.SDK.AnimationOptions.RootMotion.init -> void
+Mjolnir.SDK.AnimationOptions.Speed.get -> double
+Mjolnir.SDK.AnimationOptions.Speed.init -> void
+Mjolnir.SDK.AnimationPlayback
+Mjolnir.SDK.AnimationPlayback.Animation.get -> Mjolnir.SDK.AnimationInfo!
+Mjolnir.SDK.AnimationPlayback.Animator.get -> Mjolnir.SDK.CharacterAnimator!
+Mjolnir.SDK.AnimationPlayback.At(System.TimeSpan time, System.Action! action) -> Mjolnir.SDK.AnimationPlayback!
+Mjolnir.SDK.AnimationPlayback.Dispose() -> void
+Mjolnir.SDK.AnimationPlayback.Ended -> System.EventHandler<Mjolnir.SDK.AnimationEndedEventArgs!>?
+Mjolnir.SDK.AnimationPlayback.IsPlaying.get -> bool
+Mjolnir.SDK.AnimationPlayback.Options.get -> Mjolnir.SDK.AnimationOptions!
+Mjolnir.SDK.AnimationPlayback.Speed.get -> double
+Mjolnir.SDK.AnimationPlayback.Speed.set -> void
+Mjolnir.SDK.AnimationPlayback.Stop() -> void
+Mjolnir.SDK.AnimationPlayback.Time.get -> System.TimeSpan
+Mjolnir.SDK.Animations
 Mjolnir.SDK.BindableExtensions
+Mjolnir.SDK.CharacterAnimator
+Mjolnir.SDK.CharacterAnimator.Bone(string! name) -> UnityEngine.Transform?
+Mjolnir.SDK.CharacterAnimator.Current.get -> Mjolnir.SDK.AnimationPlayback?
+Mjolnir.SDK.CharacterAnimator.IsAvailable.get -> bool
+Mjolnir.SDK.CharacterAnimator.Play(Mjolnir.SDK.AnimationInfo! animation, Mjolnir.SDK.AnimationOptions? options = null) -> Mjolnir.SDK.AnimationPlayback!
+Mjolnir.SDK.CharacterAnimator.PlayEmote(Mjolnir.SDK.Emote emote) -> bool
+Mjolnir.SDK.CharacterAnimator.Rig.get -> string!
+Mjolnir.SDK.CharacterAnimator.Stop() -> void
 Mjolnir.SDK.CharacterEffects
 Mjolnir.SDK.CharacterEffects.Active.get -> System.Collections.Generic.IReadOnlyList<Mjolnir.SDK.ActiveEffect!>!
 Mjolnir.SDK.CharacterEffects.Added -> System.EventHandler<Mjolnir.SDK.EffectChangedEventArgs!>?
@@ -39,6 +89,38 @@ Mjolnir.SDK.CharacterStat.Maximum.get -> float
 Mjolnir.SDK.CharacterStat.Minimum.get -> float
 Mjolnir.SDK.CharacterStat.Value.get -> float
 Mjolnir.SDK.CharacterStat.Value.set -> void
+Mjolnir.SDK.CombatFaction
+Mjolnir.SDK.CombatFaction.Critters = 8 -> Mjolnir.SDK.CombatFaction
+Mjolnir.SDK.CombatFaction.Danger = 64 -> Mjolnir.SDK.CombatFaction
+Mjolnir.SDK.CombatFaction.Ignore = 32 -> Mjolnir.SDK.CombatFaction
+Mjolnir.SDK.CombatFaction.Neutral = 1 -> Mjolnir.SDK.CombatFaction
+Mjolnir.SDK.CombatFaction.None = 0 -> Mjolnir.SDK.CombatFaction
+Mjolnir.SDK.CombatFaction.Structures = 16 -> Mjolnir.SDK.CombatFaction
+Mjolnir.SDK.CombatFaction.Undead = 4 -> Mjolnir.SDK.CombatFaction
+Mjolnir.SDK.CombatFaction.Vikings = 2 -> Mjolnir.SDK.CombatFaction
+Mjolnir.SDK.Combatant
+Mjolnir.SDK.Combatant.Damage(float amount, Mjolnir.SDK.Combatant? attacker = null) -> float
+Mjolnir.SDK.Combatant.DisplayName.get -> string!
+Mjolnir.SDK.Combatant.Faction.get -> Mjolnir.SDK.CombatFaction
+Mjolnir.SDK.Combatant.Heal(float amount) -> float
+Mjolnir.SDK.Combatant.Health.get -> float
+Mjolnir.SDK.Combatant.IsAlive.get -> bool
+Mjolnir.SDK.Combatant.IsAvailable.get -> bool
+Mjolnir.SDK.Combatant.IsFriendly.get -> bool
+Mjolnir.SDK.Combatant.Kill(Mjolnir.SDK.Combatant? killer = null) -> void
+Mjolnir.SDK.Combatant.Kind.get -> Mjolnir.SDK.CombatantKind
+Mjolnir.SDK.Combatant.MaxHealth.get -> float
+Mjolnir.SDK.Combatant.Name.get -> string!
+Mjolnir.SDK.Combatant.Position.get -> UnityEngine.Vector3
+Mjolnir.SDK.Combatant.Sheet.get -> Mjolnir.SDK.CharacterSheet!
+Mjolnir.SDK.Combatant.Team.get -> int
+Mjolnir.SDK.CombatantKind
+Mjolnir.SDK.CombatantKind.Creature = 3 -> Mjolnir.SDK.CombatantKind
+Mjolnir.SDK.CombatantKind.Den = 4 -> Mjolnir.SDK.CombatantKind
+Mjolnir.SDK.CombatantKind.Pet = 2 -> Mjolnir.SDK.CombatantKind
+Mjolnir.SDK.CombatantKind.Player = 0 -> Mjolnir.SDK.CombatantKind
+Mjolnir.SDK.CombatantKind.Resident = 1 -> Mjolnir.SDK.CombatantKind
+Mjolnir.SDK.Combatants
 Mjolnir.SDK.Config.ConfigEntry<T>
 Mjolnir.SDK.Config.ConfigEntry<T>.Changed -> System.EventHandler<Mjolnir.SDK.ValueChangedEventArgs<T>!>?
 Mjolnir.SDK.Config.ConfigEntry<T>.DefaultValue.get -> T
@@ -58,6 +140,34 @@ Mjolnir.SDK.Config.ModConfig
 Mjolnir.SDK.Config.ModConfig.Bind<T>(string! section, string! key, T defaultValue, string? description = null) -> Mjolnir.SDK.Config.ConfigEntry<T>!
 Mjolnir.SDK.Config.ModConfig.FilePath.get -> string!
 Mjolnir.SDK.Config.ModConfig.Save() -> void
+Mjolnir.SDK.DamageKinds
+Mjolnir.SDK.DamageKinds.Blocked = 32 -> Mjolnir.SDK.DamageKinds
+Mjolnir.SDK.DamageKinds.Critical = 4 -> Mjolnir.SDK.DamageKinds
+Mjolnir.SDK.DamageKinds.Dodged = 64 -> Mjolnir.SDK.DamageKinds
+Mjolnir.SDK.DamageKinds.Heavy = 1 -> Mjolnir.SDK.DamageKinds
+Mjolnir.SDK.DamageKinds.KnockedDown = 256 -> Mjolnir.SDK.DamageKinds
+Mjolnir.SDK.DamageKinds.Melee = 2 -> Mjolnir.SDK.DamageKinds
+Mjolnir.SDK.DamageKinds.None = 0 -> Mjolnir.SDK.DamageKinds
+Mjolnir.SDK.DamageKinds.Staggered = 128 -> Mjolnir.SDK.DamageKinds
+Mjolnir.SDK.DamageKinds.Unblockable = 8 -> Mjolnir.SDK.DamageKinds
+Mjolnir.SDK.DamageKinds.Undodgeable = 16 -> Mjolnir.SDK.DamageKinds
+Mjolnir.SDK.DamagedEventArgs
+Mjolnir.SDK.DamagedEventArgs.Amount.get -> float
+Mjolnir.SDK.DamagedEventArgs.Attacker.get -> Mjolnir.SDK.Combatant?
+Mjolnir.SDK.DamagedEventArgs.DamagedEventArgs(Mjolnir.SDK.Combatant! target, Mjolnir.SDK.Combatant? attacker, float amount, float health, bool isFatal, Mjolnir.SDK.DamageKinds kinds) -> void
+Mjolnir.SDK.DamagedEventArgs.Health.get -> float
+Mjolnir.SDK.DamagedEventArgs.IsFatal.get -> bool
+Mjolnir.SDK.DamagedEventArgs.Kinds.get -> Mjolnir.SDK.DamageKinds
+Mjolnir.SDK.DamagedEventArgs.Target.get -> Mjolnir.SDK.Combatant!
+Mjolnir.SDK.DamagingEventArgs
+Mjolnir.SDK.DamagingEventArgs.Amount.get -> float
+Mjolnir.SDK.DamagingEventArgs.Amount.set -> void
+Mjolnir.SDK.DamagingEventArgs.Attacker.get -> Mjolnir.SDK.Combatant?
+Mjolnir.SDK.DamagingEventArgs.DamagingEventArgs(Mjolnir.SDK.Combatant! target, Mjolnir.SDK.Combatant? attacker, float amount, Mjolnir.SDK.DamageKinds kinds, UnityEngine.Vector3 position, UnityEngine.Vector3 direction) -> void
+Mjolnir.SDK.DamagingEventArgs.Direction.get -> UnityEngine.Vector3
+Mjolnir.SDK.DamagingEventArgs.Kinds.get -> Mjolnir.SDK.DamageKinds
+Mjolnir.SDK.DamagingEventArgs.Position.get -> UnityEngine.Vector3
+Mjolnir.SDK.DamagingEventArgs.Target.get -> Mjolnir.SDK.Combatant!
 Mjolnir.SDK.DevCommand
 Mjolnir.SDK.DevCommand.Description.get -> string!
 Mjolnir.SDK.DevCommand.FullName.get -> string!
@@ -80,6 +190,10 @@ Mjolnir.SDK.DevCommandContext.Print(string! text) -> void
 Mjolnir.SDK.DevCommandException
 Mjolnir.SDK.DevCommandException.DevCommandException(string! message) -> void
 Mjolnir.SDK.DevConsole
+Mjolnir.SDK.DiedEventArgs
+Mjolnir.SDK.DiedEventArgs.DiedEventArgs(Mjolnir.SDK.Combatant! target, Mjolnir.SDK.Combatant? killer) -> void
+Mjolnir.SDK.DiedEventArgs.Killer.get -> Mjolnir.SDK.Combatant?
+Mjolnir.SDK.DiedEventArgs.Target.get -> Mjolnir.SDK.Combatant!
 Mjolnir.SDK.EffectChangedEventArgs
 Mjolnir.SDK.EffectChangedEventArgs.Effect.get -> Mjolnir.SDK.EffectInfo!
 Mjolnir.SDK.EffectChangedEventArgs.Stacks.get -> int
@@ -90,6 +204,11 @@ Mjolnir.SDK.EffectInfo.DisplayName.get -> string!
 Mjolnir.SDK.EffectInfo.Id.get -> int
 Mjolnir.SDK.EffectInfo.Kind.get -> string!
 Mjolnir.SDK.Effects
+Mjolnir.SDK.Emote
+Mjolnir.SDK.Emote.Cheer = 2 -> Mjolnir.SDK.Emote
+Mjolnir.SDK.Emote.Sit = 0 -> Mjolnir.SDK.Emote
+Mjolnir.SDK.Emote.Skal = 3 -> Mjolnir.SDK.Emote
+Mjolnir.SDK.Emote.Wave = 1 -> Mjolnir.SDK.Emote
 Mjolnir.SDK.ExperienceGainingEventArgs
 Mjolnir.SDK.ExperienceGainingEventArgs.Amount.get -> float
 Mjolnir.SDK.ExperienceGainingEventArgs.Amount.set -> void
@@ -227,7 +346,12 @@ Mjolnir.SDK.ValueChangedEventArgs<T>
 Mjolnir.SDK.ValueChangedEventArgs<T>.NewValue.get -> T
 Mjolnir.SDK.ValueChangedEventArgs<T>.OldValue.get -> T
 Mjolnir.SDK.ValueChangedEventArgs<T>.ValueChangedEventArgs(T oldValue, T newValue) -> void
+override Mjolnir.SDK.AnimationInfo.ToString() -> string!
+override Mjolnir.SDK.AnimationMask.ToString() -> string!
+override Mjolnir.SDK.AnimationPlayback.ToString() -> string!
+override Mjolnir.SDK.CharacterAnimator.ToString() -> string!
 override Mjolnir.SDK.CharacterStat.ToString() -> string!
+override Mjolnir.SDK.Combatant.ToString() -> string!
 override Mjolnir.SDK.Config.ConfigEntry<T>.ToString() -> string!
 override Mjolnir.SDK.DevCommand.ToString() -> string!
 override Mjolnir.SDK.EffectInfo.ToString() -> string!
@@ -238,8 +362,17 @@ override Mjolnir.SDK.ModDependencyInfo.GetHashCode() -> int
 override Mjolnir.SDK.ModDependencyInfo.ToString() -> string!
 override Mjolnir.SDK.ModManifest.ToString() -> string!
 override Mjolnir.SDK.TranslatedText.ToString() -> string!
+static Mjolnir.SDK.AnimationMask.UpperBody.get -> Mjolnir.SDK.AnimationMask!
+static Mjolnir.SDK.AnimationOptions.Default.get -> Mjolnir.SDK.AnimationOptions!
+static Mjolnir.SDK.Animations.All.get -> System.Collections.Generic.IReadOnlyList<Mjolnir.SDK.AnimationInfo!>!
+static Mjolnir.SDK.Animations.Find(string! name) -> Mjolnir.SDK.AnimationInfo?
 static Mjolnir.SDK.BindableExtensions.Map<TSource, TResult>(this Mjolnir.SDK.IBindable<TSource>! source, System.Func<TSource, TResult>! to, System.Func<TResult, TSource>! from) -> Mjolnir.SDK.IBindable<TResult>!
 static Mjolnir.SDK.BindableExtensions.Map<TSource, TResult>(this Mjolnir.SDK.IReadOnlyBindable<TSource>! source, System.Func<TSource, TResult>! to) -> Mjolnir.SDK.IReadOnlyBindable<TResult>!
+static Mjolnir.SDK.Combatants.All.get -> System.Collections.Generic.IReadOnlyList<Mjolnir.SDK.Combatant!>!
+static Mjolnir.SDK.Combatants.Damaged -> System.EventHandler<Mjolnir.SDK.DamagedEventArgs!>?
+static Mjolnir.SDK.Combatants.Damaging -> System.EventHandler<Mjolnir.SDK.DamagingEventArgs!>?
+static Mjolnir.SDK.Combatants.Died -> System.EventHandler<Mjolnir.SDK.DiedEventArgs!>?
+static Mjolnir.SDK.Combatants.Near(UnityEngine.Vector3 position, float radius) -> System.Collections.Generic.IReadOnlyList<Mjolnir.SDK.Combatant!>!
 static Mjolnir.SDK.DevConsole.Add(string! name, string! description, System.Action<Mjolnir.SDK.DevCommandContext!>! run, string? syntax = null) -> Mjolnir.SDK.DevCommand!
 static Mjolnir.SDK.DevConsole.Commands.get -> System.Collections.Generic.IReadOnlyList<Mjolnir.SDK.DevCommand!>!
 static Mjolnir.SDK.DevConsole.Execute(string! line) -> void

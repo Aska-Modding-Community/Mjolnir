@@ -10,8 +10,10 @@
     <InteropDir>$(MSBuildThisFileDirectory)build\interop</InteropDir>
     <!-- One version for the platform: Mjolnir.Core, Mjolnir.SDK and the SDK's modules (Mjolnir.SDK.UI…). 0.2.0: the
          UI facade became its own assembly, so mods built against 0.1.0 must be rebuilt. 0.3.0: the modules Player,
-         Content, AI, World and Stats, and breaking renames in the UI module, so 0.2.0's mods are rebuilt. -->
-    <MjolnirPlatformVersion>0.3.0</MjolnirPlatformVersion>
+         Content, AI, World and Stats, and breaking renames in the UI module, so 0.2.0's mods are rebuilt. 0.4.0: the
+         modules Net, Animation, Combat, Camera and Terrain, and a mod is ClientOnly unless it declares otherwise, so
+         0.3.0's mods are rebuilt. -->
+    <MjolnirPlatformVersion>0.4.0</MjolnirPlatformVersion>
   </PropertyGroup>
 
   <!-- The SDK's public API: Mjolnir.SDK and its modules Mjolnir.SDK.<Facade> (not their tests), the assemblies mods

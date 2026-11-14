@@ -1,1 +1,60 @@
 #nullable enable
+Mjolnir.SDK.Camera.CameraMode
+Mjolnir.SDK.Camera.CameraMode.Aim = 1 -> Mjolnir.SDK.Camera.CameraMode
+Mjolnir.SDK.Camera.CameraMode.Boat = 9 -> Mjolnir.SDK.Camera.CameraMode
+Mjolnir.SDK.Camera.CameraMode.Build = 4 -> Mjolnir.SDK.Camera.CameraMode
+Mjolnir.SDK.Camera.CameraMode.Cave = 6 -> Mjolnir.SDK.Camera.CameraMode
+Mjolnir.SDK.Camera.CameraMode.Climbing = 2 -> Mjolnir.SDK.Camera.CameraMode
+Mjolnir.SDK.Camera.CameraMode.Fly = 7 -> Mjolnir.SDK.Camera.CameraMode
+Mjolnir.SDK.Camera.CameraMode.Inside = 5 -> Mjolnir.SDK.Camera.CameraMode
+Mjolnir.SDK.Camera.CameraMode.LockOn = 3 -> Mjolnir.SDK.Camera.CameraMode
+Mjolnir.SDK.Camera.CameraMode.Lookout = 8 -> Mjolnir.SDK.Camera.CameraMode
+Mjolnir.SDK.Camera.CameraMode.Normal = 0 -> Mjolnir.SDK.Camera.CameraMode
+Mjolnir.SDK.Camera.CameraModifier
+Mjolnir.SDK.Camera.CameraModifier.Dispose() -> void
+Mjolnir.SDK.Camera.CameraModifier.IsActive.get -> bool
+Mjolnir.SDK.Camera.CameraModifier.Priority.get -> int
+Mjolnir.SDK.Camera.CameraView
+Mjolnir.SDK.Camera.CameraView.Distance.get -> float
+Mjolnir.SDK.Camera.CameraView.Distance.set -> void
+Mjolnir.SDK.Camera.CameraView.FieldOfView.get -> float
+Mjolnir.SDK.Camera.CameraView.FieldOfView.set -> void
+Mjolnir.SDK.Camera.CameraView.IsCurrent.get -> bool
+Mjolnir.SDK.Camera.CameraView.Mode.get -> Mjolnir.SDK.Camera.CameraMode
+Mjolnir.SDK.Camera.CameraView.ShoulderOffset.get -> UnityEngine.Vector3
+Mjolnir.SDK.Camera.CameraView.ShoulderOffset.set -> void
+Mjolnir.SDK.Camera.GameCamera
+Mjolnir.SDK.Camera.ModCamera
+Mjolnir.SDK.Camera.ModCamera.Blend.get -> System.TimeSpan
+Mjolnir.SDK.Camera.ModCamera.Dispose() -> void
+Mjolnir.SDK.Camera.ModCamera.Ended -> System.EventHandler?
+Mjolnir.SDK.Camera.ModCamera.FieldOfView.get -> float
+Mjolnir.SDK.Camera.ModCamera.FieldOfView.set -> void
+Mjolnir.SDK.Camera.ModCamera.Follow.get -> UnityEngine.Transform?
+Mjolnir.SDK.Camera.ModCamera.Follow.set -> void
+Mjolnir.SDK.Camera.ModCamera.FollowOffset.get -> UnityEngine.Vector3
+Mjolnir.SDK.Camera.ModCamera.FollowOffset.set -> void
+Mjolnir.SDK.Camera.ModCamera.IsActive.get -> bool
+Mjolnir.SDK.Camera.ModCamera.IsShown.get -> bool
+Mjolnir.SDK.Camera.ModCamera.LookAt.get -> UnityEngine.Transform?
+Mjolnir.SDK.Camera.ModCamera.LookAt.set -> void
+Mjolnir.SDK.Camera.ModCamera.Position.get -> UnityEngine.Vector3
+Mjolnir.SDK.Camera.ModCamera.Position.set -> void
+Mjolnir.SDK.Camera.ModCamera.Priority.get -> int
+Mjolnir.SDK.Camera.ModCamera.Rotation.get -> UnityEngine.Quaternion
+Mjolnir.SDK.Camera.ModCamera.Rotation.set -> void
+override Mjolnir.SDK.Camera.CameraModifier.ToString() -> string!
+override Mjolnir.SDK.Camera.ModCamera.ToString() -> string!
+static Mjolnir.SDK.Camera.GameCamera.AddModifier(System.Action<Mjolnir.SDK.Camera.CameraView!>! modify, int priority = 0) -> Mjolnir.SDK.Camera.CameraModifier!
+static Mjolnir.SDK.Camera.GameCamera.FieldOfView.get -> float
+static Mjolnir.SDK.Camera.GameCamera.Forward.get -> UnityEngine.Vector3
+static Mjolnir.SDK.Camera.GameCamera.IsAvailable.get -> bool
+static Mjolnir.SDK.Camera.GameCamera.Mode.get -> Mjolnir.SDK.Camera.CameraMode
+static Mjolnir.SDK.Camera.GameCamera.ModeChanged -> System.EventHandler<Mjolnir.SDK.ValueChangedEventArgs<Mjolnir.SDK.Camera.CameraMode>!>?
+static Mjolnir.SDK.Camera.GameCamera.Position.get -> UnityEngine.Vector3
+static Mjolnir.SDK.Camera.GameCamera.Rotation.get -> UnityEngine.Quaternion
+static Mjolnir.SDK.Camera.GameCamera.ScreenPointToRay(UnityEngine.Vector2 screen) -> UnityEngine.Ray
+static Mjolnir.SDK.Camera.GameCamera.ShownCamera.get -> Mjolnir.SDK.Camera.ModCamera?
+static Mjolnir.SDK.Camera.GameCamera.Take(int priority = 0, System.TimeSpan blend = default(System.TimeSpan)) -> Mjolnir.SDK.Camera.ModCamera!
+static Mjolnir.SDK.Camera.GameCamera.TryRaycast(float maxDistance, out UnityEngine.Vector3 point, out UnityEngine.GameObject? target) -> bool
+static Mjolnir.SDK.Camera.GameCamera.WorldToScreen(UnityEngine.Vector3 world) -> UnityEngine.Vector3

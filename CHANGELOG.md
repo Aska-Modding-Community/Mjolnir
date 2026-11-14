@@ -3,7 +3,7 @@
 The platform has one version for the loader, the SDK and its modules. Mods built against an earlier minor version
 must be rebuilt.
 
-## Unreleased
+## 0.4.0 — 2026-11-14
 
 ### Added
 

@@ -1,12 +1,1 @@
 #nullable enable
-Mjolnir.SDK.Animation.AnimationMaskExtensions
-Mjolnir.SDK.Animation.AnimationMaskExtensions.extension(Mjolnir.SDK.AnimationMask!)
-Mjolnir.SDK.Animation.AnimationsExtensions
-Mjolnir.SDK.Animation.AnimationsExtensions.extension(Mjolnir.SDK.Animations!)
-Mjolnir.SDK.Animation.ModAnimation
-Mjolnir.SDK.Animation.ModAnimation.Asset.get -> string!
-Mjolnir.SDK.Animation.ModAnimation.BundlePath.get -> string!
-static Mjolnir.SDK.Animation.AnimationMaskExtensions.Add(string! name, string! bundle, string! asset) -> Mjolnir.SDK.AnimationMask!
-static Mjolnir.SDK.Animation.AnimationMaskExtensions.extension(Mjolnir.SDK.AnimationMask!).Add(string! name, string! bundle, string! asset) -> Mjolnir.SDK.AnimationMask!
-static Mjolnir.SDK.Animation.AnimationsExtensions.Add(string! name, string! bundle, string! asset) -> Mjolnir.SDK.Animation.ModAnimation!
-static Mjolnir.SDK.Animation.AnimationsExtensions.extension(Mjolnir.SDK.Animations!).Add(string! name, string! bundle, string! asset) -> Mjolnir.SDK.Animation.ModAnimation!
