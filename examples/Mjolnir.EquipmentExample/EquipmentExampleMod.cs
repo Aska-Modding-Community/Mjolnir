@@ -24,6 +24,7 @@ namespace Mjolnir.EquipmentExample;
     "mjolnir.equipmentexample",
     "Equipment Example",
     "1.0.0",
+    Network = NetworkCompatibility.Everyone,   // its items travel between the players
     Description = "A weapon, armour and food of a mod's own.",
     Author = "Mjolnir")]
 public sealed class EquipmentExampleMod : Mod

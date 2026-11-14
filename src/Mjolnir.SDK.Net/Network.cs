@@ -13,7 +13,7 @@ namespace Mjolnir.SDK.Net;
 /// Multiplayer for mods: the players of the session whose mods match the host's, and message channels between them.
 /// <para>
 /// Every session is checked whether or not a mod uses this class: a client joining a host is compared with it by the mods
-/// every player needs (<see cref="NetworkCompatibility.Everyone"/>, the default of <see cref="ModManifestAttribute.Network"/>),
+/// every player needs (the mods that declare <see cref="NetworkCompatibility.Everyone"/> in <see cref="ModManifestAttribute.Network"/>),
 /// and a client whose mods differ does not join; it is told which mods to turn on or off, and which versions differ.
 /// </para>
 /// <para>

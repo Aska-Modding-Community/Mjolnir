@@ -118,4 +118,11 @@ public class ModTests
         Assert.Equal("*", dependency.VersionRange);
         Assert.True(dependency.Optional);
     }
+
+    [Fact]
+    public void AModIsOnlyTheInstallingPlayersUntilItAsksForEveryone()
+    {
+        // The default keeps a mod of one player's own out of the handshake; content declares Everyone itself.
+        Assert.Equal(NetworkCompatibility.ClientOnly, new ModManifestAttribute("a.b", "A", "1.0").Network);
+    }
 }

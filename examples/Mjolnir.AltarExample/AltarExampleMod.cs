@@ -25,6 +25,7 @@ namespace Mjolnir.AltarExample;
     "mjolnir.altarexample",
     "Altar Example",
     "1.0.0",
+    Network = NetworkCompatibility.Everyone,   // its building and its effect travel between the players
     Description = "An altar to build, where the player prays.",
     Author = "Mjolnir")]
 public sealed class AltarExampleMod : Mod

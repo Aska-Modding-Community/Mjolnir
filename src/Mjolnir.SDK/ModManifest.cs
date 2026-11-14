@@ -24,7 +24,7 @@ public sealed class ModManifest
     internal ModManifest(ModDescriptor mod, ModManifestAttribute? attribute, Action<string>? warn = null)
     {
         _mod = mod;
-        Network = attribute?.Network ?? NetworkCompatibility.Everyone;
+        Network = attribute?.Network ?? NetworkCompatibility.ClientOnly;
         Description = TextOrNull(attribute?.Description);
         Author = TextOrNull(attribute?.Author);
         IconPath = FindIcon(mod.Location, TextOrNull(attribute?.Icon), warn);

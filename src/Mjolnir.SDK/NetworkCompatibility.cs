@@ -6,10 +6,10 @@ namespace Mjolnir.SDK;
 /// </summary>
 public enum NetworkCompatibility
 {
-    /// <summary>Every peer needs it (content, mechanics). The safe default.</summary>
+    /// <summary>Every peer needs it, in the same version: content, recipes, the game's rules. Declared by the mod.</summary>
     Everyone,
 
-    /// <summary>Only the player who installed it (camera, interface).</summary>
+    /// <summary>Only the player who installed it (camera, interface, cheats). The default.</summary>
     ClientOnly,
 
     /// <summary>Only the host or dedicated server (rules, admin tools).</summary>

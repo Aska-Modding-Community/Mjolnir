@@ -24,6 +24,7 @@ namespace Mjolnir.StatsExample;
     "mjolnir.statsexample",
     "Stats Example",
     "1.0.0",
+    Network = NetworkCompatibility.Everyone,   // its effect travels between the players
     Description = "The player learns faster and is blessed at each level.",
     Author = "Mjolnir")]
 public sealed class StatsExampleMod : Mod
