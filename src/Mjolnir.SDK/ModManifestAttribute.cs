@@ -17,6 +17,8 @@ namespace Mjolnir.SDK;
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
 public sealed class ModManifestAttribute(string id, string name, string version) : Attribute, IModManifest
 {
+    private NetworkCompatibility _network = NetworkCompatibility.ClientOnly;
+
     public string Id { get; } = id ?? "";
     public string Name { get; } = name ?? "";
     public string Version { get; } = version ?? "";
@@ -24,12 +26,24 @@ public sealed class ModManifestAttribute(string id, string name, string version)
     /// <summary>
     /// Who must have the mod in a multiplayer session. <see cref="NetworkCompatibility.ClientOnly"/> by default:
     /// a mod of one player's own (interface, camera, hotkeys, cheats) keeps nobody out of a session.
-    /// <para>A mod that adds content (items, recipes, buildings, effects) or changes the game's own rules must
-    /// declare <see cref="NetworkCompatibility.Everyone"/>: its ids travel between the players, so a client whose
-    /// mods differ from the host's is told which ones and does not join, instead of playing a session that drifts
-    /// apart.</para>
+    /// <para>A mod that adds content (items, recipes, buildings, effects) needs
+    /// <see cref="NetworkCompatibility.Everyone"/>: its ids travel between the players, so a client whose mods
+    /// differ from the host's is told which ones and does not join, instead of playing a session that drifts apart.
+    /// The platform raises such a mod itself when it adds its first content, so this is set only to choose another
+    /// mode — and that choice stands, with a warning in the log.</para>
     /// </summary>
-    public NetworkCompatibility Network { get; set; } = NetworkCompatibility.ClientOnly;
+    public NetworkCompatibility Network
+    {
+        get => _network;
+        set
+        {
+            _network = value;
+            IsNetworkDeclared = true;
+        }
+    }
+
+    /// <summary>Whether the mod chose <see cref="Network"/> itself, which the platform then leaves alone.</summary>
+    internal bool IsNetworkDeclared { get; private set; }
 
     /// <summary>What the mod does, in a short line: the Mods window shows it under the mod's name (its id when none).</summary>
     public string? Description { get; set; }

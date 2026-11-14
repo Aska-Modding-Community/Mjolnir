@@ -87,6 +87,9 @@ must be rebuilt.
   camera, hotkeys) no longer keeps anyone out of a multiplayer session. A mod that adds content (items, recipes,
   buildings, effects) or changes the game's rules declares `Network = NetworkCompatibility.Everyone` in its
   `[ModManifest]`, as the content examples now do, and only such mods are compared when a player joins.
+- A mod that adds content of its own and chose no mode is raised to `NetworkCompatibility.Everyone` as it adds it,
+  with a line in the log, so forgetting it cannot quietly split a session. A mod that chose a mode keeps it and is
+  warned about instead.
 - A building's `basedOn` is optional: without it a building is the mod's own on the game's plain base, instead of a game
   building wearing the mod's name.
 - The game writes the kit's files into `Mjolnir/ModKit/` instead of `Mjolnir/rigs`, and takes the old folder away.

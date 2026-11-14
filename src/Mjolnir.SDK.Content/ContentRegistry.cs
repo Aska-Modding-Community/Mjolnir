@@ -34,9 +34,19 @@ internal sealed class ContentRegistry
     private readonly Dictionary<int, ModEffect> _effectIds = [];
     private readonly Dictionary<string, ModEffect> _effectNames = new(StringComparer.Ordinal);
     private readonly Func<Assembly, (string Id, string? Folder)?> _owner;
+    private readonly Action<string, string> _needsEveryone;
     private int _version;
 
-    public ContentRegistry(Func<Assembly, (string Id, string? Folder)?> owner) => _owner = owner;
+    /// <param name="owner">The mod an assembly belongs to.</param>
+    /// <param name="needsEveryone">
+    /// Told that a mod added content every player needs, so a session compares the mod (the platform raises a mod
+    /// that chose no mode); taken apart in the tests.
+    /// </param>
+    public ContentRegistry(Func<Assembly, (string Id, string? Folder)?> owner, Action<string, string>? needsEveryone = null)
+    {
+        _owner = owner;
+        _needsEveryone = needsEveryone ?? ModNetwork.NeedsEveryone;
+    }
 
     /// <summary>The registry the public API fills: a mod is found by its assembly as its strings are.</summary>
     public static ContentRegistry Shared { get; } = new(OwnerOf);
@@ -103,6 +113,7 @@ internal sealed class ContentRegistry
         {
             if (stackSize is <= 0) throw new ArgumentOutOfRangeException(nameof(stackSize), stackSize, "a stack holds at least one");
         });
+        _needsEveryone(modId, $"the item {name}");
         string? iconPath = icon == null ? null : Resolve(folder, icon);
         ModItem item;
         string? clash;
@@ -131,6 +142,7 @@ internal sealed class ContentRegistry
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(quantity);
         ArgumentException.ThrowIfNullOrWhiteSpace(basedOn);
         var (modId, _) = Owner(caller);
+        _needsEveryone(modId, $"a recipe for {result.Name}");
         ModRecipe recipe;
         string? clash;
         lock (_lock)
@@ -152,6 +164,7 @@ internal sealed class ContentRegistry
     public ModBuilding AddBuilding(Assembly caller, string name, string basedOn, string? icon)
     {
         var (modId, folder) = Check(caller, name, basedOn);
+        _needsEveryone(modId, $"the building {name}");
         string? iconPath = icon == null ? null : Resolve(folder, icon);
         ModBuilding building;
         string? clash;
@@ -180,6 +193,7 @@ internal sealed class ContentRegistry
     public ModEffect AddEffect(Assembly caller, string name, string basedOn, string? icon)
     {
         var (modId, folder) = Check(caller, name, basedOn);
+        _needsEveryone(modId, $"the effect {name}");
         string? iconPath = icon == null ? null : Resolve(folder, icon);
         ModEffect effect;
         string? clash = null;

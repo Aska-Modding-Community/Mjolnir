@@ -27,6 +27,7 @@ public abstract class Mod : IModEntry
             $"{GetType().FullName}: mods are created by Mjolnir's mod loader");
         Log = new ModLogger(context.Mod.Name); // first: the manifest reports an icon it cannot find there
         Manifest = new ModManifest(context.Mod, GetType().GetCustomAttribute<ModManifestAttribute>(inherit: false), Log.Warn);
+        ModNetwork.Track(Manifest);   // before OnLoad: content added there raises the mod to Everyone
         _configPath = context.ConfigPath;
     }
 
