@@ -288,6 +288,8 @@ Mjolnir.SDK.ModManifestAttribute.ModManifestAttribute(string! id, string! name, 
 Mjolnir.SDK.ModManifestAttribute.Name.get -> string!
 Mjolnir.SDK.ModManifestAttribute.Network.get -> Mjolnir.SDK.NetworkCompatibility
 Mjolnir.SDK.ModManifestAttribute.Network.set -> void
+Mjolnir.SDK.ModManifestAttribute.Platform.get -> string?
+Mjolnir.SDK.ModManifestAttribute.Platform.set -> void
 Mjolnir.SDK.ModManifestAttribute.Version.get -> string!
 Mjolnir.SDK.ModRegistry
 Mjolnir.SDK.ModifierKind

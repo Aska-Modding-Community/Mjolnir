@@ -5,12 +5,19 @@ must be rebuilt.
 
 ## Unreleased
 
+## 0.4.1 — 2026-11-14
+
 ### Added
 
 - A mod declares which Mjolnir versions it works with: `[ModManifest(… Platform = ">=0.4 <0.5")]`, a range written
   as a dependency's. A mod built for another platform version is not loaded, and the log and the Mods window say
   which version it needs and which is installed, instead of the mod failing later on the first type that changed.
   A mod that declares nothing works with any version, as before.
+- Another mod loader installed beside Mjolnir is named, in the log and over the list in the Mods window. Two loaders
+  cannot share one game: only one of them starts, and the other says nothing at all, so its mods simply do nothing.
+  BepInEx (Unity Doorstop) and MelonLoader are recognised.
+
+0.4.0's mods work unchanged.
 
 ## 0.4.0 — 2026-11-14
 
