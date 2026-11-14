@@ -9,7 +9,8 @@ internal sealed record ModDependency(string Id, VersionRange Range, bool Optiona
 
 /// <summary>A discovered mod as the loader sees it: identity, version, dependencies and where it came from.</summary>
 internal sealed class ModDescriptor(string id, string name, string versionText, Version version,
-                                    IReadOnlyList<ModDependency> dependencies, Assembly assembly, string location)
+                                    IReadOnlyList<ModDependency> dependencies, Assembly assembly, string location,
+                                    VersionRange? platform = null)
 {
     public string Id { get; } = id;
     public string Name { get; } = name;
@@ -21,6 +22,9 @@ internal sealed class ModDescriptor(string id, string name, string versionText, 
     public Version Version { get; } = version;
 
     public IReadOnlyList<ModDependency> Dependencies { get; } = dependencies;
+
+    /// <summary>The platform versions the mod declared it works with; any version when it declared none.</summary>
+    public VersionRange Platform { get; } = platform ?? VersionRange.Any;
     public Assembly Assembly { get; } = assembly;
 
     /// <summary>Path of the mod's .dll.</summary>

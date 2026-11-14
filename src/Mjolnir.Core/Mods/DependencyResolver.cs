@@ -11,6 +11,7 @@ internal sealed record ResolveResult(IReadOnlyList<ModDescriptor> Ordered, IRead
 /// <list type="number">
 /// <item>Duplicate ids: the first mod (in input order) wins.</item>
 /// <item>A mod the player turned off is skipped; an optional dependency on it does not block.</item>
+/// <item>A mod built for another Mjolnir (its manifest's platform range does not hold) is skipped.</item>
 /// <item>A mod is skipped when a required dependency is missing or skipped, or any present dependency is outside its
 /// version range; this repeats until nothing changes, so dependents of skipped mods are skipped too.</item>
 /// <item>The rest is sorted topologically (dependencies first, ties by id, ordinal ignoring case);
@@ -23,7 +24,9 @@ internal static class DependencyResolver
 
     /// <param name="mods">The mods found, in discovery order.</param>
     /// <param name="turnedOff">The ids the player turned off (<see cref="ModList"/>); null for none.</param>
-    public static ResolveResult Resolve(IReadOnlyList<ModDescriptor> mods, IReadOnlySet<string>? turnedOff = null)
+    /// <param name="platform">The platform's own version, checked against each mod's declared range; null to skip that check.</param>
+    public static ResolveResult Resolve(IReadOnlyList<ModDescriptor> mods, IReadOnlySet<string>? turnedOff = null,
+                                        Version? platform = null)
     {
         var skipped = new List<(ModDescriptor, ModSkip)>();
         var byId = new Dictionary<string, ModDescriptor>(Ids);
@@ -47,7 +50,7 @@ internal static class DependencyResolver
             foreach (var mod in byId.Values)
             {
                 if (reasons.ContainsKey(mod.Id)) continue;
-                var reason = Unloadable(mod, byId, reasons);
+                var reason = Unloadable(mod, byId, reasons, platform);
                 if (reason == null) continue;
                 reasons[mod.Id] = reason;
                 changed = true;
@@ -87,8 +90,16 @@ internal static class DependencyResolver
         return new ResolveResult(ordered, skipped);
     }
 
-    private static ModSkip? Unloadable(ModDescriptor mod, Dictionary<string, ModDescriptor> byId, Dictionary<string, ModSkip> reasons)
+    // A platform version as its release is named: 0.4.0, not 0.4.0.0.
+    private static string Three(Version v) => $"{v.Major}.{v.Minor}.{Math.Max(v.Build, 0)}";
+
+    private static ModSkip? Unloadable(ModDescriptor mod, Dictionary<string, ModDescriptor> byId,
+                                       Dictionary<string, ModSkip> reasons, Version? platform)
     {
+        // Built for another Mjolnir: it would fail later, on the first type or member that changed between the two.
+        if (platform != null && !mod.Platform.Contains(platform))
+            return new ModSkip(ModSkipKind.WrongPlatform, Range: mod.Platform.ToString(), Detail: Three(platform));
+
         foreach (var dep in mod.Dependencies)
         {
             if (Ids.Equals(dep.Id, mod.Id)) return new ModSkip(ModSkipKind.SelfDependency);

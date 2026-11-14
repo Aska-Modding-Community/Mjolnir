@@ -26,6 +26,7 @@ internal enum InstalledProblemKind
     Duplicate,
     Missing,
     WrongVersion,
+    WrongPlatform,
     DependencyNotLoaded,
     DependencyTurnedOff,
     DependencyFailed,

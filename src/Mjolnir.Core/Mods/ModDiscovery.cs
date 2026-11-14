@@ -100,8 +100,18 @@ internal static partial class ModDiscovery
             }
         }
 
+        VersionRange platform;
+        try
+        {
+            platform = VersionRange.Parse(manifest.Platform);
+        }
+        catch (FormatException e)
+        {
+            return $"the platform it needs: {e.Message}";
+        }
+
         string name = string.IsNullOrWhiteSpace(manifest.Name) ? id : manifest.Name.Trim();
-        descriptor = new ModDescriptor(id, name, manifest.Version.Trim(), version, dependencies, assembly, path);
+        descriptor = new ModDescriptor(id, name, manifest.Version.Trim(), version, dependencies, assembly, path, platform);
         return null;
     }
 

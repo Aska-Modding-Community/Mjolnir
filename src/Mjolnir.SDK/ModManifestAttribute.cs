@@ -45,6 +45,15 @@ public sealed class ModManifestAttribute(string id, string name, string version)
     /// <summary>Whether the mod chose <see cref="Network"/> itself, which the platform then leaves alone.</summary>
     internal bool IsNetworkDeclared { get; private set; }
 
+    /// <summary>
+    /// Which Mjolnir versions the mod works with, as a dependency's range: <c>"&gt;=0.4"</c>, <c>"&gt;=0.4 &lt;0.5"</c>.
+    /// Any version when not given.
+    /// <para>A mod is built against one platform version and may meet another in the game; without this it loads and
+    /// fails later, on the first type or member that changed, and the player sees a mod that broke for no reason. With
+    /// it the mod is not loaded, and the log and the Mods window say which version it needs and which is installed.</para>
+    /// </summary>
+    public string? Platform { get; set; }
+
     /// <summary>What the mod does, in a short line: the Mods window shows it under the mod's name (its id when none).</summary>
     public string? Description { get; set; }
 

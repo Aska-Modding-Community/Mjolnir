@@ -226,6 +226,7 @@ internal static class ModsWindow
             InstalledProblemKind.Duplicate => SdkTexts.Get("mods.reason.duplicate", problem.Other),
             InstalledProblemKind.Missing => SdkTexts.Get("mods.reason.missing", asked),
             InstalledProblemKind.WrongVersion => SdkTexts.Get("mods.reason.wrong_version", asked, problem.Detail),
+            InstalledProblemKind.WrongPlatform => SdkTexts.Get("mods.reason.wrong_platform", problem.Range, problem.Detail),
             InstalledProblemKind.DependencyNotLoaded => SdkTexts.Get("mods.reason.dependency_not_loaded", other),
             InstalledProblemKind.DependencyTurnedOff => SdkTexts.Get("mods.reason.dependency_turned_off", other),
             InstalledProblemKind.DependencyFailed => SdkTexts.Get("mods.reason.dependency_failed", other),

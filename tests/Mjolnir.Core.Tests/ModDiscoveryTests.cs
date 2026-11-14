@@ -13,6 +13,7 @@ internal sealed class FakeManifestAttribute(string id, string name, string versi
     public string Id { get; } = id;
     public string Name { get; } = name;
     public string Version { get; } = version;
+    public string? Platform { get; set; }
 }
 
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
@@ -44,6 +45,12 @@ public sealed class GoodMod : FakeModBase;
 
 [FakeManifest("other.mod", "", "1.0")]
 public sealed class OtherMod : FakeModBase;
+
+[FakeManifest("platform.mod", "Platform Mod", "1.0", Platform = ">=0.4 <0.5")]
+public sealed class PlatformMod : FakeModBase;
+
+[FakeManifest("bad.platform", "Bad Platform", "1.0", Platform = "yesterday")]
+public sealed class BadPlatformMod : FakeModBase;
 
 public sealed class UnmarkedMod : FakeModBase;
 
@@ -97,6 +104,16 @@ public class ModDiscoveryTests
     public void EmptyNameFallsBackToTheId() => Assert.Equal("other.mod", Inspect(typeof(OtherMod))!.Mod.Name);
 
     [Fact]
+    public void TheDeclaredPlatformRangeIsRead()
+    {
+        var mod = Inspect(typeof(PlatformMod))!.Mod;
+        Assert.Equal(">=0.4 <0.5", mod.Platform.ToString());
+        Assert.True(mod.Platform.Contains(new Version(0, 4, 2, 0)));
+        Assert.False(mod.Platform.Contains(new Version(0, 5, 0, 0)));
+        Assert.Equal("*", Inspect(typeof(OtherMod))!.Mod.Platform.ToString());   // none declared
+    }
+
+    [Fact]
     public void AssemblyWithoutAManifestIsALibrary()
     {
         Assert.Null(Inspect(typeof(Helper)));
@@ -111,6 +128,7 @@ public class ModDiscoveryTests
     [InlineData(typeof(ReservedIdMod))] // the platform's settings file is mjolnir.toml
     [InlineData(typeof(BadVersionMod))]
     [InlineData(typeof(BadRangeMod))]
+    [InlineData(typeof(BadPlatformMod))]
     [InlineData(typeof(NoDefaultCtorMod))]
     [InlineData(typeof(NotAnEntry))]
     public void InvalidModsAreRejected(Type type) => Assert.Null(Inspect(type));

@@ -114,6 +114,8 @@ public class ModTests
         IModManifest manifest = new ModManifestAttribute("a.b", "A", "1.0");
         IModDependencyDeclaration dependency = new ModDependencyAttribute("c.d") { Optional = true };
         Assert.Equal("a.b", manifest.Id);
+        Assert.Null(manifest.Platform);   // a mod that says nothing works with any Mjolnir
+        Assert.Equal(">=0.4 <0.5", ((IModManifest)new ModManifestAttribute("a.b", "A", "1.0") { Platform = ">=0.4 <0.5" }).Platform);
         Assert.Equal("c.d", dependency.Id);
         Assert.Equal("*", dependency.VersionRange);
         Assert.True(dependency.Optional);

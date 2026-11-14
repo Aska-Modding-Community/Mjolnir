@@ -14,6 +14,10 @@ public class DependencyResolverTests
         return new ModDescriptor(id, id, version, v, deps, typeof(DependencyResolverTests).Assembly, id + ".dll");
     }
 
+    private static ModDescriptor NeedsPlatform(string id, string range) =>
+        new(id, id, "1.0.0", new Version(1, 0, 0, 0), [], typeof(DependencyResolverTests).Assembly, id + ".dll",
+            VersionRange.Parse(range));
+
     private static ModDependency Needs(string id, string range = "", bool optional = false) =>
         new(id, VersionRange.Parse(range), optional);
 
@@ -22,6 +26,37 @@ public class DependencyResolverTests
     private static string Reason(ResolveResult r, string id) => r.Skipped.Single(s => s.Mod.Id == id).Reason.ToString();
     private static ModSkip Skip(ResolveResult r, string id) => r.Skipped.Single(s => s.Mod.Id == id).Reason;
     private static HashSet<string> Off(params string[] ids) => new(ids, StringComparer.OrdinalIgnoreCase);
+
+    [Fact]
+    public void AModBuiltForAnotherMjolnirIsNotLoaded()
+    {
+        var r = DependencyResolver.Resolve([NeedsPlatform("a", ">=0.5")], null, new Version(0, 4, 0, 0));
+        Assert.Empty(r.Ordered);
+        Assert.Equal(ModSkipKind.WrongPlatform, Skip(r, "a").Kind);
+        Assert.Equal("needs Mjolnir >=0.5, but 0.4.0 is installed: rebuild the mod against it", Reason(r, "a"));
+    }
+
+    [Fact]
+    public void AModLoadsWhenTheInstalledMjolnirIsInItsRange()
+    {
+        var r = DependencyResolver.Resolve([NeedsPlatform("a", ">=0.4 <0.5")], null, new Version(0, 4, 0, 0));
+        Assert.Equal(["a"], Order(r));
+    }
+
+    [Fact]
+    public void AModThatNamesNoPlatformLoadsOnAny()
+    {
+        var r = DependencyResolver.Resolve([Mod("a")], null, new Version(9, 9, 9, 0));
+        Assert.Equal(["a"], Order(r));
+    }
+
+    [Fact]
+    public void WhatDependsOnAModBuiltForAnotherMjolnirIsSkippedToo()
+    {
+        var r = DependencyResolver.Resolve([NeedsPlatform("a", ">=0.5"), Mod("b", "1", Needs("a"))], null, new Version(0, 4, 0, 0));
+        Assert.Empty(r.Ordered);
+        Assert.Equal(ModSkipKind.DependencyNotLoaded, Skip(r, "b").Kind);
+    }
 
     [Fact]
     public void LoadsDependenciesFirstAndBreaksTiesById()

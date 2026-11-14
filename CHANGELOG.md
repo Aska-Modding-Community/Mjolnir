@@ -3,6 +3,15 @@
 The platform has one version for the loader, the SDK and its modules. Mods built against an earlier minor version
 must be rebuilt.
 
+## Unreleased
+
+### Added
+
+- A mod declares which Mjolnir versions it works with: `[ModManifest(… Platform = ">=0.4 <0.5")]`, a range written
+  as a dependency's. A mod built for another platform version is not loaded, and the log and the Mods window say
+  which version it needs and which is installed, instead of the mod failing later on the first type that changed.
+  A mod that declares nothing works with any version, as before.
+
 ## 0.4.0 — 2026-11-14
 
 ### Added

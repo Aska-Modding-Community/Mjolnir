@@ -11,6 +11,11 @@ internal enum ModSkipKind
     Missing,
     /// <summary>A dependency's version is outside the range: <see cref="ModSkip.Detail"/> the installed version.</summary>
     WrongVersion,
+    /// <summary>
+    /// The mod was built for another Mjolnir: <see cref="ModSkip.Range"/> the platform range it declared,
+    /// <see cref="ModSkip.Detail"/> the installed platform version.
+    /// </summary>
+    WrongPlatform,
     /// <summary>A required dependency is installed but not loaded (it was skipped itself).</summary>
     DependencyNotLoaded,
     /// <summary>A required dependency is turned off.</summary>
@@ -34,6 +39,7 @@ internal sealed record ModSkip(ModSkipKind Kind, string? Other = null, string? R
         ModSkipKind.Duplicate => $"duplicate mod id '{Other}', already used by {Detail}",
         ModSkipKind.Missing => $"needs {Other} {Range}, which is not installed",
         ModSkipKind.WrongVersion => $"needs {Other} {Range}, but {Detail} is installed",
+        ModSkipKind.WrongPlatform => $"needs Mjolnir {Range}, but {Detail} is installed: rebuild the mod against it",
         ModSkipKind.DependencyNotLoaded => $"needs {Other}, which is not loaded",
         ModSkipKind.DependencyTurnedOff => $"needs {Other}, which is turned off",
         ModSkipKind.DependencyFailed => $"its dependency {Other} failed to load",

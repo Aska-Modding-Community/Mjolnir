@@ -16,11 +16,14 @@ namespace Mjolnir.Core.Mods;
 /// </summary>
 internal static class ModLoader
 {
+    /// <summary>The platform's own version: every Mjolnir assembly carries it, and a mod declares the range it needs.</summary>
+    private static Version? PlatformVersion => typeof(ModLoader).Assembly.GetName().Version;
+
     public static void LoadAll(IReadOnlyList<LoadedModAssembly> assemblies, LoaderPaths paths)
     {
         var turnedOff = ModList.Read(paths.ModListPath);
         var candidates = ModDiscovery.Find(assemblies);
-        var result = DependencyResolver.Resolve(candidates.Select(c => c.Mod).ToList(), turnedOff);
+        var result = DependencyResolver.Resolve(candidates.Select(c => c.Mod).ToList(), turnedOff, PlatformVersion);
         foreach (var (mod, reason) in result.Skipped)
         {
             if (reason.Kind == ModSkipKind.TurnedOff) Log.Info("Mods", $"{mod}: not loaded, {reason}");

@@ -12,6 +12,9 @@ internal interface IModManifest
     string Id { get; }
     string Name { get; }
     string Version { get; }
+
+    /// <summary>The platform versions the mod works with, a range written as a dependency's; null or empty for any.</summary>
+    string? Platform { get; }
 }
 
 /// <summary>A dependency attribute; Mjolnir.SDK's <c>ModDependencyAttribute</c>.</summary>

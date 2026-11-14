@@ -1,1 +1,3 @@
 #nullable enable
+Mjolnir.SDK.ModManifestAttribute.Platform.get -> string?
+Mjolnir.SDK.ModManifestAttribute.Platform.set -> void
