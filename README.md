@@ -14,6 +14,7 @@ Write ASKA mods in C# on .NET 10: events, bindable state and builders for UI, pl
 [![License](https://img.shields.io/badge/license-MIT-3a3633?style=flat-square)](LICENSE)
 
 **[Documentation](https://aska-modding-community.github.io/mjolnir-docs/)** ·
+[Download](https://github.com/Aska-Modding-Community/Mjolnir/releases/latest) ·
 [Install](https://aska-modding-community.github.io/mjolnir-docs/docs/getting-started/installing) ·
 [Your first mod](https://aska-modding-community.github.io/mjolnir-docs/docs/getting-started/first-mod) ·
 [Coming from BepInEx](https://aska-modding-community.github.io/mjolnir-docs/docs/getting-started/from-bepinex) ·
@@ -132,7 +133,8 @@ flowchart LR
 
 ## For players
 
-1. Unpack the archive into the game's folder, the one with `Aska.exe`.
+1. Download `Mjolnir-<version>.zip` from the [latest release](https://github.com/Aska-Modding-Community/Mjolnir/releases/latest) and unpack it into the game's
+   folder, the one with `Aska.exe`.
 2. Start the game from Steam. At the first start, and after each game update, Mjolnir prepares itself for the game's
    build for about half a minute, with a progress window.
 3. Put mods into `Mjolnir/Mods/`, each in a folder of its own.
