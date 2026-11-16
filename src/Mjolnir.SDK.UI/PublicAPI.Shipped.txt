@@ -80,6 +80,8 @@ Mjolnir.SDK.UI.HeaderedControl.Header.get -> string?
 Mjolnir.SDK.UI.HeaderedControl.Header.set -> void
 Mjolnir.SDK.UI.HeaderedControl.Icon.get -> Mjolnir.SDK.UI.Bitmap?
 Mjolnir.SDK.UI.HeaderedControl.Icon.set -> void
+Mjolnir.SDK.UI.HeaderedControl.ToolTipOnIcon.get -> bool
+Mjolnir.SDK.UI.HeaderedControl.ToolTipOnIcon.set -> void
 Mjolnir.SDK.UI.HorizontalAlignment
 Mjolnir.SDK.UI.HorizontalAlignment.Center = 2 -> Mjolnir.SDK.UI.HorizontalAlignment
 Mjolnir.SDK.UI.HorizontalAlignment.Left = 1 -> Mjolnir.SDK.UI.HorizontalAlignment
@@ -577,6 +579,7 @@ static readonly Mjolnir.SDK.UI.HeaderedControl.ContentWidthProperty -> Mjolnir.S
 static readonly Mjolnir.SDK.UI.HeaderedControl.DescriptionProperty -> Mjolnir.SDK.UI.MjolnirProperty<string?>!
 static readonly Mjolnir.SDK.UI.HeaderedControl.HeaderProperty -> Mjolnir.SDK.UI.MjolnirProperty<string?>!
 static readonly Mjolnir.SDK.UI.HeaderedControl.IconProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.UI.Bitmap?>!
+static readonly Mjolnir.SDK.UI.HeaderedControl.ToolTipOnIconProperty -> Mjolnir.SDK.UI.MjolnirProperty<bool>!
 static readonly Mjolnir.SDK.UI.ProgressBase.ForegroundProperty -> Mjolnir.SDK.UI.MjolnirProperty<UnityEngine.Color?>!
 static readonly Mjolnir.SDK.UI.ProgressBase.MaximumProperty -> Mjolnir.SDK.UI.MjolnirProperty<double>!
 static readonly Mjolnir.SDK.UI.ProgressBase.MinimumProperty -> Mjolnir.SDK.UI.MjolnirProperty<double>!

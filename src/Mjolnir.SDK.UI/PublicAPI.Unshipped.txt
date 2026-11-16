@@ -1,4 +1,1 @@
 #nullable enable
-Mjolnir.SDK.UI.HeaderedControl.ToolTipOnIcon.get -> bool
-Mjolnir.SDK.UI.HeaderedControl.ToolTipOnIcon.set -> void
-static readonly Mjolnir.SDK.UI.HeaderedControl.ToolTipOnIconProperty -> Mjolnir.SDK.UI.MjolnirProperty<bool>!

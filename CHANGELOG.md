@@ -3,7 +3,7 @@
 The platform has one version for the loader, the SDK and its modules. Mods built against an earlier minor version
 must be rebuilt.
 
-## Unreleased
+## 0.4.4 — 2026-11-17
 
 ### Added
 
@@ -20,6 +20,8 @@ must be rebuilt.
   box of the game's own hover card, 180 wide and as tall as the panel was before it took the item, so the panel
   hung out of it and over what it described. The card is placed again while it shows, because the panel settles
   its height a frame after it takes the item.
+
+0.4.0's, 0.4.1's, 0.4.2's and 0.4.3's mods work unchanged: nothing was taken out of the API.
 
 ## 0.4.3 — 2026-11-17
 

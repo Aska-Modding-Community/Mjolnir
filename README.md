@@ -8,7 +8,7 @@
 
 Write ASKA mods in C# on .NET 10: events, bindable state and builders for UI, players, content and villagers.
 
-[![Platform](https://img.shields.io/badge/platform-0.4.3-fdac00?style=flat-square)](CHANGELOG.md)
+[![Platform](https://img.shields.io/badge/platform-0.4.4-fdac00?style=flat-square)](CHANGELOG.md)
 [![.NET](https://img.shields.io/badge/.NET-10-512bd4?style=flat-square)](https://dotnet.microsoft.com)
 [![Unity](https://img.shields.io/badge/Unity-6000.3.12f1%20%C2%B7%20IL2CPP%20%C2%B7%20HDRP-222c37?style=flat-square)](https://unity.com)
 [![License](https://img.shields.io/badge/license-MIT-3a3633?style=flat-square)](LICENSE)
