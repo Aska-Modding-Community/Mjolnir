@@ -9,6 +9,15 @@ namespace Mjolnir.SDK.UI.Tests;
 public sealed class TilesTests : ViewTestBase
 {
     [Fact]
+    public void ARowsCardCanBelongToItsPicture()
+    {
+        var row = new UiTextBox { Header = "Twine" };
+        Assert.False(row.ToolTipOnIcon);   // the whole row, as every other control
+        row.ToolTipOnIcon = true;
+        Assert.True(row.ToolTipOnIcon);
+    }
+
+    [Fact]
     public void AnItemCardNamesItsItemAndMarksAChangeOfIt()
     {
         var card = new UiItemCard();

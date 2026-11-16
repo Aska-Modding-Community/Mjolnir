@@ -16,6 +16,9 @@ public abstract class HeaderedControl : Control
                                                        reshape: static (old, now) => string.IsNullOrWhiteSpace(old) != string.IsNullOrWhiteSpace(now)
                                                                                         ? DirtyFlags.Rebuild : DirtyFlags.None);
 
+    public static readonly MjolnirProperty<bool> ToolTipOnIconProperty =
+        MjolnirProperty.Register<HeaderedControl, bool>(nameof(ToolTipOnIcon), false, DirtyFlags.ToolTip);
+
     // A picture appearing or going changes the row's shape (the label moves): the row is built again.
     public static readonly MjolnirProperty<Bitmap?> IconProperty =
         MjolnirProperty.Register<HeaderedControl, Bitmap?>(nameof(Icon), null, DirtyFlags.Label,
@@ -44,6 +47,17 @@ public abstract class HeaderedControl : Control
     {
         get => GetValue(DescriptionProperty);
         set => SetValue(DescriptionProperty, value);
+    }
+
+    /// <summary>
+    /// Whether <see cref="Control.ToolTip"/> belongs to the row's <see cref="Icon"/> rather than to the whole row:
+    /// the card then shows only while the pointer is on the picture, and stands beside it, as the game's own card of
+    /// an item stands beside the slot under the pointer. Without a picture the row behaves as it always does.
+    /// </summary>
+    public bool ToolTipOnIcon
+    {
+        get => GetValue(ToolTipOnIconProperty);
+        set => SetValue(ToolTipOnIconProperty, value);
     }
 
     /// <summary>

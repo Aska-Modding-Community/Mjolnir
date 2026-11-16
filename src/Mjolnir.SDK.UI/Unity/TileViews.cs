@@ -328,9 +328,10 @@ internal sealed class ItemCardView : UnityView
     private readonly RectTransform? _panelRect;
     private readonly ItemDetailsPanel? _panel;
     private readonly TMP_Text? _plain;
-    private readonly float _width, _height;
+    private float _width, _height;
     private string? _shown;
     private bool _missingLogged;
+    private readonly Action? _follow;
 
     public ItemCardView(UiItemCard card, RectTransform parent) : base(card)
     {
@@ -350,9 +351,13 @@ internal sealed class ItemCardView : UnityView
             foreach (var text in go.GetComponentsInChildren<TMP_Text>(true)) text.maskable = true;
             _width = _panelRect.sizeDelta.x > 1 ? _panelRect.sizeDelta.x : 320;
             _height = _panelRect.sizeDelta.y > 1 ? _panelRect.sizeDelta.y : 220;
-            _panelRect.anchorMin = _panelRect.anchorMax = new Vector2(0.5f, 1);
-            _panelRect.pivot = new Vector2(0.5f, 1);
+            // Its top left corner is the view's: the panel keeps its own size (its fitter sets the height from the
+            // item's text), and the view takes that size, so nothing of it hangs outside what laid it out.
+            _panelRect.anchorMin = _panelRect.anchorMax = new Vector2(0, 1);
+            _panelRect.pivot = new Vector2(0, 1);
             _panelRect.anchoredPosition = Vector2.zero;
+            _follow = Remeasure;
+            LiveTree.EveryFrame(_follow, true);
         }
         else
         {
@@ -364,6 +369,8 @@ internal sealed class ItemCardView : UnityView
     protected override string DefaultName => "ItemCard";
 
     protected override (float Width, float Height) LayoutDefaults => (_width, _height);
+
+    internal override (float Width, float Height) Natural => (_width, _height);
 
     protected override bool FixedSize => true;
 
@@ -392,7 +399,27 @@ internal sealed class ItemCardView : UnityView
             }
             _panel.ItemInfo = info;
             _panelRect.gameObject.SetActive(true);
+            LayoutRebuilder.ForceRebuildLayoutImmediate(_panelRect);
+            Remeasure();
         });
+    }
+
+    // The size the panel takes for this item, and the view's with it: the game's card is as tall as the item's
+    // text, stats and picture make it, which the clone's own fitter settles only once it holds the item.
+    private void Remeasure()
+    {
+        if (_panelRect == null) return;
+        var size = _panelRect.rect.size;
+        if (size.x <= 1 || size.y <= 1) return;
+        if (Mathf.Approximately(size.x, _width) && Mathf.Approximately(size.y, _height)) return;
+        (_width, _height) = (size.x, size.y);
+        ApplyLayout();
+    }
+
+    public override void Dispose()
+    {
+        if (_follow != null) LiveTree.EveryFrame(_follow, false);
+        base.Dispose();
     }
 
     // The game's item database: a component of the InventoryManager object of the menu and world scenes, registered as

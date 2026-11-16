@@ -5,11 +5,21 @@ must be rebuilt.
 
 ## Unreleased
 
+### Added
+
+- `HeaderedControl.ToolTipOnIcon`: a row's hover card belongs to its picture. The card then shows only while the
+  pointer is on the picture and stands beside it, as the game's own card of an item stands beside its slot.
+  `Mjolnir.CheatInventory` shows its item card that way.
+
 ### Fixed
 
 - A hover card now stands beside the pointer instead of beside the whole element: on a row as wide as the window
   the card landed at its far edge, away from the item it describes. Without a pointer the element is still what
   the card stands beside.
+- A tooltip that brings a panel of its own (`UiItemCard`) is now as large as that panel: the card was placed by a
+  box of the game's own hover card, 180 wide and as tall as the panel was before it took the item, so the panel
+  hung out of it and over what it described. The card is placed again while it shows, because the panel settles
+  its height a frame after it takes the item.
 
 ## 0.4.3 — 2026-11-17
 

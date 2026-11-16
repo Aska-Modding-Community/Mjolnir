@@ -95,6 +95,12 @@ internal abstract class UnityView : IElementView
     /// <summary>The direction its children are laid out in.</summary>
     public virtual Orientation ChildAxis => Orientation.Vertical;
 
+    /// <summary>The size a view of its own takes (a cloned game panel), for what lays it out; -1 when it has none.</summary>
+    internal virtual (float Width, float Height) Natural => (-1, -1);
+
+    /// <summary>The picture of a row, for a tooltip that belongs to it (HeaderedControl.ToolTipOnIcon); null without one.</summary>
+    internal virtual RectTransform? IconArea => null;
+
     protected abstract string DefaultName { get; }
 
     /// <summary>The Unity object's name: the element's <see cref="Control.Name"/>, or the kind's default.</summary>

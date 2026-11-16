@@ -30,8 +30,9 @@ internal sealed class ItemRow : UiUserControl
             MaxLength = 4,
             UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
             ContentWidth = 120,
-            // The game's own card of the item, as the inventory shows under the pointer.
+            // The game's own card of the item, shown for its picture as the inventory shows it for a slot.
             ToolTip = new UiItemCard { AssetName = item.AssetName },
+            ToolTipOnIcon = true,
         };
         var give = new UiButton { Name = "Give", Content = Localization.Get("row.give"), Margin = new Thickness(0, 10, 0, 0) }
             .WithBinding(Control.IsEnabledProperty, () => Items.CanGive, TimeSpan.FromSeconds(0.5));

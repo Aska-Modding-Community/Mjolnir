@@ -60,6 +60,8 @@ internal abstract class RowView : UnityView
     protected float PartFontOf(double size, float game) => FontOf(size, game, Bare ? game : _labelSize);
 
     // The picture, or else the letter tile on its own colour (muted, like the game's frames).
+    internal override RectTransform? IconArea => _icon != null ? _icon.rectTransform : null;
+
     private void ShowIcon()
     {
         if (_icon == null || _iconLetter == null) return;

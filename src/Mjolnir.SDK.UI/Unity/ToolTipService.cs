@@ -53,6 +53,9 @@ internal static class ToolTipService
         if (hovered == null) return;
         if (s_shown == null && Time.unscaledTime - s_since >= ToolTips.Delay) Show(hovered);
         else if (s_shown != null && !ReferenceEquals(s_shown.Tip, hovered.Element.ToolTip)) Show(hovered); // the tip changed
+        // A card that brings a panel of its own settles its size a frame later (its texts measure themselves), and
+        // the element under the pointer may move: where the card stands is worked out again while it shows.
+        else if (s_shown != null) GameUi.Guard("tooltip placement", () => Place(hovered, s_shown));
     }
 
     // The innermost tracked element under the pointer that nothing from another canvas covers.
@@ -68,7 +71,7 @@ internal static class ToolTipService
         {
             var root = view.Root;
             if (root == null || !root.gameObject.activeInHierarchy || view.Element.ToolTip == null) continue;
-            if (!RectTransformUtility.RectangleContainsScreenPoint(root, pointer, null)) continue;
+            if (!RectTransformUtility.RectangleContainsScreenPoint(AreaOf(view), pointer, null)) continue;
             if (!cast)
             {
                 top = TopObjectAt(pointer);
@@ -84,6 +87,10 @@ internal static class ToolTipService
         }
         return best;
     }
+
+    // What the card belongs to: a row's picture when the row says so, else the whole element.
+    private static RectTransform AreaOf(UnityView view) =>
+        view.Element is HeaderedControl { ToolTipOnIcon: true } && view.IconArea is { } icon && icon != null ? icon : view.Root;
 
     private static GameObject? TopObjectAt(Vector2 pointer)
     {
@@ -113,23 +120,40 @@ internal static class ToolTipService
         card.Fill(view.Element.ToolTip);
         card.Root.gameObject.SetActive(true);
         card.Root.SetAsLastSibling();
+        s_shown = card;
+        Place(view, card);
+    }
+
+    // Where the card stands: beside what it belongs to, on the side with room for it.
+    private static void Place(UnityView view, Card card)
+    {
+        if (view.Root == null || card.Root == null) return;
+        var canvas = view.Root.GetComponentInParent<Canvas>()?.rootCanvas;
+        if (canvas == null) return;
         LayoutRebuilder.ForceRebuildLayoutImmediate(card.Root);
         // On an overlay canvas, world coordinates are screen pixels.
         var min = view.Root.TransformPoint(view.Root.rect.min);
         var max = view.Root.TransformPoint(view.Root.rect.max);
         float scale = canvas.scaleFactor;
         var size = card.Root.rect.size * scale;
-        // Beside the pointer, as the game's own item card stands beside the slot under it: on a row as wide as the
-        // window the card would otherwise land at its far edge, away from what it describes. Without a pointer
-        // (a scenario driving the UI, a gamepad) the element itself is what the card stands beside.
+        // A card that belongs to a row's picture stands beside the picture, as the game's own item card stands
+        // beside its slot. Any other card stands beside the pointer: beside the whole element it would land at the
+        // far edge of a row as wide as the window. Without a pointer the element itself is what it stands beside.
+        var own = AreaOf(view);
         var at = GameKeyboard.PointerPosition();
         float reach = PointerReach * scale;
-        var area = at is { } p ? (p.x - reach, p.y - reach, p.x + reach, p.y + reach) : (min.x, min.y, max.x, max.y);
+        (float Left, float Bottom, float Right, float Top) area;
+        if (!ReferenceEquals(own, view.Root))
+        {
+            var iconMin = own.TransformPoint(own.rect.min);
+            var iconMax = own.TransformPoint(own.rect.max);
+            area = (iconMin.x, iconMin.y, iconMax.x, iconMax.y);
+        }
+        else area = at is { } p ? (p.x - reach, p.y - reach, p.x + reach, p.y + reach) : (min.x, min.y, max.x, max.y);
         var (x, y, right) = ToolTips.Place(area, (size.x, size.y), (Screen.width, Screen.height), Gap * scale);
         card.Root.pivot = new Vector2(right ? 0 : 1, 0.5f);
         card.Root.position = new UnityEngine.Vector3(x, y, card.Root.position.z);
         card.PointArrow(right);
-        s_shown = card;
     }
 
     private static void Hide()
@@ -158,6 +182,10 @@ internal static class ToolTipService
         private readonly RectTransform _content;
         private readonly RectTransform? _arrow;
         private readonly List<Image> _chrome = [];
+        private readonly LayoutElement? _frame;
+        private readonly HorizontalOrVerticalLayoutGroup? _stack;
+        private readonly RectOffset? _padding;
+        private readonly float _frameWidth;
         private readonly TipHost _host;
         private Control? _mounted;
 
@@ -170,6 +198,11 @@ internal static class ToolTipService
             // The card's own frame, taken before the host's objects exist: a tip that brings its own panel (an item
             // card) is shown bare, or the game's card would draw a second frame round it.
             foreach (var image in root.GetComponentsInChildren<Image>(true)) _chrome.Add(image);
+            // The frame's own width and padding, for the same reason: a bare card is as wide as what it holds.
+            _frame = root.GetComponent<LayoutElement>();
+            _frameWidth = _frame != null ? _frame.preferredWidth : -1;
+            _stack = root.GetComponent<VerticalLayoutGroup>();
+            _padding = _stack != null ? _stack.padding : null;
             _content = ViewFactory.NewRect(root, "Content");
             _content.sizeDelta = new Vector2(180, 0); // the game's card does not size its children's width
             _content.gameObject.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
@@ -244,7 +277,14 @@ internal static class ToolTipService
                 _text?.gameObject.SetActive(false);
                 _content.gameObject.SetActive(true);
                 _mounted = element;
-                GameUi.Guard($"{element} tooltip", () => _host.Mount(element, _contentView));
+                GameUi.Guard($"{element} tooltip", () =>
+                {
+                    var node = _host.Mount(element, _contentView);
+                    // A tip that brings a panel of its own sets the width too: the game's card is 180 wide inside,
+                    // and a narrower box would leave the panel hanging out of what the card is placed by.
+                    float wide = node.View is UnityView view ? view.Natural.Width : -1;
+                    _content.sizeDelta = new Vector2(Math.Max(180, wide), 0);
+                });
                 return;
             }
             Chrome(true);
@@ -262,7 +302,8 @@ internal static class ToolTipService
             }
         }
 
-        // The card's own frame and arrow, on or off.
+        // The card's own frame and arrow, on or off. Without them it is only what it holds: no padding round it
+        // and no width of its own, or the panel inside would sit in a box larger than itself.
         private void Chrome(bool shown)
         {
             foreach (var image in _chrome)
@@ -270,6 +311,8 @@ internal static class ToolTipService
                 if (image != null) image.enabled = shown;
             }
             if (_arrow != null) _arrow.gameObject.SetActive(shown);
+            if (_frame != null) _frame.preferredWidth = shown ? _frameWidth : -1;
+            if (_stack != null && _padding != null) _stack.padding = shown ? _padding : new RectOffset(0, 0, 0, 0);
         }
 
         public void PointArrow(bool cardOnRight)
