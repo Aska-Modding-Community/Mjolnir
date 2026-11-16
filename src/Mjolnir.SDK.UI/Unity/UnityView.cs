@@ -33,6 +33,7 @@ internal sealed class UnityBackend : IViewBackend
             UiWrapPanel wrap => new WrapPanelView(wrap, container),
             UiSlot slot => new SlotView(slot, container),
             UiCard card => new CardView(card, container),
+            UiItemCard item => new ItemCardView(item, container),
             UiBorder border => new BorderView(border, container),
             UiLayoutTransformControl transform => new LayoutTransformView(transform, container),
             UiExpander expander => new ExpanderView(expander, container),

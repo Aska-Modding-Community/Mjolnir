@@ -120,6 +120,13 @@ internal static partial class Theme
     public static GameObject? Card { get; private set; }
 
     /// <summary>
+    /// The inventory's card of an item (an ItemDetailsPanel, from the journal's item page): its own script stays,
+    /// so giving it an ItemInfo fills the title, the kind, the tier, the picture and the attributes; what ties it to
+    /// the page it came from is gone, and the inventory's key hints are hidden.
+    /// </summary>
+    public static GameObject? ItemCard { get; private set; }
+
+    /// <summary>
     /// The panel under a category's header in the journal (a DropdownElement's Content: its Background,
     /// UI_WindowDefault_Inventory sliced at ppu 4), for an expander's body.
     /// </summary>

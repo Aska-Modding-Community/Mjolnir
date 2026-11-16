@@ -116,6 +116,8 @@ internal static partial class Theme
                                        .OrderBy(p => (p.label != null ? 2 : 0) + (p.tier != null ? 1 : 0))
                                        .FirstOrDefault());
                 Card = KeepCard(journal.GetComponentsInChildren<DeedCategoryPanel>(true).FirstOrDefault());
+                ItemCard = KeepItemCard(journal.GetComponentsInChildren<JournalItemDetailsTabPage>(true)
+                                               .FirstOrDefault()?.detailsPanel);
                 // A category's panel: the sliced image stretched over its dropdown's Content, behind the tiles.
                 var dropdown = journal.GetComponentsInChildren<DropdownElement>(true).FirstOrDefault(d => d.Content != null);
                 var content = dropdown?.Content;
@@ -127,7 +129,8 @@ internal static partial class Theme
                                                     .FirstOrDefault(i => i.type == Image.Type.Sliced && i.transform.parent == content.transform &&
                                                                          i.rectTransform.anchorMin == Vector2.zero && i.rectTransform.anchorMax == Vector2.one));
             }
-            SdkLog.Info(GameUi.Source, $"Journal parts: icon tab {Has(IconTab)}, list button {Has(ListTab)}, hover card {Has(ToolTipCard)}, " +
+            SdkLog.Info(GameUi.Source, $"Journal parts: icon tab {Has(IconTab)}, list button {Has(ListTab)}, hover card {Has(ToolTipCard)}, "
+                                     + $"item card {Has(ItemCard)}, " +
                                        $"slot {Has(Slot)}, card {Has(Card)}, panel {(ExpanderPanel != null ? $"'{ExpanderPanel.Sprite?.name}' ppu {ExpanderPanel.Ppu}" : "MISSING")}, " +
                                        $"page panel {Has(JournalPanel)}");
         }
@@ -214,6 +217,22 @@ internal static partial class Theme
         if (panel.loreLabel != null) panel.loreLabel.gameObject.SetActive(false);
         if (panel.progressLabel != null) panel.progressLabel.gameObject.SetActive(false);
         RemoveScripts(copy, "DeedCategoryPanel", "ItemHighlightBehaviour", "TweenAnimator");
+        return copy;
+    }
+
+    // The game's item card: its ItemDetailsPanel stays — an ItemInfo given to it fills the whole card — while what
+    // belongs to the journal's page goes. The card places itself beside the slot it was opened from, which the view
+    // switches off; the inventory's key hints (use, drop, quick bar, split) mean nothing outside the inventory.
+    private static GameObject? KeepItemCard(ItemDetailsPanel? source)
+    {
+        if (source == null) return null;
+        var copy = Keep(source.transform);
+        var panel = copy?.GetComponent<ItemDetailsPanel>();
+        if (copy == null || panel == null) return null;
+        panel.AutoPosition = false;
+        if (panel.tooltipsParent != null) panel.tooltipsParent.SetActive(false);
+        if (panel.indicatorArrow != null) panel.indicatorArrow.gameObject.SetActive(false);
+        RemoveScripts(copy, "PositionConstraint", "TabPage");
         return copy;
     }
 

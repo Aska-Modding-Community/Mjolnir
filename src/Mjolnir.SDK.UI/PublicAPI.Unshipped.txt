@@ -1,1 +1,7 @@
 #nullable enable
+Mjolnir.SDK.UI.UiItemCard
+Mjolnir.SDK.UI.UiItemCard.AssetName.get -> string?
+Mjolnir.SDK.UI.UiItemCard.AssetName.set -> void
+Mjolnir.SDK.UI.UiItemCard.UiItemCard() -> void
+override Mjolnir.SDK.UI.UiItemCard.ToString() -> string!
+static readonly Mjolnir.SDK.UI.UiItemCard.AssetNameProperty -> Mjolnir.SDK.UI.MjolnirProperty<string?>!

@@ -64,6 +64,21 @@ internal static partial class Autopilot
             yield return 0.5f;
             Log($"Catalog: the next page: {CatalogPage(window)}");
         }
+        // The game's own card of an item under the pointer (Mjolnir.SDK.UI's UiItemCard in a tooltip).
+        var hovered = window.GetComponentsInChildren<Transform>(false)
+                        .FirstOrDefault(t => t.name.StartsWith("Item Item_", System.StringComparison.Ordinal));
+        if (hovered != null)
+        {
+            foreach (float wait in Hover(hovered.gameObject)) yield return wait;
+            var tip = GameObject.Find("Mjolnir_ToolTip");
+            Log($"Catalog: the card of '{hovered.name}': {(tip == null ? "no card" : CardTexts(tip))}");
+            Shot("catalog-item-card");
+            yield return AfterShot;
+            if (tip != null) HierarchyDump.Write(tip, System.IO.Path.Combine(ShotsDir, "catalog-item-card.txt"));
+            Point(null);
+            yield return 0.3f;
+        }
+        else Log("Catalog: no item row to rest the pointer on");
         if (SearchField(window) is { } search)
         {
             search.text = "верёв";
@@ -154,6 +169,18 @@ internal static partial class Autopilot
         window.GetComponentsInChildren<Transform>(false).FirstOrDefault(t => t.name == "Give")?.GetComponentInChildren<Button>(false);
 
     // The page shown: its tab, what it says it found, its page number and its rows.
+    // What the shown tooltip holds: its texts, and how many pictures are still drawn (the card's own frame is off for
+    // an item card, which brings its own panel).
+    private static string CardTexts(GameObject tip)
+    {
+        var texts = tip.GetComponentsInChildren<TMP_Text>(false)
+                       .Select(t => t.text.Replace("\n", " / "))
+                       .Where(s => s.Trim().Length > 0)
+                       .ToList();
+        int drawn = tip.GetComponentsInChildren<UnityEngine.UI.Image>(false).Count(i => i.enabled && i.sprite != null);
+        return $"{texts.Count} text(s): {string.Join(" | ", texts)}; {drawn} image(s) drawn";
+    }
+
     private static string CatalogPage(GameObject window)
     {
         var page = window.GetComponentsInChildren<Transform>(false).FirstOrDefault(t => t.name.StartsWith("Page ", System.StringComparison.Ordinal));

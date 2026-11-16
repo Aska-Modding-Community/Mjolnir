@@ -18,7 +18,6 @@ internal sealed class ItemRow : UiUserControl
     public ItemRow(ItemDefinition item)
     {
         Name = $"Item {item.AssetName}";
-        string description = item.Description;
         var count = new UiTextBox
         {
             Name = "Count",
@@ -31,7 +30,8 @@ internal sealed class ItemRow : UiUserControl
             MaxLength = 4,
             UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
             ContentWidth = 120,
-            ToolTip = description.Length > 0 ? $"{item.DisplayName}\n{description}" : null,
+            // The game's own card of the item, as the inventory shows under the pointer.
+            ToolTip = new UiItemCard { AssetName = item.AssetName },
         };
         var give = new UiButton { Name = "Give", Content = Localization.Get("row.give"), Margin = new Thickness(0, 10, 0, 0) }
             .WithBinding(Control.IsEnabledProperty, () => Items.CanGive, TimeSpan.FromSeconds(0.5));

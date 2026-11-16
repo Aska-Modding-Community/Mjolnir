@@ -1,5 +1,8 @@
 using System;
 using Il2CppInterop.Runtime;
+using SandSailorStudio;
+using SandSailorStudio.Inventory;
+using SSSGame.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -311,5 +314,93 @@ internal sealed class CardView : UnityView
             shown++;
         }
         return height + column.spacing * Math.Max(0, shown - 1);
+    }
+}
+
+/// <summary>
+/// The game's card of an item (<see cref="UiItemCard"/>): a clone of the inventory's card, filled by giving it the
+/// item's description from the game's database. Its own script is switched off right after it is built: in the game the
+/// card places itself beside the slot it was opened from, and here its place is the layout's business.
+/// </summary>
+internal sealed class ItemCardView : UnityView
+{
+    private readonly UiItemCard _card;
+    private readonly RectTransform? _panelRect;
+    private readonly ItemDetailsPanel? _panel;
+    private readonly TMP_Text? _plain;
+    private readonly float _width, _height;
+    private string? _shown;
+    private bool _missingLogged;
+
+    public ItemCardView(UiItemCard card, RectTransform parent) : base(card)
+    {
+        _card = card;
+        Root = ViewFactory.NewRect(parent, DefaultName);
+        if (Theme.ItemCard is { } template)
+        {
+            var go = Object.Instantiate(template, Root, false);
+            go.name = "Card";
+            go.SetActive(true);
+            _panelRect = RectOf(go);
+            _panel = go.GetComponent<ItemDetailsPanel>();
+            // Its LateUpdate follows the slot it was opened from; nothing opened this one.
+            if (_panel != null) _panel.enabled = false;
+            // The game's menus have no masks: in a window's scroll view the parts must be maskable.
+            foreach (var image in go.GetComponentsInChildren<Image>(true)) image.maskable = true;
+            foreach (var text in go.GetComponentsInChildren<TMP_Text>(true)) text.maskable = true;
+            _width = _panelRect.sizeDelta.x > 1 ? _panelRect.sizeDelta.x : 320;
+            _height = _panelRect.sizeDelta.y > 1 ? _panelRect.sizeDelta.y : 220;
+            _panelRect.anchorMin = _panelRect.anchorMax = new Vector2(0.5f, 1);
+            _panelRect.pivot = new Vector2(0.5f, 1);
+            _panelRect.anchoredPosition = Vector2.zero;
+        }
+        else
+        {
+            _plain = SettingRows.Plain(Root, "Text");
+            (_width, _height) = (320, 40);
+        }
+    }
+
+    protected override string DefaultName => "ItemCard";
+
+    protected override (float Width, float Height) LayoutDefaults => (_width, _height);
+
+    protected override bool FixedSize => true;
+
+    protected override void ApplyOwn(DirtyFlags dirty)
+    {
+        if ((dirty & DirtyFlags.Value) == 0 || _shown == _card.AssetName) return;
+        _shown = _card.AssetName;
+        if (_plain != null)
+        {
+            _plain.text = _shown ?? "";
+            return;
+        }
+        if (_panel == null || _panelRect == null) return;
+        GameUi.Guard($"{Element} item", () =>
+        {
+            var info = Find(_shown);
+            if (info == null)
+            {
+                if (!_missingLogged && !string.IsNullOrEmpty(_shown))
+                {
+                    _missingLogged = true;
+                    SdkLog.Warn(GameUi.Source, $"{Element}: the game's database has no item '{_shown}'");
+                }
+                _panelRect.gameObject.SetActive(false);
+                return;
+            }
+            _panel.ItemInfo = info;
+            _panelRect.gameObject.SetActive(true);
+        });
+    }
+
+    // The game's item database: a component of the InventoryManager object of the menu and world scenes, registered as
+    // a game manager when it wakes. Null before a scene with it, and the card is then empty.
+    private static ItemInfo? Find(string? assetName)
+    {
+        if (string.IsNullOrEmpty(assetName)) return null;
+        var database = GameManagers.Get<ItemDatabaseManager>()?.Database;
+        return database == null ? null : database.GetItemInfo(assetName);
     }
 }

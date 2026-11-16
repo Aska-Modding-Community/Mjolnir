@@ -9,6 +9,18 @@ namespace Mjolnir.SDK.UI.Tests;
 public sealed class TilesTests : ViewTestBase
 {
     [Fact]
+    public void AnItemCardNamesItsItemAndMarksAChangeOfIt()
+    {
+        var card = new UiItemCard();
+        Assert.Null(card.AssetName);
+        var view = Mount(card);
+        int value = view.AppliedCount(DirtyFlags.Value);
+        card.AssetName = "Item_Wood_Sticks";
+        Assert.Equal(value + 1, view.AppliedCount(DirtyFlags.Value));
+        Assert.Equal("UiItemCard 'Item_Wood_Sticks'", card.ToString());
+    }
+
+    [Fact]
     public void ASlotShowsNoCountOrStripUntilGivenOneAndKeepsItsFillInRange()
     {
         var slot = new UiSlot();

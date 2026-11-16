@@ -148,6 +148,7 @@ internal static class ToolTipService
         private readonly TMP_Text? _text;
         private readonly RectTransform _content;
         private readonly RectTransform? _arrow;
+        private readonly List<Image> _chrome = [];
         private readonly TipHost _host;
         private Control? _mounted;
 
@@ -157,6 +158,9 @@ internal static class ToolTipService
             _title = title;
             _text = text;
             _arrow = arrow;
+            // The card's own frame, taken before the host's objects exist: a tip that brings its own panel (an item
+            // card) is shown bare, or the game's card would draw a second frame round it.
+            foreach (var image in root.GetComponentsInChildren<Image>(true)) _chrome.Add(image);
             _content = ViewFactory.NewRect(root, "Content");
             _content.sizeDelta = new Vector2(180, 0); // the game's card does not size its children's width
             _content.gameObject.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
@@ -226,6 +230,7 @@ internal static class ToolTipService
             Unmount();
             if (tip is Control element)
             {
+                Chrome(element is not UiItemCard);
                 _title?.gameObject.SetActive(false);
                 _text?.gameObject.SetActive(false);
                 _content.gameObject.SetActive(true);
@@ -233,6 +238,7 @@ internal static class ToolTipService
                 GameUi.Guard($"{element} tooltip", () => _host.Mount(element, _contentView));
                 return;
             }
+            Chrome(true);
             _content.gameObject.SetActive(false);
             var (title, text) = ToolTips.Split(tip?.ToString() ?? "");
             if (_title != null)
@@ -245,6 +251,16 @@ internal static class ToolTipService
                 _text.gameObject.SetActive(text != null);
                 _text.text = text ?? "";
             }
+        }
+
+        // The card's own frame and arrow, on or off.
+        private void Chrome(bool shown)
+        {
+            foreach (var image in _chrome)
+            {
+                if (image != null) image.enabled = shown;
+            }
+            if (_arrow != null) _arrow.gameObject.SetActive(shown);
         }
 
         public void PointArrow(bool cardOnRight)

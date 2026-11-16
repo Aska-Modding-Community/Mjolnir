@@ -5,6 +5,15 @@ must be rebuilt.
 
 ## Unreleased
 
+### Added
+
+- `UiItemCard`: the game's own card of an item, as the inventory shows it under the pointer — the picture, the name,
+  the tier, the kind, the lore and the item's attributes. The item is named by `AssetName` (`Item_Wood_Sticks`, a
+  mod's `ModItem.AssetName`, an `ItemDefinition.AssetName`), and the card fills itself from the game's database, so it
+  shows items the player does not carry. A tooltip that is a card is drawn as it is, without the hover card's frame
+  around it: `row.ToolTip = new UiItemCard { AssetName = item.AssetName };`.
+- `Mjolnir.CheatInventory` shows that card for every row of its catalog.
+
 ## 0.4.2 — 2026-11-16
 
 ### Fixed
