@@ -13,8 +13,9 @@
          Content, AI, World and Stats, and breaking renames in the UI module, so 0.2.0's mods are rebuilt. 0.4.0: the
          modules Net, Animation, Combat, Camera and Terrain, and a mod is ClientOnly unless it declares otherwise, so
          0.3.0's mods are rebuilt. 0.4.1: a mod may declare the platform range it needs; nothing was taken away, so
-         0.4.0's mods keep working. -->
-    <MjolnirPlatformVersion>0.4.1</MjolnirPlatformVersion>
+         0.4.0's mods keep working. 0.4.2: a fix in the UI
+         module only, so 0.4.1's mods keep working too. -->
+    <MjolnirPlatformVersion>0.4.2</MjolnirPlatformVersion>
   </PropertyGroup>
 
   <!-- The SDK's public API: Mjolnir.SDK and its modules Mjolnir.SDK.<Facade> (not their tests), the assemblies mods

@@ -5,6 +5,8 @@ must be rebuilt.
 
 ## Unreleased
 
+## 0.4.2 — 2026-11-16
+
 ### Fixed
 
 - An open dropdown list no longer sits inside a panel of its own: the box of a `UiComboBox` lays its children out
@@ -14,6 +16,8 @@ must be rebuilt.
 ### Changed
 
 - `Mjolnir.CheatInventory`: an item's field starts at a full stack instead of 1.
+
+0.4.0's and 0.4.1's mods work unchanged: nothing of the API changed.
 
 ## 0.4.1 — 2026-11-14
 
