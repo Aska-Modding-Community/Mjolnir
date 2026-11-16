@@ -69,7 +69,7 @@ internal static partial class Autopilot
                         .FirstOrDefault(t => t.name.StartsWith("Item Item_", System.StringComparison.Ordinal));
         if (hovered != null)
         {
-            foreach (float wait in Hover(hovered.gameObject)) yield return wait;
+            foreach (float wait in HoverAt(hovered.gameObject, new Vector2(0.04f, 0.5f))) yield return wait;
             var tip = GameObject.Find("Mjolnir_ToolTip");
             Log($"Catalog: the card of '{hovered.name}': {(tip == null ? "no card" : CardTexts(tip))}");
             Shot("catalog-item-card");

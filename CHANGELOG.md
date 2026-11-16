@@ -5,6 +5,12 @@ must be rebuilt.
 
 ## Unreleased
 
+### Fixed
+
+- A hover card now stands beside the pointer instead of beside the whole element: on a row as wide as the window
+  the card landed at its far edge, away from the item it describes. Without a pointer the element is still what
+  the card stands beside.
+
 ## 0.4.3 — 2026-11-17
 
 ### Added

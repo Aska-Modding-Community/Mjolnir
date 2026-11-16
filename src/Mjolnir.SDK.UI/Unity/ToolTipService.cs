@@ -25,6 +25,9 @@ internal static class ToolTipService
     private static float s_since;
     private static Card? s_shown;
 
+    /// <summary>Half the box the card keeps clear round the pointer, in reference pixels.</summary>
+    private const float PointerReach = 10;
+
     /// <summary>A view whose element has a tooltip (or no longer has one, or is gone).</summary>
     public static void Track(UnityView view, bool on)
     {
@@ -116,7 +119,13 @@ internal static class ToolTipService
         var max = view.Root.TransformPoint(view.Root.rect.max);
         float scale = canvas.scaleFactor;
         var size = card.Root.rect.size * scale;
-        var (x, y, right) = ToolTips.Place((min.x, min.y, max.x, max.y), (size.x, size.y), (Screen.width, Screen.height), Gap * scale);
+        // Beside the pointer, as the game's own item card stands beside the slot under it: on a row as wide as the
+        // window the card would otherwise land at its far edge, away from what it describes. Without a pointer
+        // (a scenario driving the UI, a gamepad) the element itself is what the card stands beside.
+        var at = GameKeyboard.PointerPosition();
+        float reach = PointerReach * scale;
+        var area = at is { } p ? (p.x - reach, p.y - reach, p.x + reach, p.y + reach) : (min.x, min.y, max.x, max.y);
+        var (x, y, right) = ToolTips.Place(area, (size.x, size.y), (Screen.width, Screen.height), Gap * scale);
         card.Root.pivot = new Vector2(right ? 0 : 1, 0.5f);
         card.Root.position = new UnityEngine.Vector3(x, y, card.Root.position.z);
         card.PointArrow(right);

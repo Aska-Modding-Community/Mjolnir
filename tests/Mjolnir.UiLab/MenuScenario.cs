@@ -230,10 +230,16 @@ internal static partial class Autopilot
     }
 
     // Rests the pointer on the middle of an element for longer than the tooltip's delay.
-    private static IEnumerable<float> Hover(GameObject element)
+    private static IEnumerable<float> Hover(GameObject element) => HoverAt(element, new Vector2(0.5f, 0.5f));
+
+    // The same at a point of the element's rectangle, as a fraction of it (0,0 its bottom left corner): a row's
+    // picture sits at its left, and a card stands beside the pointer.
+    private static IEnumerable<float> HoverAt(GameObject element, Vector2 at)
     {
         var rect = element.GetComponent<RectTransform>();
-        Point(RectTransformUtility.WorldToScreenPoint(null, rect.TransformPoint(rect.rect.center)));
+        var area = rect.rect;
+        var local = new Vector3(area.xMin + area.width * at.x, area.yMin + area.height * at.y, 0);
+        Point(RectTransformUtility.WorldToScreenPoint(null, rect.TransformPoint(local)));
         yield return 0.8f;
     }
 
