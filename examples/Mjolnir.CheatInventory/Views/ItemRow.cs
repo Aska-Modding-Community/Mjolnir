@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using Mjolnir.SDK;
 using Mjolnir.SDK.Content;
 using Mjolnir.SDK.UI;
@@ -6,9 +7,9 @@ using Mjolnir.SDK.UI;
 namespace Mjolnir.CheatInventory.Views;
 
 /// <summary>
-/// One item: the game's row with the item's picture, its name and its category, a field for how many (1 to start with), and a
-/// button that gives them to the player, answered by the game's own notification with the item's picture. The item's text
-/// shows in the game's hover card.
+/// One item: the game's row with the item's picture, its name and its category, a field for how many (a full stack to
+/// start with), and a button that gives them to the player, answered by the game's own notification with the item's
+/// picture. The item's text shows in the game's hover card.
 /// </summary>
 internal sealed class ItemRow : UiUserControl
 {
@@ -24,7 +25,8 @@ internal sealed class ItemRow : UiUserControl
             Header = item.DisplayName,
             Description = Localization.Get("row.details", item.Category?.DisplayName ?? "", item.StackSize),
             Icon = item.Icon,
-            Text = "1",
+            // A full stack to start with: that is what a cheat window is asked for, and the field says how many fit.
+            Text = Math.Clamp(item.StackSize, 1, MostAtOnce).ToString(CultureInfo.InvariantCulture),
             ContentType = TextInputContentType.Digits,
             MaxLength = 4,
             UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,

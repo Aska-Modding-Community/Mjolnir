@@ -448,7 +448,22 @@ internal sealed class DropdownView : RowView
         // The game centres its dropdown box in a fixed-width row; pin it to the right edge instead. (TryCast, not "is":
         // Il2CppInterop wraps Find's result as the declared Transform, whatever the native object is.)
         var box = row.transform.Find("Dropdown")?.TryCast<RectTransform>();
-        if (box != null) SettingRows.PinRight(box, Theme.DropdownRow!.GetComponent<RectTransform>().sizeDelta.x);
+        if (box != null)
+        {
+            SettingRows.PinRight(box, Theme.DropdownRow!.GetComponent<RectTransform>().sizeDelta.x);
+            // The open list is a copy of the template, and the template is anchored to the box's top-left corner. It
+            // is given the box's width and put right under the field, because the box's layout group no longer places
+            // it (Theme.FixDropdownList takes it out, or the box would grow to the list's height and draw its dark
+            // background round the whole list — seen by the user, 16.11.2026).
+            var template = _dropdown.template;
+            if (template != null && Math.Abs(template.anchorMin.x - template.anchorMax.x) < 0.01f
+                                 && Math.Abs(template.anchorMin.y - template.anchorMax.y) < 0.01f)
+            {
+                float width = box.rect.width, height = template.rect.height, field = box.rect.height;
+                template.offsetMin = new Vector2(0, -field - height);
+                template.offsetMax = new Vector2(width, -field);
+            }
+        }
         _dropdown.onValueChanged.AddListener(DelegateSupport.ConvertDelegate<UnityAction<int>>(new Action<int>(i =>
         {
             if (Applying) return;

@@ -327,6 +327,7 @@ internal static partial class Theme
                 Arrow = SelectorRow == null ? null : ViewFactory.FindDeep(SelectorRow.transform, "Increase")?.GetComponentInChildren<Image>(true)?.sprite;
                 DropdownRow = Keep(FindDropdownRow(settings.transform));
                 FixCheckboxFrame(DropdownRow);
+                FixDropdownList(DropdownRow);
                 HeaderRow = Keep(FindHeaderRow(settings.transform));
                 ScrollView = Keep(FindScrollView(settings.transform));
                 var content = ScrollView?.GetComponent<ScrollRect>()?.content;
@@ -377,6 +378,21 @@ internal static partial class Theme
             if (frame == null) continue;
             frame.anchoredPosition = new Vector2(mark?.anchoredPosition.x ?? 0, frame.anchoredPosition.y);
         }
+    }
+
+    // The box of a dropdown lays its children out (VerticalLayoutGroup + ContentSizeFitter), and the open list is one
+    // of them: the box grew to the list's height, so its dark background and frame were drawn round the whole list,
+    // which sat inside them in the game's own narrower width (seen by the user, 16.11.2026). In our copy the list's
+    // template is taken out of that layout, and the list TMP instantiates from it inherits that: the box keeps the
+    // field's height. The template's anchors are left alone — TMP places the open list by them, and a stretched
+    // template put the list over the field; its width follows the box in <c>DropdownView</c>.
+    private static void FixDropdownList(GameObject? row)
+    {
+        var template = row?.GetComponent<TMP_Dropdown>()?.template;
+        if (template == null) return;
+        var element = template.GetComponent<LayoutElement>();
+        if (element == null) element = template.gameObject.AddComponent<LayoutElement>();
+        element.ignoreLayout = true;
     }
 
     // A section title ("Camera Categ Label" → "Camera").

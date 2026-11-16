@@ -731,6 +731,46 @@ internal static partial class Autopilot
               $"box x {string.Join("/", boxes.Select(x => x.ToString("0.##")).Distinct())}";
     }
 
+    // Every part of a dropdown's row and of its open list: size, anchors and image, to see what is drawn around the
+    // items and whether the list lines up with the box. The items' own parts are left out (CheckboxOffsets has them).
+    private static string DropdownParts(TMP_Dropdown dropdown)
+    {
+        var row = dropdown.transform;
+        var lines = new List<string>();
+        foreach (var part in row.GetComponentsInChildren<Transform>(true))
+        {
+            var rect = part.TryCast<RectTransform>();
+            if (rect == null || part.name.StartsWith("Item ", StringComparison.Ordinal)) continue;
+            if (PathUnder(part, row).StartsWith("Dropdown/Template/", StringComparison.Ordinal)) continue;
+            if (lines.Count >= 24) break;
+            var image = part.GetComponent<Image>();
+            string look = image == null ? ""
+                : $", {(image.sprite == null ? "no sprite" : image.sprite.name)} {image.type} ppu {image.pixelsPerUnitMultiplier:0.##}"
+                  + $" alpha {image.color.a:0.##}{(image.enabled ? "" : " off")}";
+            string components = string.Join(",", part.GetComponents<Component>()
+                                                     .Select(c => c.GetIl2CppType().Name)
+                                                     .Where(n => n != "RectTransform" && n != "CanvasRenderer" && n != "Image"));
+            lines.Add($"{PathUnder(part, row)} {rect.rect.width:0}\u00d7{rect.rect.height:0}"
+                      + $" anchors {rect.anchorMin.x:0.##},{rect.anchorMin.y:0.##}-{rect.anchorMax.x:0.##},{rect.anchorMax.y:0.##}"
+                      + $" at {rect.anchoredPosition.x:0},{rect.anchoredPosition.y:0}{(part.gameObject.activeInHierarchy ? "" : " hidden")}{look}"
+                      + (components.Length == 0 ? "" : $" [{components}]"));
+        }
+        return string.Join(" | ", lines);
+    }
+
+    // An object's path under root, compared by instance id (two wrappers of one native object are not the same object).
+    private static string PathUnder(Transform part, Transform root)
+    {
+        string path = part.name;
+        var parent = part.parent;
+        for (int depth = 0; parent != null && parent.GetInstanceID() != root.GetInstanceID() && depth < 8; depth++)
+        {
+            path = parent.name + "/" + path;
+            parent = parent.parent;
+        }
+        return path;
+    }
+
     // The example's HUD column: the configured line (hidden while switched off) and the clock.
     private static string HudTexts()
     {

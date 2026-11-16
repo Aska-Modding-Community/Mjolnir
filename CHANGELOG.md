@@ -5,6 +5,16 @@ must be rebuilt.
 
 ## Unreleased
 
+### Fixed
+
+- An open dropdown list no longer sits inside a panel of its own: the box of a `UiComboBox` lays its children out
+  and grew to the list's height, so the box's dark background and frame were drawn round the whole list, which kept
+  the game's own narrower width. The list now hangs under the field, as wide as it.
+
+### Changed
+
+- `Mjolnir.CheatInventory`: an item's field starts at a full stack instead of 1.
+
 ## 0.4.1 — 2026-11-14
 
 ### Added

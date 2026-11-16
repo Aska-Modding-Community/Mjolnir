@@ -79,9 +79,11 @@ internal static partial class Autopilot
                 Click(armor.gameObject);
             yield return 0.5f;
             categories = window.GetComponentsInChildren<TMP_Dropdown>(false).FirstOrDefault() ?? categories;
+            Log($"Catalog: the list closed: {DropdownParts(categories)}");
             categories.Show();
             yield return 0.5f;
             Log($"Catalog: the category list open: {CheckboxOffsets(categories)} (the frame at the checkmark's x expected, 0)");
+            Log($"Catalog: the list's parts: {DropdownParts(categories)}");
             Shot("catalog-dropdown");
             yield return AfterShot;
             categories.Hide();
