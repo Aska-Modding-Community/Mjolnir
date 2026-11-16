@@ -5,6 +5,8 @@ must be rebuilt.
 
 ## Unreleased
 
+## 0.4.3 — 2026-11-17
+
 ### Added
 
 - `UiItemCard`: the game's own card of an item, as the inventory shows it under the pointer — the picture, the name,
@@ -13,6 +15,8 @@ must be rebuilt.
   shows items the player does not carry. A tooltip that is a card is drawn as it is, without the hover card's frame
   around it: `row.ToolTip = new UiItemCard { AssetName = item.AssetName };`.
 - `Mjolnir.CheatInventory` shows that card for every row of its catalog.
+
+0.4.0's, 0.4.1's and 0.4.2's mods work unchanged: nothing was taken out of the API.
 
 ## 0.4.2 — 2026-11-16
 

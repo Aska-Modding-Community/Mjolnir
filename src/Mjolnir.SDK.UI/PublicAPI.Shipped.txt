@@ -276,6 +276,10 @@ Mjolnir.SDK.UI.UiImage.Source.set -> void
 Mjolnir.SDK.UI.UiImage.Stretch.get -> Mjolnir.SDK.UI.Stretch
 Mjolnir.SDK.UI.UiImage.Stretch.set -> void
 Mjolnir.SDK.UI.UiImage.UiImage() -> void
+Mjolnir.SDK.UI.UiItemCard
+Mjolnir.SDK.UI.UiItemCard.AssetName.get -> string?
+Mjolnir.SDK.UI.UiItemCard.AssetName.set -> void
+Mjolnir.SDK.UI.UiItemCard.UiItemCard() -> void
 Mjolnir.SDK.UI.UiItemsControl
 Mjolnir.SDK.UI.UiItemsControl.ItemTemplate.get -> Mjolnir.SDK.UI.IDataTemplate?
 Mjolnir.SDK.UI.UiItemsControl.ItemTemplate.set -> void
@@ -500,6 +504,7 @@ override Mjolnir.SDK.UI.UiButton.ToString() -> string!
 override Mjolnir.SDK.UI.UiCard.ToString() -> string!
 override Mjolnir.SDK.UI.UiExpander.ToString() -> string!
 override Mjolnir.SDK.UI.UiHotKeyBox.ToString() -> string!
+override Mjolnir.SDK.UI.UiItemCard.ToString() -> string!
 override Mjolnir.SDK.UI.UiMenuItem.ToString() -> string!
 override Mjolnir.SDK.UI.UiSectionHeader.ToString() -> string!
 override Mjolnir.SDK.UI.UiTabItem.ToString() -> string!
@@ -604,6 +609,7 @@ static readonly Mjolnir.SDK.UI.UiGrid.RowSpacingProperty -> Mjolnir.SDK.UI.Mjoln
 static readonly Mjolnir.SDK.UI.UiHotKeyBox.GestureProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.KeyGesture>!
 static readonly Mjolnir.SDK.UI.UiImage.SourceProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.UI.Bitmap?>!
 static readonly Mjolnir.SDK.UI.UiImage.StretchProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.UI.Stretch>!
+static readonly Mjolnir.SDK.UI.UiItemCard.AssetNameProperty -> Mjolnir.SDK.UI.MjolnirProperty<string?>!
 static readonly Mjolnir.SDK.UI.UiItemsControl.ItemTemplateProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.UI.IDataTemplate?>!
 static readonly Mjolnir.SDK.UI.UiItemsControl.ItemsPanelProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.UI.FuncTemplate<Mjolnir.SDK.UI.Panel!>?>!
 static readonly Mjolnir.SDK.UI.UiItemsControl.ItemsSourceProperty -> Mjolnir.SDK.UI.MjolnirProperty<System.Collections.IEnumerable?>!
