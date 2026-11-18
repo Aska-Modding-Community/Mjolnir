@@ -59,6 +59,7 @@ internal static class GamePlacement
             s_made = true;
             Make(list);
         }
+        GameRoads.BeforeDatabase(list);
         foreach (var made in s_byName.Values)
             if (IndexOf(list, made.Info) < 0) list.Add(made.Info);
     }
@@ -68,7 +69,8 @@ internal static class GamePlacement
     {
         if (!s_byName.TryGetValue(name, out var made) || made.Info == null) return null;
         var context = ItemObjectSpawnContext.WORLD;
-        int quantity = 1;
+        // A gathered kind comes up full: its stack's count is what its gathering gives (a sloe bush 5 berries).
+        int quantity = made.Data.IsGathered && made.Info.TryCast<VegetationResourceInfo>()?.overridenGatherResource is { quantity: > 0 } gathered ? gathered.quantity : 1;
         var turn = Quaternion.Euler(0, rotation, 0);
         var size = Vector3.one * scale;
         var spawned = made.Info.SpawnObject(ref context, ref quantity, ref position, ref turn, ref size, null, false);
@@ -85,6 +87,9 @@ internal static class GamePlacement
 
     /// <summary>Whether a placed object is felled or mined.</summary>
     public static bool IsHarvestable(string assetName) => s_byAsset.TryGetValue(assetName, out var made) && made.Data.IsHarvestable;
+
+    /// <summary>A placed kind by its item kind's name; null for anything else.</summary>
+    internal static Made? Find(string? assetName) => assetName != null && s_byAsset.TryGetValue(assetName, out var made) ? made : null;
 
     private static void Make(Il2CppSystem.Collections.Generic.List<ItemInfo> list)
     {
@@ -219,7 +224,7 @@ internal static class GamePlacement
             _ => NaturalObjectKind.Other,
         };
         var data2 = new PlaceableKindData(vegetation.Name, kind, name, vegetation.MinScale, vegetation.MaxScale, harvest, gather);
-        return new Made(info, data2, trunk, resource ?? "");
+        return new Made(info, data2, trunk, resource ?? "", source?.TryCast<BiomeResourceInfo>());
     }
 
     // A kind the game harvests or gathers: its own object, a world item's now.
@@ -337,7 +342,8 @@ internal static class GamePlacement
         return -1;
     }
 
-    private sealed record Made(ItemInfo Info, PlaceableKindData Data, ItemInfo? Trunk, string Resource);
+    /// <summary>A kind made: its item kind, what the SDK says of it, a tree's trunk kind, what it gives, the world's kind.</summary>
+    internal sealed record Made(ItemInfo Info, PlaceableKindData Data, ItemInfo? Trunk, string Resource, BiomeResourceInfo? World);
 }
 
 /// <summary>
@@ -368,7 +374,9 @@ internal static class PlacementPatches
     {
         try
         {
-            if (GamePlacement.IsOurs(__instance)) GamePlacement.Show(__instance);
+            if (!GamePlacement.IsOurs(__instance)) return;
+            GamePlacement.Show(__instance);
+            GameRegrowth.AfterTreeSetup(__instance);
         }
         catch (Exception e)
         {

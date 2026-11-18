@@ -55,15 +55,7 @@ internal sealed class GameTerrain : ITerrainSource
             }
             catch (Exception e)
             {
-                SdkLog.Warn(Landscape.Platform, $"No kinds of the world can be placed: their patches failed: {e.Message}");
-            }
-            try
-            {
-                patched += s_harmony.CreateClassProcessor(typeof(RoadPatches)).Patch()?.Count ?? 0;
-            }
-            catch (Exception e)
-            {
-                SdkLog.Warn(Landscape.Platform, $"Road plans keep the game's width: their patch failed: {e.Message}");
+                SdkLog.Warn(Landscape.Platform, $"Harvesting gives the player what the game gives: its patches failed: {e.Message}");
             }
             try
             {
@@ -71,7 +63,15 @@ internal sealed class GameTerrain : ITerrainSource
             }
             catch (Exception e)
             {
-                SdkLog.Warn(Landscape.Platform, $"Harvesting gives the player what the game gives: its patches failed: {e.Message}");
+                SdkLog.Warn(Landscape.Platform, $"No kinds of the world can be placed: their patches failed: {e.Message}");
+            }
+            try
+            {
+                patched += s_harmony.CreateClassProcessor(typeof(RegrowthPatches)).Patch()?.Count ?? 0;
+            }
+            catch (Exception e)
+            {
+                SdkLog.Warn(Landscape.Platform, $"Placed bushes neither keep nor give again once gathered: their patches failed: {e.Message}");
             }
             TerrainCommands.Register();
             SdkLog.Info(Landscape.Platform, $"Terrain module started: {patched} game methods patched");
@@ -376,7 +376,7 @@ internal sealed class GameTerrain : ITerrainSource
 
     public IReadOnlyList<IRoadPlanView> RoadPlans => GameRoads.All();
 
-    public IRoadPlanView? PlaceRoadPlan(IReadOnlyList<Vector3> points, GroundKind kind) => GameRoads.Place(points, kind);
+    public IRoadPlanView? PlaceRoadPlan(IReadOnlyList<Vector3> points, GroundKind kind, float width) => GameRoads.Place(points, kind, width);
 
     // As the game's tool writes its own change: the data filled from the ground, the samples set and marked, the removable
     // objects taken, the data sent to the other players, then applied (the game's routine, the events through the patch).

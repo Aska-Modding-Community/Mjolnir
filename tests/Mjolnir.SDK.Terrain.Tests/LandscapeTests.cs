@@ -456,10 +456,11 @@ internal sealed class FakeTerrain : ITerrainSource
 
     IReadOnlyList<IRoadPlanView> ITerrainSource.RoadPlans => Roads;
 
-    public IRoadPlanView? PlaceRoadPlan(IReadOnlyList<Vector3> points, GroundKind kind)
+    public IRoadPlanView? PlaceRoadPlan(IReadOnlyList<Vector3> points, GroundKind kind, float width)
     {
         if (NoRoads) return null;
         var plan = new FakeRoadPlan(this, points, kind);
+        if (width > 0) plan.Width = width;
         Roads.Add(plan);
         return plan;
     }

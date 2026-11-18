@@ -26,13 +26,16 @@ must be rebuilt.
 - Stones and changes of the ground with their loot: `Harvest` takes the game's stone clumps too. `LandscapeObjects.Harvest`
   takes every natural object a change of the ground reaches with its loot (harvested, gathered by hand, or cleared
   where it gives nothing), the loot falling on the new ground; `LandscapeOptions.Harvesting` says who strikes.
-- Wide roads: `RoadPlan.Width` and `RoadPlans.Place(…, width)` give a road plan a strip of its own, 1 to 16 m (the
-  game's road levels 3.5 m), on this machine until the game closes: the game keeps no width per plan. The console's
-  `road width`.
+- Wide roads: `RoadPlan.Width` and `RoadPlans.Place(…, width)` give a road plan a strip of its own, 1 to 16 m in steps
+  of half a metre (`RoadPlans.WidthStep`; the game's road levels 3.5 m), kept through a save and sent to the other
+  players, who need the same Mjolnir. The console's `road width`.
 - Placing the world's kinds: `NaturalObjects.Place(kind, position, rotation, scale)` places a tree, a bush, a crop, a
   stone or a boulder of the scenery — any of the 70 kinds the game grows but its grass (`NaturalObjects.Kinds`,
   `PlaceableKind`) — as a world item that looks, is felled, mined or gathered and drops its loot as the world's do, and
   is saved; a tree's scale is its age. Every player needs the same Mjolnir. The console's `place`.
+- Placed objects over time: a placed bush comes up full, stays when gathered to the end (a save keeps it) and gives
+  again when the world's bushes of its kind do; a placed tree smaller than its grown size grows by the world's clock
+  (`NaturalObjects.TreeGrowthDays`, 32 days by default, 0 for none).
 
 ## 0.4.4 — 2026-11-17
 

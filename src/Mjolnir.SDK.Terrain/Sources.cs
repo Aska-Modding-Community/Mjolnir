@@ -66,7 +66,7 @@ internal interface ITerrainSource
     IReadOnlyList<IRoadPlanView> RoadPlans { get; }
 
     /// <summary>Lays a road plan of <paramref name="kind"/> through the points (on the ground); null when the game will not take one.</summary>
-    IRoadPlanView? PlaceRoadPlan(IReadOnlyList<Vector3> points, GroundKind kind);
+    IRoadPlanView? PlaceRoadPlan(IReadOnlyList<Vector3> points, GroundKind kind, float width);
 
     /// <summary>Makes the change with the game's tool; the game's patch raises <see cref="Landscape.GroundChanging"/> for it.</summary>
     LandscapeResult Apply(in LandscapeEdit edit);
@@ -192,7 +192,7 @@ internal interface IRoadPlanView
     /// <summary>What it lays: a road, or dirt for the levelling plan.</summary>
     GroundKind Kind { get; }
 
-    /// <summary>The strip each section levels, in metres; set, it is this machine's width for the plan until the game closes.</summary>
+    /// <summary>The strip each section levels, in metres; set, the plan takes the template of that width (kept and sent).</summary>
     float Width { get; set; }
 
     int Sections { get; }

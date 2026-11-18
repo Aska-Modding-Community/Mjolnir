@@ -22,25 +22,76 @@ internal static class GameRoads
     private static SplineStructureTemplate? s_road;
     private static SplineStructureTemplate? s_level;
 
-    /// <summary>
-    /// The widths mods gave plans, by the plan's layout state: the template's own field, half the strip a section levels,
-    /// put in its place while one of that plan's sections is levelled (<see cref="RoadPatches"/>). Holding the state keeps
-    /// its pointer from being given to another object.
-    /// </summary>
-    private static readonly Dictionary<IntPtr, (NetworkStructureSplineLayoutState State, SplineStructureTemplate Template, float Half)> s_widths = [];
+    /// <summary>The step a plan's width is kept to, in metres: a template of the SDK's own per step.</summary>
+    internal const float WidthStep = 0.5f;
 
-    /// <summary>The template's half width to level a plan's section with, where a mod gave the plan its own.</summary>
-    internal static bool TryGetWidth(NetworkStructureSplineLayoutState state, out SplineStructureTemplate template, out float half)
+    /// <summary>
+    /// The SDK's own templates of the two plans, one per width (half the strip in the template's field, as the game's): a
+    /// plan laid from one, or switched to one, keeps its width, since the game saves and sends a structure by its template.
+    /// Made once per game as the game builds its item database, by name: "Mjolnir_RoadPlan_Road_80" for a road 8 m wide.
+    /// </summary>
+    private static readonly Dictionary<string, SplineStructureTemplate> s_widths = new(StringComparer.Ordinal);
+    private static bool s_widthsMade;
+
+    /// <summary>The width templates go into the database's list (made the first time), before the game reads it.</summary>
+    public static void BeforeDatabase(Il2CppSystem.Collections.Generic.List<SandSailorStudio.Inventory.ItemInfo> list)
     {
-        if (s_widths.TryGetValue(state.Pointer, out var entry))
+        if (!s_widthsMade)
         {
-            template = entry.Template;
-            half = entry.Half;
-            return true;
+            s_widthsMade = true;
+            var ids = new HashSet<int>();
+            SplineStructureTemplate? road = null, level = null;
+            for (int i = 0; i < list.Count; i++)
+            {
+                var info = list[i];
+                if (info == null) continue;
+                ids.Add(info.id);
+                if (info.name == RoadTemplate) road = info.TryCast<SplineStructureTemplate>();
+                else if (info.name == LevelTemplate) level = info.TryCast<SplineStructureTemplate>();
+            }
+            int made = 0;
+            foreach (var (kind, template) in new[] { ("Road", road), ("Level", level) })
+            {
+                if (template == null) continue;
+                for (int step = (int)(RoadPlans.MinimumWidth / WidthStep); step <= (int)(RoadPlans.MaximumWidth / WidthStep); step++)
+                {
+                    string name = WidthName(kind, step * WidthStep);
+                    int id = (int)(Fnv1a.OfUtf8("mjolnir.terrain/" + name) & 0x7FFFFFFF) | 0x40000000;
+                    if (!ids.Add(id))
+                    {
+                        SdkLog.Warn(Landscape.Platform, $"The road plan template '{name}' is not made: its id {id} is taken");
+                        continue;
+                    }
+                    var copy = UnityEngine.Object.Instantiate(template);
+                    copy.name = name;
+                    copy.id = id;
+                    copy.hideFlags |= HideFlags.DontUnloadUnusedAsset;
+                    copy.width = step * WidthStep / 2f;
+                    s_widths[name] = copy;
+                    made++;
+                }
+            }
+            SdkLog.Info(Landscape.Platform, $"{made} road plan templates of a mod's width");
         }
-        template = null!;
-        half = 0;
-        return false;
+        foreach (var template in s_widths.Values)
+        {
+            bool listed = false;
+            for (int i = list.Count - 1; i >= 0 && !listed; i--)
+                listed = list[i] != null && list[i].Pointer == template.Pointer;
+            if (!listed) list.Add(template);
+        }
+    }
+
+    private static string WidthName(string kind, float width) => FormattableString.Invariant($"Mjolnir_RoadPlan_{kind}_{Math.Round(width * 10f):0}");
+
+    /// <summary>The template of a plan's kind and width: the game's own at its own width, else the SDK's.</summary>
+    private static SplineStructureTemplate? Template(GroundKind kind, float width)
+    {
+        var game = Template(kind == GroundKind.Dirt ? LevelTemplate : RoadTemplate);
+        if (width <= 0 || game == null) return game;
+        float rounded = MathF.Round(width / WidthStep) * WidthStep;
+        if (Math.Abs(rounded - game.width * 2f) < 0.01f) return game;
+        return s_widths.TryGetValue(WidthName(kind == GroundKind.Dirt ? "Level" : "Road", rounded), out var mine) ? mine : null;
     }
 
     /// <summary>Every road plan of the loaded world.</summary>
@@ -60,10 +111,10 @@ internal static class GameRoads
     }
 
     /// <summary>Lays a plan through the settlement, then gives its layout the points.</summary>
-    public static IRoadPlanView? Place(IReadOnlyList<Vector3> points, GroundKind kind)
+    public static IRoadPlanView? Place(IReadOnlyList<Vector3> points, GroundKind kind, float width)
     {
         var settlement = GameManagers.Get<SettlementManager>()?.worldSettlement;
-        var template = Template(kind == GroundKind.Dirt ? LevelTemplate : RoadTemplate);
+        var template = Template(kind, width);
         if (settlement == null || template == null)
         {
             SdkLog.Info(Landscape.Platform, $"A road plan was not laid: settlement {settlement != null}, template {template != null}");
@@ -136,25 +187,21 @@ internal static class GameRoads
             ? GameTerrain.KindOf(tool.overpaint ? tool.overpaintTerrainType : tool.levelTerrainType)
             : GroundKind.Road;
 
-        // The strip a section levels is twice the template's width field (the road's 1.75 levels 3.5 m and paves about
-        // 2.5 m, seen in game); a mod's width stands in for it while one of the plan's sections is levelled.
+        // The strip a section levels is twice the width field of the layout's template (the road's 1.75 levels 3.5 m and
+        // paves about 2.5 m, seen in game). A width of a mod's is the template of the SDK's for it: set on the structure,
+        // which the game saves and sends by its template, and on the layout, which levels with its own reference.
         public float Width
         {
-            get
-            {
-                if (State() is { } state && s_widths.TryGetValue(state.Pointer, out var entry)) return entry.Half * 2f;
-                return Template() is { } template ? template.width * 2f : 0f;
-            }
+            get => Template() is { } template ? template.width * 2f : 0f;
             set
             {
-                var state = State();
-                var template = Template();
-                if (state == null || template == null) return;
-                var dead = new List<IntPtr>();
-                foreach (var (pointer, entry) in s_widths)
-                    if (entry.State == null) dead.Add(pointer);
-                foreach (var pointer in dead) s_widths.Remove(pointer);
-                s_widths[state.Pointer] = (state, template, value / 2f);
+                var structure = Owner();
+                var layout = structure?.GetComponentInChildren<StructureSplineLayout>(true);
+                if (structure == null || layout == null) return;
+                var template = GameRoads.Template(Kind, value);
+                if (template == null) return;
+                structure.Template = template;
+                layout._structureTemplate = template;
             }
         }
 
@@ -225,33 +272,5 @@ internal static class GameRoads
             _taken = true;
             return true;
         }
-    }
-}
-
-/// <summary>
-/// A plan's own width: while one of its sections is levelled (by the SDK or a villager), its template's width is the one
-/// a mod gave it, and the template's own comes back after. The method is the game's own (its code is shared with no other).
-/// </summary>
-[HarmonyPatch]
-internal static class RoadPatches
-{
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(TerraformingSplineInteraction), nameof(TerraformingSplineInteraction.LevelSection))]
-    private static void Widen(TerraformingSplineInteraction __instance, out float __state)
-    {
-        __state = float.NaN;
-        var state = __instance.splineLayoutState;
-        if (state == null || !GameRoads.TryGetWidth(state, out var template, out float half)) return;
-        __state = template.width;
-        template.width = half;
-    }
-
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(TerraformingSplineInteraction), nameof(TerraformingSplineInteraction.LevelSection))]
-    private static void Restore(TerraformingSplineInteraction __instance, float __state)
-    {
-        if (float.IsNaN(__state)) return;
-        var state = __instance.splineLayoutState;
-        if (state != null && GameRoads.TryGetWidth(state, out var template, out _)) template.width = __state;
     }
 }

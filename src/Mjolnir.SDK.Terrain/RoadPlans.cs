@@ -35,6 +35,9 @@ public static class RoadPlans
     /// <summary>The widest strip a plan of a mod's width levels (<see cref="RoadPlan.Width"/>), in metres.</summary>
     public const float MaximumWidth = 16f;
 
+    /// <summary>The step a plan's width is kept to, in metres: a width between two steps is rounded to the nearer.</summary>
+    public const float WidthStep = 0.5f;
+
     /// <summary>The road plans of the loaded world.</summary>
     public static IReadOnlyList<RoadPlan> All
     {
@@ -117,9 +120,8 @@ public static class RoadPlans
         }
         try
         {
-            var placed = source.PlaceRoadPlan(list, kind);
+            var placed = source.PlaceRoadPlan(list, kind, width);
             if (placed == null) return null;
-            if (width != 0f) placed.Width = width;
             SdkLog.Info(Landscape.Platform, FormattableString.Invariant($"{modId} laid a {kind.ToString().ToLowerInvariant()} plan of {list.Length} points, {length:0.#} m"));
             return new RoadPlan(placed);
         }
@@ -150,11 +152,11 @@ public sealed class RoadPlan
 
     /// <summary>
     /// How wide a strip each of its sections levels, in metres: the game's road levels 3.5 m and paves about a metre less
-    /// in its middle. Set, it is the plan's width on this machine, whoever levels a section here — <see cref="LevelNow"/> or
-    /// the villagers — from <see cref="RoadPlans.MinimumWidth"/> to <see cref="RoadPlans.MaximumWidth"/>. The game keeps
-    /// no width of its own for a plan, so it is not saved and not sent: once the world is loaded again, or on another
-    /// player's machine, the plan levels the game's width until it is set again; the ground already paved stays as it is.
-    /// Set off the main thread, it is applied on the main thread's next frame; 0 is read there and once it is gone.
+    /// in its middle. Set, from <see cref="RoadPlans.MinimumWidth"/> to <see cref="RoadPlans.MaximumWidth"/> in steps of
+    /// <see cref="RoadPlans.WidthStep"/> (a width between is rounded), the plan takes the SDK's template of that width:
+    /// whoever levels its sections — <see cref="LevelNow"/> or the villagers — levels that width, and the game saves the
+    /// plan and tells the other players with it (who need the same SDK). Set off the main thread, it is applied on the main
+    /// thread's next frame; 0 is read there and once it is gone.
     /// </summary>
     /// <exception cref="ArgumentOutOfRangeException">A width out of its range.</exception>
     public float Width

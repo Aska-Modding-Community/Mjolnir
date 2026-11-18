@@ -51,6 +51,7 @@ const Mjolnir.SDK.Terrain.RoadPlans.MaximumSections = 96 -> int
 const Mjolnir.SDK.Terrain.RoadPlans.MaximumWidth = 16 -> float
 const Mjolnir.SDK.Terrain.RoadPlans.MinimumWidth = 1 -> float
 const Mjolnir.SDK.Terrain.RoadPlans.SectionLength = 2 -> float
+const Mjolnir.SDK.Terrain.RoadPlans.WidthStep = 0.5 -> float
 override Mjolnir.SDK.Terrain.LandscapeZone.ToString() -> string!
 override Mjolnir.SDK.Terrain.PlaceableKind.ToString() -> string!
 override Mjolnir.SDK.Terrain.RoadPlan.ToString() -> string!
@@ -59,6 +60,8 @@ static Mjolnir.SDK.Terrain.Landscape.Protect(Mjolnir.SDK.Terrain.LandscapeArea a
 static Mjolnir.SDK.Terrain.NaturalObjects.FindKind(string! name) -> Mjolnir.SDK.Terrain.PlaceableKind?
 static Mjolnir.SDK.Terrain.NaturalObjects.Kinds.get -> System.Collections.Generic.IReadOnlyList<Mjolnir.SDK.Terrain.PlaceableKind!>!
 static Mjolnir.SDK.Terrain.NaturalObjects.Place(string! kind, UnityEngine.Vector3 position, float rotation = 0, float scale = 1) -> Mjolnir.SDK.Terrain.NaturalObject?
+static Mjolnir.SDK.Terrain.NaturalObjects.TreeGrowthDays.get -> float
+static Mjolnir.SDK.Terrain.NaturalObjects.TreeGrowthDays.set -> void
 static Mjolnir.SDK.Terrain.RoadPlans.All.get -> System.Collections.Generic.IReadOnlyList<Mjolnir.SDK.Terrain.RoadPlan!>!
 static Mjolnir.SDK.Terrain.RoadPlans.Nearest(UnityEngine.Vector3 center, float radius = 32) -> Mjolnir.SDK.Terrain.RoadPlan?
 static Mjolnir.SDK.Terrain.RoadPlans.Place(System.Collections.Generic.IEnumerable<UnityEngine.Vector3>! points, Mjolnir.SDK.Terrain.GroundKind kind = Mjolnir.SDK.Terrain.GroundKind.Road, float width = 0) -> Mjolnir.SDK.Terrain.RoadPlan?

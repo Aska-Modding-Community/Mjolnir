@@ -63,6 +63,27 @@ public static class NaturalObjects
     public const float MaximumScale = 4f;
 
     /// <summary>
+    /// How many of the world's days a placed tree takes to grow from nothing to its grown size, 32 by default, as long as
+    /// the game's own birch sapling grows; 0 stops placed trees growing. A placed tree smaller than its grown size — a
+    /// scale between its kind's <see cref="PlaceableKind.MinimumScale"/> and <see cref="PlaceableKind.MaximumScale"/>, the
+    /// same for the same place on every machine — grows towards it by the world's clock while it stands (a stump does not),
+    /// on the host, while it is near a player; the game saves its scale and tells the other players. A tree placed at its
+    /// grown size or larger stays as it is. It holds for every mod's trees, so set it only when the player asks.
+    /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException">Below 0, or not a number.</exception>
+    public static float TreeGrowthDays
+    {
+        get => s_treeGrowthDays;
+        set
+        {
+            if (!(value >= 0) || float.IsInfinity(value)) throw new ArgumentOutOfRangeException(nameof(value), value, "A tree's growth takes 0 days or more.");
+            s_treeGrowthDays = value;
+        }
+    }
+
+    private static volatile float s_treeGrowthDays = 32f;
+
+    /// <summary>
     /// The kinds of the world a mod can place (<see cref="Place"/>), every kind the game grows but its grass. They are made
     /// as the game builds its item database, in the main menu already; empty before that and without the game.
     /// </summary>
@@ -99,7 +120,9 @@ public static class NaturalObjects
     /// bush, a stone, a boulder of the scenery. It is a world item of the SDK's own that looks as the kind does and is
     /// harvested or gathered as it is: a tree falls to its stump and drops the game's trunk, a bush gives its berries. The
     /// game saves it and tells the other players, who need the same SDK. A tree's scale is its age: the world's own trees
-    /// stand between <see cref="PlaceableKind.MinimumScale"/> and <see cref="PlaceableKind.MaximumScale"/>.
+    /// stand between <see cref="PlaceableKind.MinimumScale"/> and <see cref="PlaceableKind.MaximumScale"/>, and a placed tree
+    /// smaller than that grows (<see cref="TreeGrowthDays"/>). A bush comes up full; gathered to the end it stays, saved
+    /// as it is, and gives again when the world's bushes of its kind do (the world's berry bushes at a season's start).
     /// </summary>
     /// <param name="kind">The kind's name ("tree_willow") or asset name.</param>
     /// <param name="position">Where it stands; its y is the ground's.</param>

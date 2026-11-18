@@ -258,6 +258,49 @@ public sealed class ObjectsTests : IDisposable
     }
 
     [Fact]
+    public void ABushAtRestKeepsWhenItGivesAgainInItsMark()
+    {
+        foreach (float due in new[] { 0f, 0.004f, 142.37f, 9000.5f })
+        {
+            int mark = Regrowth.Encode(due);
+            Assert.True(mark < 0);
+            Assert.Equal(MathF.Round(due * 100f) / 100f, Regrowth.Decode(mark), 3);
+        }
+        Assert.True(Regrowth.Encode(-5f) < 0);
+    }
+
+    [Fact]
+    public void APlacedTreeGrowsToASizeOfItsKindTheSameForItsPlace()
+    {
+        var at = V(-144.7f, 30f, 322.8f);
+        float grown = Regrowth.GrownScale(1f, 1.6f, at);
+        Assert.InRange(grown, 1f, 1.6f);
+        Assert.Equal(grown, Regrowth.GrownScale(1f, 1.6f, V(-144.7f, 35f, 322.8f)));
+        var sizes = Enumerable.Range(0, 20).Select(i => Regrowth.GrownScale(1f, 1.6f, V(-144.7f + i * 3f, 30f, 322.8f))).Distinct().Count();
+        Assert.True(sizes > 10);
+        Assert.Equal(1.2f, Regrowth.GrownScale(1.2f, 1.2f, at));
+    }
+
+    [Fact]
+    public void TreesGrowOverDaysOrNotAtAll()
+    {
+        float before = NaturalObjects.TreeGrowthDays;
+        try
+        {
+            Assert.Equal(32f, before);
+            NaturalObjects.TreeGrowthDays = 0f;
+            Assert.Equal(0f, NaturalObjects.TreeGrowthDays);
+            Assert.Throws<ArgumentOutOfRangeException>(() => NaturalObjects.TreeGrowthDays = -1f);
+            Assert.Throws<ArgumentOutOfRangeException>(() => NaturalObjects.TreeGrowthDays = float.NaN);
+            Assert.Throws<ArgumentOutOfRangeException>(() => NaturalObjects.TreeGrowthDays = float.PositiveInfinity);
+        }
+        finally
+        {
+            NaturalObjects.TreeGrowthDays = before;
+        }
+    }
+
+    [Fact]
     public void KindsOfTheWorldArePlacedOnTheGround()
     {
         Assert.Equal(3, NaturalObjects.Kinds.Count);
