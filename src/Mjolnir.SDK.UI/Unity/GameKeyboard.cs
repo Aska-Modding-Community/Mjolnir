@@ -77,11 +77,22 @@ internal sealed class GameKeyboard : IKeyboardSource
     {
         if (PressOverride is var (pressed, frame) && frame == UnityEngine.Time.frameCount && pressed.Equals(key, StringComparison.OrdinalIgnoreCase))
             return true;
+        return Control(key, out var control) ? control != null && control.wasPressedThisFrame : null;
+    }
+
+    public bool? IsHeld(string key) => Control(key, out var control) ? control != null && control.isPressed : null;
+
+    public bool? WasReleased(string key) => Control(key, out var control) ? control != null && control.wasReleasedThisFrame : null;
+
+    // The key's control on the keyboard now (null without a keyboard); false for a name that is no key.
+    private bool Control(string key, out KeyControl? control)
+    {
+        control = null;
         if (!_keys.TryGetValue(key, out var resolved))
             _keys[key] = resolved = Enum.TryParse<InputKey>(key, ignoreCase: true, out var parsed) && parsed != InputKey.None ? parsed : null;
-        if (resolved == null) return null;
-        var keyboard = Current;
-        return keyboard != null && keyboard[resolved.Value].wasPressedThisFrame;
+        if (resolved == null) return false;
+        if (Current is { } keyboard) control = keyboard[resolved.Value];
+        return true;
     }
 
     public string? FirstPressed()

@@ -48,6 +48,13 @@ internal static class GameLoop
         remove => GameEvents.Update -= value;
     }
 
+    /// <summary>Every frame after every Update (Unity LateUpdate), on the main thread.</summary>
+    public static event Action LateUpdate
+    {
+        add => GameEvents.LateUpdate += value;
+        remove => GameEvents.LateUpdate -= value;
+    }
+
     /// <summary>
     /// Whether Unity may be touched now: phase B has started, this is the main thread, and the game has a screen (a
     /// headless dedicated server has none; every UI call is a no-op there). Otherwise logs why (as

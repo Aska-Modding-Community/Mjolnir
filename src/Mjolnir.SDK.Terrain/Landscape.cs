@@ -67,6 +67,66 @@ public static partial class Landscape
         return Live() is { } source && source.IsLoaded(x, z) && source.TryGetHeight(x, z, out height);
     }
 
+    /// <summary>The farthest a ray looks for the ground, in metres.</summary>
+    public const float MaximumRayDistance = 2000f;
+
+    /// <summary>
+    /// Where a ray first meets the ground: a point under the cursor (<c>GameCamera.ScreenPointToRay</c>), what a tool aims at.
+    /// Only the ground counts (its heights, the game's sampler), not buildings, trees or the game's invisible volumes.
+    /// </summary>
+    /// <param name="ray">From where and which way; its direction need not be of length 1.</param>
+    /// <param name="maxDistance">How far along the ray to look, over 0 and at most <see cref="MaximumRayDistance"/> metres.</param>
+    /// <param name="point">The point on the ground, within a centimetre.</param>
+    /// <returns>Whether the ray meets loaded ground within the distance, asked on the main thread. A ray that starts under the
+    /// ground meets nothing.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">The distance is out of range or not a number.</exception>
+    public static bool TryRaycast(Ray ray, float maxDistance, out Vector3 point) =>
+        TryRaycast(ray.origin, ray.direction, maxDistance, out point);
+
+    // The ray marched in steps of a metre (shorter while the ground is near), then halved down to a centimetre where it
+    // goes under the ground.
+    internal static bool TryRaycast(Vector3 origin, Vector3 direction, float maxDistance, out Vector3 point)
+    {
+        point = default;
+        if (!(maxDistance > 0 && maxDistance <= MaximumRayDistance))
+            throw new ArgumentOutOfRangeException(nameof(maxDistance), maxDistance, $"A ray looks over 0 and at most {MaximumRayDistance} m.");
+        if (Live() is not { } source) return false;
+        float length = MathF.Sqrt(direction.x * direction.x + direction.y * direction.y + direction.z * direction.z);
+        if (!(length > 0) || !float.IsFinite(length)) return false;
+        float dx = direction.x / length, dy = direction.y / length, dz = direction.z / length;
+        float previous = -1;
+        for (float t = 0; ; )
+        {
+            float x = origin.x + dx * t, y = origin.y + dy * t, z = origin.z + dz * t;
+            if (source.IsLoaded(x, z) && source.TryGetHeight(x, z, out float ground))
+            {
+                if (y <= ground)
+                {
+                    if (previous < 0) return false; // it starts under the ground
+                    float above = previous, below = t;
+                    while (below - above > RayPrecision)
+                    {
+                        float middle = (above + below) / 2;
+                        float mx = origin.x + dx * middle, mz = origin.z + dz * middle;
+                        if (source.TryGetHeight(mx, mz, out float h) && origin.y + dy * middle <= h) below = middle;
+                        else above = middle;
+                    }
+                    point.x = origin.x + dx * below;
+                    point.y = origin.y + dy * below;
+                    point.z = origin.z + dz * below;
+                    return true;
+                }
+                previous = t;
+            }
+            else previous = -1;
+            if (t >= maxDistance) return false;
+            t = Math.Min(maxDistance, t + RayStep);
+        }
+    }
+
+    private const float RayStep = 1f;
+    private const float RayPrecision = 0.01f;
+
     /// <summary>Which way the ground faces at a point (length 1); (0, 0, 0) where it is not known.</summary>
     public static Vector3 NormalAt(float x, float z) => Live() is { } source && source.IsLoaded(x, z) ? source.Normal(x, z) : default;
 
@@ -340,6 +400,7 @@ public static partial class Landscape
     {
         TerrainCommands.ResetForTests();
         LandscapeOutline.ResetForTests();
+        LandscapeGrid.ResetForTests();
         LandscapeZone.ResetForTests();
         Source = null;
         s_changing = null;

@@ -364,6 +364,8 @@ internal sealed class GameTerrain : ITerrainSource
 
     public IOutlineView NewOutline() => new GameOutline();
 
+    public IGridView NewGrid(int columns, int rows) => new GameGrid(columns, rows);
+
     public IReadOnlyList<IWorldObject> ObjectsIn(float centerX, float centerZ, float radius) => GameObjects.In(centerX, centerZ, radius);
 
     public IReadOnlyList<PlaceableKindData> PlaceableKinds => GamePlacement.Kinds;

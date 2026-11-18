@@ -196,6 +196,12 @@ internal interface IKeyboardSource
     /// <summary>Whether the key (an Input System name) went down this frame; null for a name that is no key.</summary>
     bool? WasPressed(string key);
 
+    /// <summary>Whether the key is held down now; null for a name that is no key.</summary>
+    bool? IsHeld(string key);
+
+    /// <summary>Whether the key came up this frame; null for a name that is no key.</summary>
+    bool? WasReleased(string key);
+
     /// <summary>The name of a key other than a modifier that went down this frame, if any.</summary>
     string? FirstPressed();
 }

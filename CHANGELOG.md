@@ -36,6 +36,17 @@ must be rebuilt.
 - Placed objects over time: a placed bush comes up full, stays when gathered to the end (a save keeps it) and gives
   again when the world's bushes of its kind do; a placed tree smaller than its grown size grows by the world's clock
   (`NaturalObjects.TreeGrowthDays`, 32 days by default, 0 for none).
+- Tools on the ground: `Landscape.ShowGrid(center, columns, rows, cellSize, rotation)` draws a grid of cells on the
+  ground in the look of the game's levelling field — framed, see-through, lying on the relief — that a mod colours cell
+  by cell (`LandscapeGrid.SetCell` for a shade between `NearColor` and `FarColor`, `MarkCell`, `ClearCell`) to show
+  what a change will do before it is made; `Landscape.TryRaycast(ray, maxDistance, out point)` finds where a ray, the
+  one under the cursor, meets the ground; `LandscapeOutline.Height` and `LineWidth` set how high over the ground and how
+  wide an outline runs.
+- The player's controls for a mod's tool: `PlayerControls.Capture()` gives a `ControlsCapture` that stops the
+  character, its attacks, the game's camera, quick slots and menu keys and shows the cursor until it is disposed, the
+  world is left or its mod is disabled (`Ended`); hotkeys and mod windows still work. `MouseInput` reads the mouse:
+  `Position`, `IsPressed`/`WasPressed`/`WasReleased(MouseButton)`, `Wheel` in notches and `IsOverInterface`;
+  `KeyboardInput` the keys held, pressed and released by name, the modifiers held and whether the player types.
 
 ## 0.4.4 — 2026-11-17
 

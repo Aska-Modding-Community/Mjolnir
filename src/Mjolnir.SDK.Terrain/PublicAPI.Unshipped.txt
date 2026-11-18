@@ -9,10 +9,34 @@ Mjolnir.SDK.Terrain.HarvestOptions.AwardExperience.init -> void
 Mjolnir.SDK.Terrain.HarvestOptions.ChopTrunk.get -> bool
 Mjolnir.SDK.Terrain.HarvestOptions.ChopTrunk.init -> void
 Mjolnir.SDK.Terrain.HarvestOptions.HarvestOptions() -> void
+Mjolnir.SDK.Terrain.LandscapeGrid
+Mjolnir.SDK.Terrain.LandscapeGrid.CellCenter(int column, int row) -> UnityEngine.Vector3
+Mjolnir.SDK.Terrain.LandscapeGrid.CellSize.get -> float
+Mjolnir.SDK.Terrain.LandscapeGrid.Center.get -> UnityEngine.Vector3
+Mjolnir.SDK.Terrain.LandscapeGrid.Center.set -> void
+Mjolnir.SDK.Terrain.LandscapeGrid.Clear() -> void
+Mjolnir.SDK.Terrain.LandscapeGrid.ClearCell(int column, int row) -> void
+Mjolnir.SDK.Terrain.LandscapeGrid.Columns.get -> int
+Mjolnir.SDK.Terrain.LandscapeGrid.Dispose() -> void
+Mjolnir.SDK.Terrain.LandscapeGrid.FarColor.get -> UnityEngine.Color?
+Mjolnir.SDK.Terrain.LandscapeGrid.FarColor.set -> void
+Mjolnir.SDK.Terrain.LandscapeGrid.IsVisible.get -> bool
+Mjolnir.SDK.Terrain.LandscapeGrid.IsVisible.set -> void
+Mjolnir.SDK.Terrain.LandscapeGrid.MarkCell(int column, int row) -> void
+Mjolnir.SDK.Terrain.LandscapeGrid.NearColor.get -> UnityEngine.Color?
+Mjolnir.SDK.Terrain.LandscapeGrid.NearColor.set -> void
+Mjolnir.SDK.Terrain.LandscapeGrid.Rotation.get -> float
+Mjolnir.SDK.Terrain.LandscapeGrid.Rotation.set -> void
+Mjolnir.SDK.Terrain.LandscapeGrid.Rows.get -> int
+Mjolnir.SDK.Terrain.LandscapeGrid.SetCell(int column, int row, float fraction) -> void
 Mjolnir.SDK.Terrain.LandscapeObjects.Clear = 3 -> Mjolnir.SDK.Terrain.LandscapeObjects
 Mjolnir.SDK.Terrain.LandscapeObjects.Harvest = 4 -> Mjolnir.SDK.Terrain.LandscapeObjects
 Mjolnir.SDK.Terrain.LandscapeOptions.Harvesting.get -> Mjolnir.SDK.Terrain.HarvestOptions?
 Mjolnir.SDK.Terrain.LandscapeOptions.Harvesting.init -> void
+Mjolnir.SDK.Terrain.LandscapeOutline.Height.get -> float
+Mjolnir.SDK.Terrain.LandscapeOutline.Height.set -> void
+Mjolnir.SDK.Terrain.LandscapeOutline.LineWidth.get -> float
+Mjolnir.SDK.Terrain.LandscapeOutline.LineWidth.set -> void
 Mjolnir.SDK.Terrain.LandscapeZone
 Mjolnir.SDK.Terrain.LandscapeZone.Area.get -> Mjolnir.SDK.Terrain.LandscapeArea
 Mjolnir.SDK.Terrain.LandscapeZone.Area.set -> void
@@ -45,6 +69,12 @@ Mjolnir.SDK.Terrain.RoadPlan.Sections.get -> int
 Mjolnir.SDK.Terrain.RoadPlan.Width.get -> float
 Mjolnir.SDK.Terrain.RoadPlan.Width.set -> void
 Mjolnir.SDK.Terrain.RoadPlans
+const Mjolnir.SDK.Terrain.Landscape.MaximumRayDistance = 2000 -> float
+const Mjolnir.SDK.Terrain.LandscapeGrid.MaximumCellSize = 16 -> float
+const Mjolnir.SDK.Terrain.LandscapeGrid.MaximumCells = 256 -> int
+const Mjolnir.SDK.Terrain.LandscapeGrid.MinimumCellSize = 0.25 -> float
+const Mjolnir.SDK.Terrain.LandscapeOutline.MaximumHeight = 10 -> float
+const Mjolnir.SDK.Terrain.LandscapeOutline.MaximumLineWidth = 2 -> float
 const Mjolnir.SDK.Terrain.NaturalObjects.MaximumScale = 4 -> float
 const Mjolnir.SDK.Terrain.RoadPlans.MaximumPoints = 8 -> int
 const Mjolnir.SDK.Terrain.RoadPlans.MaximumSections = 96 -> int
@@ -52,11 +82,14 @@ const Mjolnir.SDK.Terrain.RoadPlans.MaximumWidth = 16 -> float
 const Mjolnir.SDK.Terrain.RoadPlans.MinimumWidth = 1 -> float
 const Mjolnir.SDK.Terrain.RoadPlans.SectionLength = 2 -> float
 const Mjolnir.SDK.Terrain.RoadPlans.WidthStep = 0.5 -> float
+override Mjolnir.SDK.Terrain.LandscapeGrid.ToString() -> string!
 override Mjolnir.SDK.Terrain.LandscapeZone.ToString() -> string!
 override Mjolnir.SDK.Terrain.PlaceableKind.ToString() -> string!
 override Mjolnir.SDK.Terrain.RoadPlan.ToString() -> string!
 static Mjolnir.SDK.Terrain.HarvestOptions.Default.get -> Mjolnir.SDK.Terrain.HarvestOptions!
 static Mjolnir.SDK.Terrain.Landscape.Protect(Mjolnir.SDK.Terrain.LandscapeArea area) -> Mjolnir.SDK.Terrain.LandscapeZone!
+static Mjolnir.SDK.Terrain.Landscape.ShowGrid(UnityEngine.Vector3 center, int columns, int rows, float cellSize = 1, float rotation = 0) -> Mjolnir.SDK.Terrain.LandscapeGrid!
+static Mjolnir.SDK.Terrain.Landscape.TryRaycast(UnityEngine.Ray ray, float maxDistance, out UnityEngine.Vector3 point) -> bool
 static Mjolnir.SDK.Terrain.NaturalObjects.FindKind(string! name) -> Mjolnir.SDK.Terrain.PlaceableKind?
 static Mjolnir.SDK.Terrain.NaturalObjects.Kinds.get -> System.Collections.Generic.IReadOnlyList<Mjolnir.SDK.Terrain.PlaceableKind!>!
 static Mjolnir.SDK.Terrain.NaturalObjects.Place(string! kind, UnityEngine.Vector3 position, float rotation = 0, float scale = 1) -> Mjolnir.SDK.Terrain.NaturalObject?

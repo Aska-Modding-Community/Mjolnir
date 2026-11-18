@@ -12,8 +12,17 @@ namespace Mjolnir.SDK.Terrain;
 /// </summary>
 public sealed class LandscapeOutline : IDisposable
 {
-    /// <summary>How high over the ground the line runs, in metres, so the grass does not hide it.</summary>
+    /// <summary>How high over the ground the line runs by default, in metres, so the grass does not hide it.</summary>
     internal const float Lift = 0.3f;
+
+    /// <summary>How wide the edge's line is by default, in metres.</summary>
+    internal const float EdgeWidth = 0.2f;
+
+    /// <summary>The highest a line runs over the ground, in metres.</summary>
+    public const float MaximumHeight = 10f;
+
+    /// <summary>The widest line, in metres.</summary>
+    public const float MaximumLineWidth = 2f;
 
     /// <summary>The most metres between two points of a line, so it follows the ground between them.</summary>
     internal const float PointSpacing = 1f;
@@ -28,6 +37,8 @@ public sealed class LandscapeOutline : IDisposable
     private readonly object _lock = new();
     private LandscapeArea _area;
     private Color _color;
+    private float _height = Lift;
+    private float _lineWidth = EdgeWidth;
     private bool _visible = true;
     private bool _disposed;
     private bool _dirty = true;
@@ -64,6 +75,44 @@ public sealed class LandscapeOutline : IDisposable
             lock (_lock)
             {
                 _color = value;
+                _dirty = true;
+            }
+        }
+    }
+
+    /// <summary>
+    /// How high over the ground the line runs, in metres, from 0 to <see cref="MaximumHeight"/>; 0.3 by default, so the
+    /// grass does not hide it.
+    /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException">Out of range or not a number.</exception>
+    public float Height
+    {
+        get { lock (_lock) return _height; }
+        set
+        {
+            if (!(value >= 0 && value <= MaximumHeight)) throw new ArgumentOutOfRangeException(nameof(value), value, $"An outline runs 0 to {MaximumHeight} m over the ground.");
+            lock (_lock)
+            {
+                _height = value;
+                _dirty = true;
+            }
+        }
+    }
+
+    /// <summary>
+    /// How wide the edge's line is, in metres, over 0 and at most <see cref="MaximumLineWidth"/>; 0.2 by default. The blend's
+    /// line is 0.4 of it.
+    /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException">Out of range or not a number.</exception>
+    public float LineWidth
+    {
+        get { lock (_lock) return _lineWidth; }
+        set
+        {
+            if (!(value > 0 && value <= MaximumLineWidth)) throw new ArgumentOutOfRangeException(nameof(value), value, $"An outline's line is over 0 and at most {MaximumLineWidth} m wide.");
+            lock (_lock)
+            {
+                _lineWidth = value;
                 _dirty = true;
             }
         }
@@ -120,6 +169,7 @@ public sealed class LandscapeOutline : IDisposable
     {
         LandscapeArea area;
         Color color;
+        float height, width;
         bool visible, dirty;
         lock (_lock)
         {
@@ -131,6 +181,8 @@ public sealed class LandscapeOutline : IDisposable
             }
             area = _area;
             color = _color;
+            height = _height;
+            width = _lineWidth;
             visible = _visible;
             dirty = _dirty || ++_age >= RefreshFrames;
             _dirty = false;
@@ -145,15 +197,15 @@ public sealed class LandscapeOutline : IDisposable
                 return true;
             }
             if (!dirty) return true;
-            var edge = OnGround(source, Line(area, false)!);
+            var edge = OnGround(source, Line(area, false)!, height);
             if (edge.Count < 2)
             {
                 _view?.Hide();
                 return true;
             }
-            var blend = Line(area, true) is { } outer ? OnGround(source, outer) : null;
+            var blend = Line(area, true) is { } outer ? OnGround(source, outer, height) : null;
             _view ??= source.NewOutline();
-            _view.Draw(edge, blend is { Count: >= 2 } ? blend : null, color);
+            _view.Draw(edge, blend is { Count: >= 2 } ? blend : null, color, width);
         }
         catch (Exception e)
         {
@@ -163,7 +215,7 @@ public sealed class LandscapeOutline : IDisposable
         return true;
     }
 
-    private static List<Vector3> OnGround(ITerrainSource source, List<(float X, float Z)> line)
+    private static List<Vector3> OnGround(ITerrainSource source, List<(float X, float Z)> line, float lift)
     {
         var points = new List<Vector3>(line.Count);
         foreach (var (x, z) in line)
@@ -171,7 +223,7 @@ public sealed class LandscapeOutline : IDisposable
             if (!source.IsLoaded(x, z) || !source.TryGetHeight(x, z, out float height)) continue;
             Vector3 v = default;
             v.x = x;
-            v.y = height + Lift;
+            v.y = height + lift;
             v.z = z;
             points.Add(v);
         }

@@ -15,6 +15,14 @@ internal sealed class FakeKeyboard : IKeyboardSource
 
     public bool? WasPressed(string key) => key.Equals("NoSuchKey", StringComparison.OrdinalIgnoreCase) ? null : Pressed.Contains(key);
 
+    public HashSet<string> Held { get; } = new(StringComparer.OrdinalIgnoreCase);
+
+    public HashSet<string> Released { get; } = new(StringComparer.OrdinalIgnoreCase);
+
+    public bool? IsHeld(string key) => key.Equals("NoSuchKey", StringComparison.OrdinalIgnoreCase) ? null : Held.Contains(key);
+
+    public bool? WasReleased(string key) => key.Equals("NoSuchKey", StringComparison.OrdinalIgnoreCase) ? null : Released.Contains(key);
+
     public string? FirstPressed()
     {
         foreach (string key in Pressed) return key;

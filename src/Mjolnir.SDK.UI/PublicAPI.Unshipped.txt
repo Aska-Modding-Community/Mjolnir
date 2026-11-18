@@ -1,1 +1,30 @@
 #nullable enable
+Mjolnir.SDK.UI.ControlsCapture
+Mjolnir.SDK.UI.ControlsCapture.Dispose() -> void
+Mjolnir.SDK.UI.ControlsCapture.Ended -> System.EventHandler?
+Mjolnir.SDK.UI.ControlsCapture.IsActive.get -> bool
+Mjolnir.SDK.UI.ControlsCapture.ShowsCursor.get -> bool
+Mjolnir.SDK.UI.ControlsCapture.ShowsCursor.set -> void
+Mjolnir.SDK.UI.KeyboardInput
+Mjolnir.SDK.UI.MouseButton
+Mjolnir.SDK.UI.MouseButton.Left = 0 -> Mjolnir.SDK.UI.MouseButton
+Mjolnir.SDK.UI.MouseButton.Middle = 2 -> Mjolnir.SDK.UI.MouseButton
+Mjolnir.SDK.UI.MouseButton.Right = 1 -> Mjolnir.SDK.UI.MouseButton
+Mjolnir.SDK.UI.MouseInput
+Mjolnir.SDK.UI.PlayerControls
+override Mjolnir.SDK.UI.ControlsCapture.ToString() -> string!
+static Mjolnir.SDK.UI.KeyboardInput.IsAvailable.get -> bool
+static Mjolnir.SDK.UI.KeyboardInput.IsPressed(string! key) -> bool
+static Mjolnir.SDK.UI.KeyboardInput.IsTyping.get -> bool
+static Mjolnir.SDK.UI.KeyboardInput.Modifiers.get -> Mjolnir.SDK.KeyModifiers
+static Mjolnir.SDK.UI.KeyboardInput.WasPressed(string! key) -> bool
+static Mjolnir.SDK.UI.KeyboardInput.WasReleased(string! key) -> bool
+static Mjolnir.SDK.UI.MouseInput.IsAvailable.get -> bool
+static Mjolnir.SDK.UI.MouseInput.IsOverInterface.get -> bool
+static Mjolnir.SDK.UI.MouseInput.IsPressed(Mjolnir.SDK.UI.MouseButton button) -> bool
+static Mjolnir.SDK.UI.MouseInput.Position.get -> UnityEngine.Vector2
+static Mjolnir.SDK.UI.MouseInput.WasPressed(Mjolnir.SDK.UI.MouseButton button) -> bool
+static Mjolnir.SDK.UI.MouseInput.WasReleased(Mjolnir.SDK.UI.MouseButton button) -> bool
+static Mjolnir.SDK.UI.MouseInput.Wheel.get -> float
+static Mjolnir.SDK.UI.PlayerControls.Capture(bool showCursor = true) -> Mjolnir.SDK.UI.ControlsCapture!
+static Mjolnir.SDK.UI.PlayerControls.IsCaptured.get -> bool

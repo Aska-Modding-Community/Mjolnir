@@ -487,6 +487,15 @@ internal sealed class FakeTerrain : ITerrainSource
         return outline;
     }
 
+    public List<FakeGrid> Grids { get; } = [];
+
+    public IGridView NewGrid(int columns, int rows)
+    {
+        var grid = new FakeGrid(columns, rows);
+        Grids.Add(grid);
+        return grid;
+    }
+
     public LandscapeResult Write(LandscapeSamples samples, in GroundWrite write)
     {
         if (Throw) throw new InvalidOperationException("the game's write failed");
@@ -588,14 +597,71 @@ internal sealed class FakeOutline : IOutlineView
 
     public int Draws { get; private set; }
 
-    public void Draw(IReadOnlyList<Vector3> edge, IReadOnlyList<Vector3>? blend, Color color)
+    public float Width { get; private set; }
+
+    public void Draw(IReadOnlyList<Vector3> edge, IReadOnlyList<Vector3>? blend, Color color, float width)
     {
         Edge = edge;
         Blend = blend;
         Color = color;
+        Width = width;
         IsShown = true;
         Draws++;
     }
+
+    public void Hide() => IsShown = false;
+
+    public void Destroy()
+    {
+        IsShown = false;
+        IsDestroyed = true;
+    }
+}
+
+/// <summary>A grid's cells as the model last placed and painted them.</summary>
+internal sealed class FakeGrid(int columns, int rows) : IGridView
+{
+    public int Columns { get; } = columns;
+
+    public int Rows { get; } = rows;
+
+    public Vector3 Center { get; private set; }
+
+    public float Rotation { get; private set; }
+
+    public float CellSize { get; private set; }
+
+    public GridCellKind[]? Kinds { get; private set; }
+
+    public float[]? Fractions { get; private set; }
+
+    public (Color? Near, Color? Far) Colours { get; private set; }
+
+    public bool IsShown { get; private set; }
+
+    public bool IsDestroyed { get; private set; }
+
+    public int Places { get; private set; }
+
+    public int Paints { get; private set; }
+
+    public void Place(Vector3 center, float rotation, float cellSize)
+    {
+        Center = center;
+        Rotation = rotation;
+        CellSize = cellSize;
+        IsShown = true;
+        Places++;
+    }
+
+    public void Paint(GridCellKind[] kinds, float[] fractions)
+    {
+        Kinds = kinds;
+        Fractions = fractions;
+        Paints++;
+    }
+
+    public void Colors(Color? near, Color? far) => Colours = (near, far);
 
     public void Hide() => IsShown = false;
 

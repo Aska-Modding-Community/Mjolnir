@@ -28,7 +28,7 @@
     <MjolnirSdk Include="Mjolnir.SDK.Terrain" />
     <GameInterop Include="Fusion.Runtime;Fusion.Common" />
     <GameInterop Include="UnityEngine.AudioModule" />
-    <GameInterop Include="Cinemachine;Unity.RenderPipelines.Core.Runtime" />
+    <GameInterop Include="Cinemachine;Unity.RenderPipelines.Core.Runtime;Unity.RenderPipelines.HighDefinition.Runtime" />
   </ItemGroup>
 
   <!-- The "localization" scenario: the game's localization manager, which keeps its keys in a HashSet

@@ -11,8 +11,8 @@ namespace Mjolnir.SDK.Terrain;
 /// </summary>
 internal sealed class GameOutline : IOutlineView
 {
-    private const float EdgeWidth = 0.2f;
-    private const float BlendWidth = 0.08f;
+    // The blend's line against the edge's.
+    private const float BlendShare = 0.4f;
 
     private static Shader? s_shader;
 
@@ -25,8 +25,8 @@ internal sealed class GameOutline : IOutlineView
         _root = new GameObject("Mjolnir_LandscapeOutline");
         Object.DontDestroyOnLoad(_root);
         _root.hideFlags = HideFlags.HideAndDontSave;
-        _edge = NewLine("Edge", EdgeWidth);
-        _blend = NewLine("Blend", BlendWidth);
+        _edge = NewLine("Edge", LandscapeOutline.EdgeWidth);
+        _blend = NewLine("Blend", LandscapeOutline.EdgeWidth * BlendShare);
         _root.SetActive(false);
     }
 
@@ -47,9 +47,11 @@ internal sealed class GameOutline : IOutlineView
 
     private static Shader? Shader() => s_shader != null ? s_shader : s_shader = UnityEngine.Shader.Find("HDRP/Unlit");
 
-    public void Draw(IReadOnlyList<Vector3> edge, IReadOnlyList<Vector3>? blend, Color color)
+    public void Draw(IReadOnlyList<Vector3> edge, IReadOnlyList<Vector3>? blend, Color color, float width)
     {
         if (_root == null) return;
+        _edge.widthMultiplier = width;
+        _blend.widthMultiplier = width * BlendShare;
         Set(_edge, edge, color);
         if (blend != null)
         {

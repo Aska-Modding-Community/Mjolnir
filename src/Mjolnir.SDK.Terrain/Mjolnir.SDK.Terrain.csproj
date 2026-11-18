@@ -19,7 +19,7 @@
        streaming (SandSailorStudio), Unity's terrain and physics (the buildings in an area), and the vegetation system's
        biome type on the tool. -->
   <ItemGroup>
-    <GameInterop Include="Il2Cppmscorlib;UnityEngine.CoreModule;UnityEngine.PhysicsModule;UnityEngine.TerrainModule;Assembly-CSharp;SandSailorStudio;Fusion.Runtime;AwesomeTechnologies.VegetationStudioPro.Runtime;Unity.Collections;Unity.Mathematics" />
+    <GameInterop Include="Il2Cppmscorlib;UnityEngine.CoreModule;UnityEngine.PhysicsModule;UnityEngine.TerrainModule;Assembly-CSharp;SandSailorStudio;Fusion.Runtime;AwesomeTechnologies.VegetationStudioPro.Runtime;Unity.Collections;Unity.Mathematics;Unity.RenderPipelines.HighDefinition.Runtime;Unity.RenderPipelines.Core.Runtime" />
   </ItemGroup>
 
   <ItemGroup>

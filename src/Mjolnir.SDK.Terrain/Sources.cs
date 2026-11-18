@@ -43,6 +43,9 @@ internal interface ITerrainSource
     /// <summary>A line of the game's own to draw an outline on the ground with (hidden until drawn).</summary>
     IOutlineView NewOutline();
 
+    /// <summary>A grid of <paramref name="columns"/> × <paramref name="rows"/> cells drawn on the ground (hidden until placed).</summary>
+    IGridView NewGrid(int columns, int rows);
+
     /// <summary>The world's natural objects whose place lies within <paramref name="radius"/> metres of a point.</summary>
     IReadOnlyList<IWorldObject> ObjectsIn(float centerX, float centerZ, float radius);
 
@@ -222,14 +225,32 @@ internal interface IRoadPlanView
 internal interface IOutlineView
 {
     /// <summary>
-    /// Shows the area's edge as a closed line through <paramref name="edge"/>, and its blend's outer edge, when it has one,
-    /// as a thinner line through <paramref name="blend"/>.
+    /// Shows the area's edge as a closed line <paramref name="width"/> wide through <paramref name="edge"/>, and its blend's
+    /// outer edge, when it has one, as a thinner line through <paramref name="blend"/>.
     /// </summary>
-    void Draw(IReadOnlyList<Vector3> edge, IReadOnlyList<Vector3>? blend, Color color);
+    void Draw(IReadOnlyList<Vector3> edge, IReadOnlyList<Vector3>? blend, Color color, float width);
 
     void Hide();
 
     /// <summary>Takes the lines out of the world for good.</summary>
+    void Destroy();
+}
+
+/// <summary>A grid's cells in the world (Game/GameGrid.cs; a fake in the unit tests). Used on the main thread only.</summary>
+internal interface IGridView
+{
+    /// <summary>Shows the grid with its middle at <paramref name="center"/> (y: the ground's height there), turned as a rectangle is.</summary>
+    void Place(Vector3 center, float rotation, float cellSize);
+
+    /// <summary>What each cell shows, row after row from the lowest z, each row from the lowest x.</summary>
+    void Paint(GridCellKind[] kinds, float[] fractions);
+
+    /// <summary>The colours of a shade's two ends; null for the game's own. A marked cell is always the game's red.</summary>
+    void Colors(Color? near, Color? far);
+
+    void Hide();
+
+    /// <summary>Takes the grid out of the world for good.</summary>
     void Destroy();
 }
 

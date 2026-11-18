@@ -111,6 +111,24 @@ public static partial class Landscape
         LandscapeOutline.Add(CallingMod.Of(Assembly.GetCallingAssembly()), area, color);
 
     /// <summary>
+    /// Draws a grid of cells on the ground, in the look of the game's levelling field: each cell framed and see-through,
+    /// lying on the relief. A mod colours each cell (<see cref="LandscapeGrid.SetCell"/>, <see cref="LandscapeGrid.MarkCell"/>)
+    /// to show what a change will do before it is made — ground to fill, to cut, already right — and moves the grid with
+    /// <see cref="LandscapeGrid.Center"/>. It stays until disposed. It is drawn on this machine only, in no save, and hidden
+    /// while no world is loaded or its middle is not loaded. May be called from any thread: it shows from the next frame.
+    /// </summary>
+    /// <param name="center">The grid's middle on the ground (its y is not used).</param>
+    /// <param name="columns">Cells along x, from 1 to <see cref="LandscapeGrid.MaximumCells"/>.</param>
+    /// <param name="rows">Cells along z, from 1 to <see cref="LandscapeGrid.MaximumCells"/>.</param>
+    /// <param name="cellSize">A cell's side in metres, from <see cref="LandscapeGrid.MinimumCellSize"/> to <see cref="LandscapeGrid.MaximumCellSize"/>.</param>
+    /// <param name="rotation">How far it is turned about the vertical, in degrees, as a <see cref="LandscapeArea.Rectangle"/> is.</param>
+    /// <returns>The grid, every cell empty.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">A count, the size, the middle or the turn is out of range or not a number.</exception>
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static LandscapeGrid ShowGrid(Vector3 center, int columns, int rows, float cellSize = 1, float rotation = 0) =>
+        LandscapeGrid.Add(CallingMod.Of(Assembly.GetCallingAssembly()), center, columns, rows, cellSize, rotation);
+
+    /// <summary>
     /// Protects the area's ground from every change of this machine but this mod's own: the player's tools, the villagers',
     /// a building's footprint or field, the game's and other mods'. A mod keeps its shrine, its arena or a player's claim
     /// as it is. The zone lasts until it is disposed; it is not saved with the world.
@@ -140,6 +158,11 @@ public static partial class Landscape
         return samples.Kinds[k >= 0 ? k : fallback];
     }
 
-    /// <summary>The module's tick on the main thread: the outlines drawn, moved and taken away.</summary>
-    internal static void Tick() => LandscapeOutline.Tick(Live());
+    /// <summary>The module's tick on the main thread: the outlines and grids drawn, moved and taken away.</summary>
+    internal static void Tick()
+    {
+        var source = Live();
+        LandscapeOutline.Tick(source);
+        LandscapeGrid.Tick(source);
+    }
 }
