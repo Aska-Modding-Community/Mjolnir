@@ -67,6 +67,23 @@ internal static class GameObjects
         }
     }
 
+    /// <summary>The world's items of one name lying within <paramref name="radius"/> metres of a point.</summary>
+    public static List<InventoryItemInstance> Items(Vector3 center, float radius, string name)
+    {
+        var items = new List<InventoryItemInstance>();
+        var resources = GameManagers.Get<ResourceManager>();
+        if (resources == null) return items;
+        var found = new Il2CppSystem.Collections.Generic.List<WorldItemInstance>();
+        resources.GetAllInstancesList(found, center, Quaternion.identity, At(radius * 2, SearchHeight, radius * 2), SDFShape.CIRCLE,
+            null, InstanceActivationContext.ALL, false);
+        for (int i = 0; i < found.Count; i++)
+        {
+            var item = found[i]?.TryCast<InventoryItemInstance>();
+            if (item != null && !item.Destroyed && item.Descriptor?.itemInfo?.name == name) items.Add(item);
+        }
+        return items;
+    }
+
     private static Vector3 At(float x, float y, float z)
     {
         Vector3 v = default;
@@ -119,6 +136,38 @@ internal static class GameObjects
         // The game's gathering interaction on the object, where it has one (a bush, a nest, driftwood).
         private GatherInteraction? Gathering() =>
             !IsGone && instance.gameObject != null ? instance.gameObject.GetComponentInChildren<GatherInteraction>(true) : null;
+
+        public bool IsClearable => instance.IsRemovable(InstanceDestructionLevel.SYSTEM);
+
+        // The game's own level takes a tree and a boulder too, dropping nothing (seen in game: a willow and a shoreline
+        // boulder gone at once, still gone after a save and a load).
+        public bool Clear()
+        {
+            if (IsGone) return true;
+            if (!IsClearable) return false;
+            bool silent = false;
+            var level = InstanceDestructionLevel.SYSTEM;
+            instance.Destroy(ref silent, ref level);
+            _taken = true;
+            return true;
+        }
+
+        // The game's own harvest, blow by blow (GameHarvest); a felled tree's trunk is chopped once it comes up.
+        public bool Harvest(HarvestOptions options)
+        {
+            if (IsGone) return true;
+            var harvest = instance.gameObject != null ? instance.gameObject.GetComponentInChildren<HarvestInteraction>(true) : null;
+            if (harvest == null) return false;
+            string resource = ResourceName;
+            var at = instance.GetPosition();
+            bool tree = Kind == NaturalObjectKind.Tree && options.ChopTrunk && resource.Length > 0;
+            var lying = tree ? GameHarvest.TrunksAround(at, resource) : null;
+            bool done = GameHarvest.Strike(harvest, options);
+            if (!done) return false;
+            _taken = true; // used up: the game takes it (seen in game: a felled tree's place held only its loot)
+            if (lying != null) GameHarvest.ChopTrunk(at, resource, lying, options);
+            return true;
+        }
 
         public bool Remove()
         {

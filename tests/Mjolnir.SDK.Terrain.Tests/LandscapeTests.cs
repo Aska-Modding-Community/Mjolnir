@@ -427,6 +427,21 @@ internal sealed class FakeTerrain : ITerrainSource
 
     public List<FakeOutline> Outlines { get; } = [];
 
+    /// <summary>The road plans of the fake world; with <see cref="NoRoads"/> the world takes no new one.</summary>
+    public List<IRoadPlanView> Roads { get; } = [];
+
+    public bool NoRoads { get; set; }
+
+    IReadOnlyList<IRoadPlanView> ITerrainSource.RoadPlans => Roads;
+
+    public IRoadPlanView? PlaceRoadPlan(IReadOnlyList<Vector3> points, GroundKind kind)
+    {
+        if (NoRoads) return null;
+        var plan = new FakeRoadPlan(this, points, kind);
+        Roads.Add(plan);
+        return plan;
+    }
+
     /// <summary>The levelling fields of the fake world; with <see cref="NoFields"/> the world takes no new one.</summary>
     public List<IFieldView> Fields { get; } = [];
 
@@ -477,6 +492,11 @@ internal sealed class FakeTerrain : ITerrainSource
         if (write.ObjectsAt is { } objectsAt && write.Objects == LandscapeObjects.Remove)
             foreach (var o in Objects)
                 if (!o.IsGone && o.IsRemovable && objectsAt(o.Position.x, o.Position.z)) o.Remove();
+        if (write.ObjectsAt is { } harvestAt && write.Objects == LandscapeObjects.Harvest)
+            ObjectSweep.TakeAll(Objects.Where(o => harvestAt(o.Position.x, o.Position.z)).Cast<IWorldObject>().ToList(), write.Harvesting ?? HarvestOptions.Default);
+        if (write.ObjectsAt is { } clearAt && write.Objects == LandscapeObjects.Clear)
+            foreach (var o in Objects)
+                if (!o.IsGone && o.Kind != NaturalObjectKind.Item && clearAt(o.Position.x, o.Position.z)) o.Clear();
         if (write.ObjectsAt is { } settleAt && write.Objects == LandscapeObjects.Settle)
             foreach (var found in ObjectsIn(samples.CenterX, samples.CenterZ, samples.Side))
             {

@@ -55,6 +55,20 @@ public enum LandscapeObjects
 
     /// <summary>Nothing is taken: every object in the area is put on the new ground under it.</summary>
     Settle,
+
+    /// <summary>
+    /// Every natural object in the area is taken, trees and boulders too, as <see cref="NaturalObject.Clear"/> takes it
+    /// (nothing is dropped); the items lying there stay.
+    /// </summary>
+    Clear,
+
+    /// <summary>
+    /// Every natural object in the area is taken with its loot, once the ground has changed: what the game harvests (a tree
+    /// with its trunk, a stump, a stone clump) is harvested as <see cref="NaturalObject.Harvest"/> does, what is picked by
+    /// hand gives all it has, and what gives nothing (a boulder of the scenery, grass) is cleared. The loot falls on the new
+    /// ground. Who strikes is <see cref="LandscapeOptions.Harvesting"/>; the items lying there stay.
+    /// </summary>
+    Harvest,
 }
 
 /// <summary>A change to the ground.</summary>

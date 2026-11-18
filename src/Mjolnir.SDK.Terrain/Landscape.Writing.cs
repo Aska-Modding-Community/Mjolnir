@@ -226,9 +226,9 @@ public static partial class Landscape
                 if (!change(samples)) return LandscapeResult.Failed;
                 bool touched = Array.IndexOf(samples.Touched, true) >= 0;
                 if (!touched && Array.IndexOf(samples.BiomeChanged, true) < 0) return LandscapeResult.Done;
-                bool objects = touched && (options.Objects == LandscapeObjects.Settle || (options.Objects == LandscapeObjects.Remove && options.ClearVegetation && !raw));
+                bool objects = touched && (options.Objects is LandscapeObjects.Settle or LandscapeObjects.Clear or LandscapeObjects.Harvest || (options.Objects == LandscapeObjects.Remove && options.ClearVegetation && !raw));
                 Func<float, float, bool>? objectsAt = objects ? (x, z) => area.Weight(x, z) >= 0.5f : null;
-                return source.Write(samples, new GroundWrite(operation, bounds, raw, objectsAt, options.Objects));
+                return source.Write(samples, new GroundWrite(operation, bounds, raw, objectsAt, options.Objects, options.Harvesting));
             });
         }
         finally

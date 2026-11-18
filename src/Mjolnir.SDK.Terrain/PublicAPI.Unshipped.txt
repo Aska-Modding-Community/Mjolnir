@@ -1,4 +1,18 @@
 #nullable enable
+Mjolnir.SDK.Terrain.HarvestOptions
+Mjolnir.SDK.Terrain.HarvestOptions.AllowInjuries.get -> bool
+Mjolnir.SDK.Terrain.HarvestOptions.AllowInjuries.init -> void
+Mjolnir.SDK.Terrain.HarvestOptions.AsPlayer.get -> bool
+Mjolnir.SDK.Terrain.HarvestOptions.AsPlayer.init -> void
+Mjolnir.SDK.Terrain.HarvestOptions.AwardExperience.get -> bool
+Mjolnir.SDK.Terrain.HarvestOptions.AwardExperience.init -> void
+Mjolnir.SDK.Terrain.HarvestOptions.ChopTrunk.get -> bool
+Mjolnir.SDK.Terrain.HarvestOptions.ChopTrunk.init -> void
+Mjolnir.SDK.Terrain.HarvestOptions.HarvestOptions() -> void
+Mjolnir.SDK.Terrain.LandscapeObjects.Clear = 3 -> Mjolnir.SDK.Terrain.LandscapeObjects
+Mjolnir.SDK.Terrain.LandscapeObjects.Harvest = 4 -> Mjolnir.SDK.Terrain.LandscapeObjects
+Mjolnir.SDK.Terrain.LandscapeOptions.Harvesting.get -> Mjolnir.SDK.Terrain.HarvestOptions?
+Mjolnir.SDK.Terrain.LandscapeOptions.Harvesting.init -> void
 Mjolnir.SDK.Terrain.LandscapeZone
 Mjolnir.SDK.Terrain.LandscapeZone.Area.get -> Mjolnir.SDK.Terrain.LandscapeArea
 Mjolnir.SDK.Terrain.LandscapeZone.Area.set -> void
@@ -6,5 +20,29 @@ Mjolnir.SDK.Terrain.LandscapeZone.Dispose() -> void
 Mjolnir.SDK.Terrain.LandscapeZone.IsActive.get -> bool
 Mjolnir.SDK.Terrain.LandscapeZone.ModId.get -> string!
 Mjolnir.SDK.Terrain.LandscapeZone.Refused -> System.EventHandler<Mjolnir.SDK.Terrain.LandscapeChangingEventArgs!>?
+Mjolnir.SDK.Terrain.NaturalObject.Clear() -> bool
+Mjolnir.SDK.Terrain.NaturalObject.Harvest(Mjolnir.SDK.Terrain.HarvestOptions? options = null) -> bool
+Mjolnir.SDK.Terrain.NaturalObject.IsClearable.get -> bool
+Mjolnir.SDK.Terrain.RoadPlan
+Mjolnir.SDK.Terrain.RoadPlan.Build() -> bool
+Mjolnir.SDK.Terrain.RoadPlan.IsBuilt.get -> bool
+Mjolnir.SDK.Terrain.RoadPlan.IsGone.get -> bool
+Mjolnir.SDK.Terrain.RoadPlan.IsLevelled.get -> bool
+Mjolnir.SDK.Terrain.RoadPlan.Kind.get -> Mjolnir.SDK.Terrain.GroundKind
+Mjolnir.SDK.Terrain.RoadPlan.LevelNow() -> int
+Mjolnir.SDK.Terrain.RoadPlan.LevelledSections.get -> int
+Mjolnir.SDK.Terrain.RoadPlan.Points.get -> System.Collections.Generic.IReadOnlyList<UnityEngine.Vector3>!
+Mjolnir.SDK.Terrain.RoadPlan.Remove() -> bool
+Mjolnir.SDK.Terrain.RoadPlan.Sections.get -> int
+Mjolnir.SDK.Terrain.RoadPlan.Width.get -> float
+Mjolnir.SDK.Terrain.RoadPlans
+const Mjolnir.SDK.Terrain.RoadPlans.MaximumPoints = 8 -> int
+const Mjolnir.SDK.Terrain.RoadPlans.MaximumSections = 96 -> int
+const Mjolnir.SDK.Terrain.RoadPlans.SectionLength = 2 -> float
 override Mjolnir.SDK.Terrain.LandscapeZone.ToString() -> string!
+override Mjolnir.SDK.Terrain.RoadPlan.ToString() -> string!
+static Mjolnir.SDK.Terrain.HarvestOptions.Default.get -> Mjolnir.SDK.Terrain.HarvestOptions!
 static Mjolnir.SDK.Terrain.Landscape.Protect(Mjolnir.SDK.Terrain.LandscapeArea area) -> Mjolnir.SDK.Terrain.LandscapeZone!
+static Mjolnir.SDK.Terrain.RoadPlans.All.get -> System.Collections.Generic.IReadOnlyList<Mjolnir.SDK.Terrain.RoadPlan!>!
+static Mjolnir.SDK.Terrain.RoadPlans.Nearest(UnityEngine.Vector3 center, float radius = 32) -> Mjolnir.SDK.Terrain.RoadPlan?
+static Mjolnir.SDK.Terrain.RoadPlans.Place(System.Collections.Generic.IEnumerable<UnityEngine.Vector3>! points, Mjolnir.SDK.Terrain.GroundKind kind = Mjolnir.SDK.Terrain.GroundKind.Road) -> Mjolnir.SDK.Terrain.RoadPlan?

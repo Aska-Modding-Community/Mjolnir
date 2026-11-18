@@ -138,6 +138,126 @@ public sealed class ObjectsTests : IDisposable
     }
 
     [Fact]
+    public void ATreeAndABoulderAreClearedThoughAChangeOfTheGroundKeepsThem()
+    {
+        var tree = Add(0, 10, NaturalObjectKind.Tree, "tree_willow", removable: false);
+        var boulder = Add(3, 10, NaturalObjectKind.LargeObject, "rock_shoreline_big", removable: false);
+        var kept = Add(6, 10, NaturalObjectKind.LargeObject, "quest_stone", removable: false);
+        kept.IsClearable = false;
+        var found = NaturalObjects.Around(V(3, 0, 10), 4);
+        Assert.All(found.Take(2), o => Assert.False(o.Remove()));
+        Assert.True(found.Single(o => o.AssetName == "tree_willow").Clear());
+        Assert.True(found.Single(o => o.AssetName == "rock_shoreline_big").Clear());
+        var quest = found.Single(o => o.AssetName == "quest_stone");
+        Assert.False(quest.IsClearable);
+        Assert.False(quest.Clear());
+        Assert.True(tree.IsGone);
+        Assert.True(boulder.IsGone);
+        Assert.False(kept.IsGone);
+    }
+
+    [Fact]
+    public void AChangeOfTheGroundClearsEveryNaturalObjectButTheItems()
+    {
+        var tree = Add(0, 10, NaturalObjectKind.Tree, "tree_birch1", removable: false);
+        var bush = Add(1, 10);
+        var sapling = Add(-1, 10, NaturalObjectKind.Item, "Item_Wood_TreeBirch1Sapling", removable: false);
+        var outside = Add(9, 10, NaturalObjectKind.Tree, "tree_fir4", removable: false);
+        Assert.Equal(LandscapeResult.Done, Landscape.Level(LandscapeArea.Rectangle(V(0, 0, 10), 6, 6, blend: 0), 31, new LandscapeOptions { Objects = LandscapeObjects.Clear }));
+        Assert.Empty(_game.Applied); // written by the SDK, not the game's tool
+        Assert.True(tree.IsGone);
+        Assert.True(bush.IsGone);
+        Assert.False(sapling.IsGone);
+        Assert.False(outside.IsGone);
+    }
+
+    [Fact]
+    public void TheConsoleClearsWhatGrowsRoundThePlayer()
+    {
+        var tree = Add(0, 2, NaturalObjectKind.Tree, "tree_birch1", removable: false);
+        var dropped = Add(1, 1, NaturalObjectKind.Item, "Item_Wood_Sticks", removable: false);
+        var far = Add(0, 20, NaturalObjectKind.Tree, "tree_birch1", removable: false);
+        DevConsole.Execute("objects clear");
+        Assert.Contains(DevConsole.Lines, l => l.Text == "Cleared 1 of 1 within 4 m.");
+        Assert.True(tree.IsGone);
+        Assert.False(dropped.IsGone);
+        Assert.False(far.IsGone);
+    }
+
+    [Fact]
+    public void ATreeIsHarvestedByNobodyUnlessAsked()
+    {
+        var tree = Add(0, 10, NaturalObjectKind.Tree, "tree_willow", removable: false);
+        var far = Add(3, 10, NaturalObjectKind.Tree, "tree_fir4", removable: false);
+        far.HarvestHere = false;
+        var found = NaturalObjects.Around(V(0, 0, 10), 4);
+        Assert.True(found.Single(o => o.AssetName == "tree_willow").Harvest());
+        Assert.Same(HarvestOptions.Default, tree.Harvested);
+        Assert.False(HarvestOptions.Default.AsPlayer);
+        Assert.True(HarvestOptions.Default.ChopTrunk);
+        Assert.True(tree.IsGone);
+        var asPlayer = new HarvestOptions { AsPlayer = true, AllowInjuries = false };
+        Assert.False(found.Single(o => o.AssetName == "tree_fir4").Harvest(asPlayer));
+        Assert.Same(asPlayer, far.Harvested);
+        Assert.False(far.IsGone);
+    }
+
+    [Fact]
+    public void AHarvestOffTheMainThreadOrOfAGoneObjectDoesNothing()
+    {
+        var tree = Add(0, 10, NaturalObjectKind.Tree, "tree_willow", removable: false);
+        var found = NaturalObjects.Nearest(V(0, 0, 10), 2)!;
+        tree.IsGone = true;
+        Assert.False(found.Harvest());
+        Assert.Null(tree.Harvested);
+        tree.IsGone = false;
+        Dispatcher.Tick(); // this thread is the main one now
+        bool other = true;
+        var thread = new System.Threading.Thread(() => other = found.Harvest());
+        thread.Start();
+        thread.Join();
+        Assert.False(other);
+        Assert.Null(tree.Harvested);
+    }
+
+    [Fact]
+    public void TheConsoleHarvestsWhatGrowsRoundThePlayer()
+    {
+        var tree = Add(0, 2, NaturalObjectKind.Tree, "tree_birch1", removable: false);
+        var bush = Add(1, 1);
+        bush.HarvestHere = false; // picked by hand, no harvest of its own
+        DevConsole.Execute("objects harvest 4 player");
+        Assert.Contains(DevConsole.Lines, l => l.Text == "Harvested 1 of 2 within 4 m as the player.");
+        Assert.True(tree.Harvested!.AsPlayer);
+        Assert.True(tree.IsGone);
+        Assert.False(bush.IsGone);
+    }
+
+    [Fact]
+    public void AChangeOfTheGroundHarvestsGathersAndClearsWhatItReaches()
+    {
+        var tree = Add(0, 10, NaturalObjectKind.Tree, "tree_fir3", removable: false);
+        var bush = Add(1, 10, NaturalObjectKind.Object, "bush_flax_fibres");
+        bush.HarvestHere = false;
+        bush.GatherCount = 6;
+        var boulder = Add(-1, 10, NaturalObjectKind.LargeObject, "rock_shoreline_big", removable: false);
+        boulder.HarvestHere = false;
+        var lying = Add(0, 11, NaturalObjectKind.Item, "Item_Wood_Sticks", removable: false);
+        var outside = Add(9, 10, NaturalObjectKind.Tree, "tree_fir4", removable: false);
+        var asPlayer = new HarvestOptions { AsPlayer = true };
+        Assert.Equal(LandscapeResult.Done, Landscape.Raise(LandscapeArea.Circle(V(0, 0, 10), 3), 1, new LandscapeOptions { Objects = LandscapeObjects.Harvest, Harvesting = asPlayer }));
+        Assert.Same(asPlayer, tree.Harvested);
+        Assert.True(tree.IsGone);
+        Assert.True(bush.Gathered > 0);
+        Assert.Equal(0, bush.GatherCount);
+        Assert.True(bush.IsGone); // cleared once it gave all it had
+        Assert.True(boulder.IsGone); // gives nothing: cleared
+        Assert.False(lying.IsGone);
+        Assert.Null(lying.Harvested);
+        Assert.False(outside.IsGone);
+    }
+
+    [Fact]
     public void AnObjectIsGatheredByHand()
     {
         var bush = Add(0, 10);
@@ -255,7 +375,7 @@ internal sealed class FakeObject : IWorldObject
 
     public bool IsHarvestable { get; set; }
 
-    public bool IsGone { get; private set; }
+    public bool IsGone { get; set; }
 
     /// <summary>How many times it was moved.</summary>
     public int Moves { get; private set; }
@@ -263,12 +383,42 @@ internal sealed class FakeObject : IWorldObject
     /// <summary>How many items are left to gather by hand.</summary>
     public int GatherCount { get; set; }
 
+    /// <summary>The charges taken by hand.</summary>
+    public int Gathered { get; private set; }
+
     public int Gather(int charges)
     {
         if (IsGone || GatherCount <= 0) return 0;
         int taken = Math.Min(charges, GatherCount);
         GatherCount -= taken;
+        Gathered += taken;
         return taken;
+    }
+
+    /// <summary>Whether it has a harvest of its own here (a tree near the player).</summary>
+    public bool HarvestHere { get; set; } = true;
+
+    /// <summary>The options of the last harvest asked for.</summary>
+    public HarvestOptions? Harvested { get; private set; }
+
+    public bool Harvest(HarvestOptions options)
+    {
+        Harvested = options;
+        if (IsGone) return true;
+        if (!HarvestHere) return false;
+        IsGone = true;
+        return true;
+    }
+
+    /// <summary>Whether the game's own level takes it (everything but a few things of the game).</summary>
+    public bool IsClearable { get; set; } = true;
+
+    public bool Clear()
+    {
+        if (IsGone) return true;
+        if (!IsClearable) return false;
+        IsGone = true;
+        return true;
     }
 
     public bool Remove()

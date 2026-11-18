@@ -56,6 +56,12 @@ internal interface ITerrainSource
     /// </summary>
     IFieldView? PlaceField(float x, float z, int tilesX, int tilesZ, float tileSize);
 
+    /// <summary>The game's road plans in the loaded world.</summary>
+    IReadOnlyList<IRoadPlanView> RoadPlans { get; }
+
+    /// <summary>Lays a road plan of <paramref name="kind"/> through the points (on the ground); null when the game will not take one.</summary>
+    IRoadPlanView? PlaceRoadPlan(IReadOnlyList<Vector3> points, GroundKind kind);
+
     /// <summary>Makes the change with the game's tool; the game's patch raises <see cref="Landscape.GroundChanging"/> for it.</summary>
     LandscapeResult Apply(in LandscapeEdit edit);
 
@@ -114,6 +120,19 @@ internal interface IWorldObject
     /// <summary>Takes it out of the world as a change of the ground does; false when the game keeps it.</summary>
     bool Remove();
 
+    /// <summary>Whether the game lets it be taken at its own level: a tree or a boulder too.</summary>
+    bool IsClearable { get; }
+
+    /// <summary>Takes it out of the world at the game's own level, whatever it is; false when the game keeps it.</summary>
+    bool Clear();
+
+    /// <summary>
+    /// Strikes it as the game's harvest does until nothing is left, its loot falling beside it; true when it is used up,
+    /// false when it has no harvest of its own here (too far from the player, or a thing picked by hand) or the game
+    /// turned a blow away.
+    /// </summary>
+    bool Harvest(HarvestOptions options);
+
     /// <summary>Moves it to a place, its look with it; false when it could not be moved.</summary>
     bool MoveTo(Vector3 position);
 }
@@ -156,6 +175,42 @@ internal interface IFieldView
     bool Remove();
 }
 
+/// <summary>
+/// One of the game's road plans for the model (Game/GameRoads.cs; a fake in the unit tests). Used on the main thread only;
+/// the plan may be gone by the time the model asks again.
+/// </summary>
+internal interface IRoadPlanView
+{
+    IReadOnlyList<Vector3> Points { get; }
+
+    /// <summary>What it lays: a road, or dirt for the levelling plan.</summary>
+    GroundKind Kind { get; }
+
+    float Width { get; }
+
+    int Sections { get; }
+
+    /// <summary>The sections levelled and paved (the game counts every section done while the plan is not built yet).</summary>
+    int LevelledSections { get; }
+
+    /// <summary>Whether its build part is done, so its sections can be levelled.</summary>
+    bool IsBuilt { get; }
+
+    bool IsGone { get; }
+
+    /// <summary>Finishes its build part as if the villagers had brought what it needs.</summary>
+    bool Build();
+
+    /// <summary>
+    /// Levels every section not done yet, as a villager does, but those whose ground <paramref name="skip"/> says to leave
+    /// (the game marks a section worked before its tool runs); how many are done now.
+    /// </summary>
+    int LevelNow(Func<Rect, bool>? skip);
+
+    /// <summary>Takes the plan away, the ground left as it is.</summary>
+    bool Remove();
+}
+
 /// <summary>An outline's lines in the world (Game/GameOutline.cs; a fake in the unit tests). Used on the main thread only.</summary>
 internal interface IOutlineView
 {
@@ -178,7 +233,8 @@ internal interface IOutlineView
 /// snapshot put back), instead of from its kind, its vegetation and whether its height changed.</param>
 /// <param name="ObjectsAt">Where the world's natural objects are touched (the area's own ground); null for nowhere.</param>
 /// <param name="Objects">What becomes of the objects there: taken as the game's tool takes them, left, or put on the new ground.</param>
-internal readonly record struct GroundWrite(LandscapeOperation Operation, Rect Area, bool Raw, Func<float, float, bool>? ObjectsAt, LandscapeObjects Objects);
+/// <param name="Harvesting">With <see cref="LandscapeObjects.Harvest"/>, who strikes.</param>
+internal readonly record struct GroundWrite(LandscapeOperation Operation, Rect Area, bool Raw, Func<float, float, bool>? ObjectsAt, LandscapeObjects Objects, HarvestOptions? Harvesting = null);
 
 /// <summary>
 /// The ground's samples over a square, row by row along z, each row along x: what the game keeps every half metre (its

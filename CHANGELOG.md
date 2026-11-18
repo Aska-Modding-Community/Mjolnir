@@ -12,6 +12,20 @@ must be rebuilt.
   its own mod still changes the ground there. `Refused` reports what it refused, `Area` moves it and `Dispose` ends it;
   another mod's change is `Blocked`, and `Check` says so. `LevellingField.LevelNow` leaves the tiles another mod's
   zone keeps untried. The console's `protect`.
+- Road plans: `RoadPlans.Place(points)` lays the game's own road plan through up to 8 points (or, with
+  `GroundKind.Dirt`, its levelling plan along a line), for the villagers to supply and pave; `RoadPlan.Build` skips the
+  supplies, `LevelNow` paves every section at once and `Remove` takes the plan away. `RoadPlans.All` and `Nearest` find
+  the plans of the loaded world. The console's `road`.
+- Trees and boulders: `NaturalObject.Clear` takes any natural object away, trees and boulders too, which a change of
+  the ground keeps (`IsClearable`); nothing is dropped and the save keeps it gone. `LandscapeObjects.Clear` clears
+  every natural object a change of the ground reaches. The console's `objects clear`.
+- Felling with loot: `NaturalObject.Harvest` strikes a tree, a stump or a trunk as the game's woodcutters do until
+  nothing is left, with the game's loot (the trunk, firewood, logs, sticks, bark); no tool is needed. By default
+  nobody strikes; `HarvestOptions.AsPlayer` strikes as the local player, with the experience and the work injuries
+  each optional, and `ChopTrunk` chooses whether a felled tree's trunk is chopped too. The console's `objects harvest`.
+- Stones and changes of the ground with their loot: `Harvest` takes the game's stone clumps too. `LandscapeObjects.Harvest`
+  takes every natural object a change of the ground reaches with its loot (harvested, gathered by hand, or cleared
+  where it gives nothing), the loot falling on the new ground; `LandscapeOptions.Harvesting` says who strikes.
 
 ## 0.4.4 — 2026-11-17
 

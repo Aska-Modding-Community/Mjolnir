@@ -35,9 +35,17 @@ public sealed class LandscapeOptions
     /// What becomes of the natural objects (bushes, saplings, small stones) standing where the ground changes:
     /// <see cref="LandscapeObjects.Remove"/>, the game's own way, takes those a change of the ground takes, wherever it
     /// clears the vegetation; <see cref="LandscapeObjects.Keep"/> leaves every one standing; <see cref="LandscapeObjects.Settle"/>
-    /// puts them on the new ground instead (<see cref="NaturalObject.Settle"/>). Trees and boulders are never taken.
+    /// puts them on the new ground instead (<see cref="NaturalObject.Settle"/>); <see cref="LandscapeObjects.Clear"/> takes
+    /// every one, trees and boulders too (<see cref="NaturalObject.Clear"/>); <see cref="LandscapeObjects.Harvest"/> takes
+    /// every one with its loot.
     /// </summary>
     public LandscapeObjects Objects { get; init; }
+
+    /// <summary>
+    /// With <see cref="LandscapeObjects.Harvest"/>, who strikes and what the game gives them (<see cref="HarvestOptions"/>);
+    /// null for <see cref="HarvestOptions.Default"/>: nobody.
+    /// </summary>
+    public HarvestOptions? Harvesting { get; init; }
 
     /// <summary>Whether the villagers' and creatures' paths are worked out again for the changed ground, as the game does.</summary>
     public bool UpdateNavigation { get; init; } = true;

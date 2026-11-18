@@ -103,6 +103,7 @@ public sealed class NaturalObject
         ResourceName = Read(() => found.ResourceName, "");
         IsRemovable = Read(() => found.IsRemovable, false);
         IsHarvestable = Read(() => found.IsHarvestable, false);
+        IsClearable = Read(() => found.IsClearable, false);
     }
 
     /// <summary>The game's name of what it is ("Harvest_Wood_birch1", "Harvest_Stone_BiomeIronDeposit").</summary>
@@ -119,6 +120,9 @@ public sealed class NaturalObject
 
     /// <summary>Whether the player can gather or fell it.</summary>
     public bool IsHarvestable { get; }
+
+    /// <summary>Whether <see cref="Clear"/> takes it: a tree and a boulder too, as the game's own level allows.</summary>
+    public bool IsClearable { get; }
 
     /// <summary>
     /// How many items are left to gather out of it by hand (a bush's fibres, a spruce's sticks); 0 for a thing the player
@@ -178,7 +182,7 @@ public sealed class NaturalObject
     /// <summary>
     /// Takes it out of the world as a change of the ground does, with everything the game does for it (the other players'
     /// games told by the game itself). A tree or a boulder, which the game never takes that way, stays
-    /// (<see cref="IsRemovable"/>).
+    /// (<see cref="IsRemovable"/>); <see cref="Clear"/> takes it.
     /// </summary>
     /// <returns>Whether it is gone now.</returns>
     public bool Remove()
@@ -191,6 +195,53 @@ public sealed class NaturalObject
         catch (Exception e)
         {
             SdkLog.Warn(Landscape.Platform, $"'{AssetName}' could not be taken out of the world: {e.Message}");
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Harvests it as a woodcutter or a miner of the game does, blow after blow until nothing is left: a tree falls and
+    /// leaves its trunk and its stump's firewood, the trunk is chopped into logs, sticks and bark
+    /// (<see cref="HarvestOptions.ChopTrunk"/>), a stump or a trunk on its own gives its own. The loot is the game's,
+    /// dropped beside it, and the game tells the other players. No tool is needed. By default nobody strikes, so no one
+    /// gains experience, is injured or has the harvest counted; <see cref="HarvestOptions.AsPlayer"/> strikes as the local
+    /// player. Only an object the game has brought up round the player can be harvested (a tree 160 m away was).
+    /// </summary>
+    /// <param name="options">Who strikes and what the game gives them; null for <see cref="HarvestOptions.Default"/>.</param>
+    /// <returns>
+    /// Whether it is used up now; false off the main thread, beyond what the game has brought up, for a thing picked by hand
+    /// (<see cref="Gather"/>) or one the game does not harvest at all.
+    /// </returns>
+    public bool Harvest(HarvestOptions? options = null)
+    {
+        if (!Landscape.IsMainThread || IsGone) return false;
+        try
+        {
+            return _object.Harvest(options ?? HarvestOptions.Default);
+        }
+        catch (Exception e)
+        {
+            SdkLog.Warn(Landscape.Platform, $"'{AssetName}' could not be harvested: {e.Message}");
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Takes it out of the world whatever it is — a tree or a boulder too — at the game's own level, as the game takes what
+    /// it clears itself: nothing is dropped (no wood, no stone), and the game tells the other players. It does not grow
+    /// back: the save keeps it gone.
+    /// </summary>
+    /// <returns>Whether it is gone now.</returns>
+    public bool Clear()
+    {
+        if (!Landscape.IsMainThread) return false;
+        try
+        {
+            return _object.Clear();
+        }
+        catch (Exception e)
+        {
+            SdkLog.Warn(Landscape.Platform, $"'{AssetName}' could not be cleared: {e.Message}");
             return false;
         }
     }

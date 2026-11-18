@@ -11,7 +11,7 @@ namespace Mjolnir.SDK.Terrain;
 /// point); <c>raise</c>, <c>lower</c>, <c>level</c>, <c>paint</c>, <c>clearveg</c>, <c>grass</c>, <c>smooth</c> and
 /// <c>biome</c> change a square in front of the player, through <see cref="Landscape"/> like a mod's change, and <c>undo</c>
 /// puts the last of them back; <c>objects</c> tells what the world grew round the player, <c>field</c> works the game's
-/// levelling fields, and <c>protect</c> keeps a square from the player's tools and the villagers.
+/// levelling fields, <c>road</c> its road plans, and <c>protect</c> keeps a square from the player's tools and the villagers.
 /// </summary>
 internal static class TerrainCommands
 {
@@ -40,8 +40,9 @@ internal static class TerrainCommands
         DevConsole.AddFor(owner, "grass", "Gives a square in front of the player its natural ground and grass back.", Grass, "[size=4]");
         DevConsole.AddFor(owner, "smooth", "Smooths a square in front of the player.", Smooth, "[strength=0.5] [size=4]");
         DevConsole.AddFor(owner, "biome", "Lists the biomes here, or gives a square in front of the player one of them.", Biome, "[name|number] [size=8]");
-        DevConsole.AddFor(owner, "objects", "Lists the trees, stones and plants of the world round the player.", Objects, "[radius=8] [name]");
+        DevConsole.AddFor(owner, "objects", "Lists the trees, stones and plants of the world round the player, clears them, or harvests them with their loot.", Objects, "[radius=8] [name] | clear [radius=4] | harvest [radius=4] [player]");
         DevConsole.AddFor(owner, "field", "Lists the game's levelling fields, or places, levels, finishes or takes away the nearest one.", Field, "[place [size=8]|level|finish|remove]");
+        DevConsole.AddFor(owner, "road", "Lists the game's road plans, or lays one ahead of the player, or builds, paves or takes away the nearest one.", Road, "[place [length=16] [dirt]|build|level|remove]");
         DevConsole.AddFor(owner, "protect", "Protects a square in front of the player from the player's tools, the villagers and other mods, or lists or ends the console's zones.", Protect, "[size=8|list|clear]");
         DevConsole.AddFor(owner, "undo", "Puts back the ground the console's last change changed.", Undo);
     }
@@ -156,6 +157,28 @@ internal static class TerrainCommands
 
     private static void Objects(DevCommandContext context)
     {
+        if (context.Arguments.Count > 0 && context.GetString(0).Equals("clear", StringComparison.OrdinalIgnoreCase))
+        {
+            float reach = context.GetFloat(1, ClearRadius);
+            if (!(reach > 0 && reach <= NaturalObjects.MaximumRadius)) throw new DevCommandException(Invariant($"A radius is over 0 and at most {NaturalObjects.MaximumRadius} m."));
+            var (at, _) = Player();
+            var standing = NaturalObjects.Around(at, reach).Where(o => o.Kind != NaturalObjectKind.Item).ToList();
+            int cleared = standing.Count(o => o.Clear());
+            context.Print(Invariant($"Cleared {cleared} of {standing.Count} within {reach:0.#} m."));
+            return;
+        }
+        if (context.Arguments.Count > 0 && context.GetString(0).Equals("harvest", StringComparison.OrdinalIgnoreCase))
+        {
+            float reach = context.Arguments.Count > 1 && !context.GetString(1).Equals("player", StringComparison.OrdinalIgnoreCase) ? context.GetFloat(1, ClearRadius) : ClearRadius;
+            if (!(reach > 0 && reach <= NaturalObjects.MaximumRadius)) throw new DevCommandException(Invariant($"A radius is over 0 and at most {NaturalObjects.MaximumRadius} m."));
+            bool player = context.Arguments.Skip(1).Any(a => a.Equals("player", StringComparison.OrdinalIgnoreCase));
+            var (at, _) = Player();
+            var options = new HarvestOptions { AsPlayer = player };
+            var harvestable = NaturalObjects.Around(at, reach).Where(o => o.IsHarvestable && o.Kind != NaturalObjectKind.Item).ToList();
+            int harvested = harvestable.Count(o => o.Harvest(options));
+            context.Print(Invariant($"Harvested {harvested} of {harvestable.Count} within {reach:0.#} m{(player ? " as the player" : "")}."));
+            return;
+        }
         float radius = context.GetFloat(0, 8f);
         if (!(radius > 0 && radius <= NaturalObjects.MaximumRadius)) throw new DevCommandException(Invariant($"A radius is over 0 and at most {NaturalObjects.MaximumRadius} m."));
         string? name = context.Arguments.Count > 1 ? context.GetString(1) : null;
@@ -175,6 +198,9 @@ internal static class TerrainCommands
         }
         if (found.Count > ListedObjects) context.Print(Invariant($"  … and {found.Count - ListedObjects} more."));
     }
+
+    /// <summary>How far round the player the console's <c>objects clear</c> clears when no radius is given, in metres.</summary>
+    public const float ClearRadius = 4f;
 
     /// <summary>How many of the objects found the console names one by one.</summary>
     public const int ListedObjects = 10;
@@ -224,6 +250,63 @@ internal static class TerrainCommands
 
     /// <summary>The side of the field the console places when none is given, in metres.</summary>
     public const float FieldSize = 8f;
+
+    private static void Road(DevCommandContext context)
+    {
+        var (position, forward) = Player();
+        string what = context.Arguments.Count > 0 ? context.GetString(0).ToLowerInvariant() : "list";
+        if (what == "place")
+        {
+            float length = context.GetFloat(1, RoadLength);
+            if (!(length >= RoadPlans.SectionLength && length <= RoadPlans.MaximumSections * RoadPlans.SectionLength))
+                throw new DevCommandException(Invariant($"A length is from {RoadPlans.SectionLength} to {RoadPlans.MaximumSections * RoadPlans.SectionLength} m."));
+            var kind = context.Arguments.Count > 2 && context.GetString(2).Equals("dirt", StringComparison.OrdinalIgnoreCase) ? GroundKind.Dirt : GroundKind.Road;
+            float fl = MathF.Sqrt(forward.x * forward.x + forward.z * forward.z);
+            float fx = fl > 0 ? forward.x / fl : 0, fz = fl > 0 ? forward.z / fl : 1;
+            Vector3 from = default, to = default;
+            from.x = position.x + fx * RoadStart;
+            from.z = position.z + fz * RoadStart;
+            to.x = from.x + fx * length;
+            to.z = from.z + fz * length;
+            var placed = RoadPlans.Place([from, to], kind);
+            if (placed == null) context.Error("No road plan laid (see the log).");
+            else context.Print($"Laid a {placed}.");
+            return;
+        }
+        if (what == "list")
+        {
+            var all = RoadPlans.All;
+            if (all.Count == 0)
+            {
+                context.Print("No road plans in the loaded world.");
+                return;
+            }
+            context.Print(Invariant($"{all.Count} road plan(s):"));
+            foreach (var one in all.Take(ListedObjects)) context.Print($"  {one}");
+            return;
+        }
+        if (what is not ("build" or "level" or "remove")) throw new DevCommandException($"'{what}' is nothing a road plan does: place, build, level or remove.");
+        var plan = RoadPlans.Nearest(position, 32f) ?? throw new DevCommandException("No road plan within 32 m.");
+        switch (what)
+        {
+            case "build":
+                context.Print(plan.Build() ? $"Built the {plan}." : "The road plan could not be built (see the log).");
+                break;
+            case "level":
+                int sections = plan.Sections;
+                context.Print(Invariant($"Paved {plan.LevelNow()} of {sections} sections."));
+                break;
+            case "remove":
+                context.Print(plan.Remove() ? "The road plan is taken away." : "The road plan could not be taken away (see the log).");
+                break;
+        }
+    }
+
+    /// <summary>The length of the road plan the console lays when none is given, in metres.</summary>
+    public const float RoadLength = 16f;
+
+    /// <summary>How far in front of the player the console's road plan starts, in metres (clear of their feet).</summary>
+    public const float RoadStart = 3f;
 
     // The zones the console made, which it lists and ends (main thread).
     private static readonly List<LandscapeZone> s_zones = [];

@@ -49,6 +49,14 @@ internal sealed class GameTerrain : ITerrainSource
             GameLoop.Update += () => GameGuard.RunLogOnce(Landscape.Platform, "drawing the outlines", Landscape.Tick);
             s_harmony = new Harmony("mjolnir.sdk.terrain");
             int patched = s_harmony.CreateClassProcessor(typeof(TerrainPatches)).Patch()?.Count ?? 0;
+            try
+            {
+                patched += s_harmony.CreateClassProcessor(typeof(HarvestPatches)).Patch()?.Count ?? 0;
+            }
+            catch (Exception e)
+            {
+                SdkLog.Warn(Landscape.Platform, $"Harvesting gives the player what the game gives: its patches failed: {e.Message}");
+            }
             TerrainCommands.Register();
             SdkLog.Info(Landscape.Platform, $"Terrain module started: {patched} game methods patched");
         }
@@ -346,6 +354,10 @@ internal sealed class GameTerrain : ITerrainSource
 
     public IFieldView? PlaceField(float x, float z, int tilesX, int tilesZ, float tileSize) => GameFields.Place(x, z, tilesX, tilesZ, tileSize);
 
+    public IReadOnlyList<IRoadPlanView> RoadPlans => GameRoads.All();
+
+    public IRoadPlanView? PlaceRoadPlan(IReadOnlyList<Vector3> points, GroundKind kind) => GameRoads.Place(points, kind);
+
     // As the game's tool writes its own change: the data filled from the ground, the samples set and marked, the removable
     // objects taken, the data sent to the other players, then applied (the game's routine, the events through the patch).
     public LandscapeResult Write(LandscapeSamples samples, in GroundWrite write)
@@ -383,7 +395,8 @@ internal sealed class GameTerrain : ITerrainSource
         if (biomes.Count > 0) written += MarkBiome(data, samples, biomes[0]);
         if (written == 0) return LandscapeResult.Done;
         if (write.ObjectsAt is { } objectsAt && write.Objects == LandscapeObjects.Remove) RemoveObjects(samples, objectsAt);
-        var settling = write.ObjectsAt is { } settleAt && write.Objects == LandscapeObjects.Settle ? Standing(samples, settleAt) : null;
+        if (write.ObjectsAt is { } clearAt && write.Objects == LandscapeObjects.Clear) ClearObjects(samples, clearAt);
+        var settling = write.ObjectsAt is { } settleAt && write.Objects is LandscapeObjects.Settle or LandscapeObjects.Harvest ? Standing(samples, settleAt) : null;
         var made = TerrainPatches.Begin(write.Area, write.Operation);
         try
         {
@@ -400,7 +413,26 @@ internal sealed class GameTerrain : ITerrainSource
             TerrainPatches.End(made);
         }
         if (settling != null) Settle(settling, samples);
+        // Harvested once the drawn ground has followed, so the loot falls on the new ground, not into it.
+        if (settling != null && write.Objects == LandscapeObjects.Harvest) GameHarvest.Later(settling, write.Harvesting ?? HarvestOptions.Default);
         return LandscapeResult.Done;
+    }
+
+    // Every natural object where the change reaches, trees and boulders too, taken at the game's own level; the items lying
+    // there (a dropped thing, a planted sapling) stay.
+    private static void ClearObjects(LandscapeSamples samples, Func<float, float, bool> where)
+    {
+        foreach (var found in Standing(samples, where))
+        {
+            try
+            {
+                if (!found.IsGone && found.Kind != NaturalObjectKind.Item) found.Clear();
+            }
+            catch (Exception e)
+            {
+                SdkLog.Warn(Landscape.Platform, $"An object could not be cleared: {e.Message}");
+            }
+        }
     }
 
     // The objects standing where the change reaches, kept before it is made (the heights they are put on come from the
