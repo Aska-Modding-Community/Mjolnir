@@ -148,6 +148,7 @@ public static partial class Landscape
         ClearVegetation = false,
         KeepKind = true,
         KeepOffBuildings = (options ?? LandscapeOptions.Default).KeepOffBuildings,
+        KeepOffLandmarks = (options ?? LandscapeOptions.Default).KeepOffLandmarks,
         OnlyOn = options?.OnlyOn,
     };
 

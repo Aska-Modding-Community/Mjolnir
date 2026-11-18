@@ -1,1 +1,15 @@
 #nullable enable
+Mjolnir.SDK.UI.HudPart
+Mjolnir.SDK.UI.HudPart.QuickBar = 0 -> Mjolnir.SDK.UI.HudPart
+Mjolnir.SDK.UI.UiQuickSlot
+Mjolnir.SDK.UI.UiQuickSlot.Icon.get -> Mjolnir.SDK.UI.Bitmap?
+Mjolnir.SDK.UI.UiQuickSlot.Icon.set -> void
+Mjolnir.SDK.UI.UiQuickSlot.IsSelected.get -> bool
+Mjolnir.SDK.UI.UiQuickSlot.IsSelected.set -> void
+Mjolnir.SDK.UI.UiQuickSlot.Key.get -> string!
+Mjolnir.SDK.UI.UiQuickSlot.Key.set -> void
+Mjolnir.SDK.UI.UiQuickSlot.UiQuickSlot() -> void
+static Mjolnir.SDK.UI.Hud.AddInPlaceOf<T>(T! element, Mjolnir.SDK.UI.HudPart part) -> T!
+static readonly Mjolnir.SDK.UI.UiQuickSlot.IconProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.UI.Bitmap?>!
+static readonly Mjolnir.SDK.UI.UiQuickSlot.IsSelectedProperty -> Mjolnir.SDK.UI.MjolnirProperty<bool>!
+static readonly Mjolnir.SDK.UI.UiQuickSlot.KeyProperty -> Mjolnir.SDK.UI.MjolnirProperty<string!>!

@@ -20,6 +20,44 @@ internal static class GameObjects
     /// <summary>How tall a box is searched round a point, in metres: the whole height of the world.</summary>
     private const float SearchHeight = 400f;
 
+    /// <summary>How long an object taken by the SDK counts as gone whatever the game says of it, in seconds.</summary>
+    private const float TakenFor = 60f;
+
+    // The objects the SDK took away lately, by their place in the vegetation data (an item of the world: by its own
+    // object), with where they stood. The game marks an object destroyed only in its own copy of the data, so a handle
+    // made for it by the next search still says it stands: a brush writing ten times a second took the same bush and the
+    // same felled tree again and again, and the game, asked to remove an object no longer in its data, failed
+    // ("RemoveInstanceData with index out of range") and soon hung (seen by the user, 2026-11-19).
+    private static readonly Dictionary<(IntPtr Data, int Index), (Vector3 At, float When)> s_taken = [];
+
+    private static (IntPtr Data, int Index) KeyOf(WorldItemInstance instance)
+    {
+        var biome = instance.TryCast<BiomeItemInstance>();
+        return biome?.GetBuffer() is { } buffer ? (buffer.Pointer, biome.Index) : (instance.Pointer, -1);
+    }
+
+    /// <summary>Whether the SDK took this object away lately (the same place in the data, the same spot).</summary>
+    private static bool WasTaken(WorldItemInstance instance)
+    {
+        if (s_taken.Count == 0 || !s_taken.TryGetValue(KeyOf(instance), out var taken)) return false;
+        if (Time.realtimeSinceStartup - taken.When > TakenFor) return false;
+        var at = instance.GetPosition();
+        return (at - taken.At).sqrMagnitude < 0.01f; // a place in the data given to another object since is not it
+    }
+
+    private static void MarkTaken(WorldItemInstance instance)
+    {
+        float now = Time.realtimeSinceStartup;
+        if (s_taken.Count > 2048)
+        {
+            var old = new List<(IntPtr, int)>();
+            foreach (var (key, taken) in s_taken)
+                if (now - taken.When > TakenFor) old.Add(key);
+            foreach (var key in old) s_taken.Remove(key);
+        }
+        s_taken[KeyOf(instance)] = (instance.GetPosition(), now);
+    }
+
     /// <summary>The objects whose place lies within <paramref name="radius"/> metres of a point.</summary>
     public static IReadOnlyList<IWorldObject> In(float centerX, float centerZ, float radius)
     {
@@ -58,12 +96,13 @@ internal static class GameObjects
         for (int i = found.Count - 1; i >= 0; i--)
         {
             var instance = found[i];
-            if (instance == null || instance.Destroyed) continue;
+            if (instance == null || instance.Destroyed || WasTaken(instance)) continue;
             var position = instance.GetPosition();
             if (!where(position.x, position.z) || !instance.IsRemovable(InstanceDestructionLevel.TERRAFORMING)) continue;
             bool silent = false;
             var level = InstanceDestructionLevel.TERRAFORMING;
             instance.Destroy(ref silent, ref level);
+            MarkTaken(instance);
         }
     }
 
@@ -126,7 +165,7 @@ internal static class GameObjects
         // The game keeps the destroyed mark in the instance's own copy of the data, which a handle that was taken out of
         // the world no longer follows: what this mod took is remembered here (seen in game: right after a nest was taken
         // the game's own mark was still false, though the nest was gone).
-        public bool IsGone => _taken || instance == null || instance.Destroyed;
+        public bool IsGone => _taken || instance == null || instance.Destroyed || WasTaken(instance);
 
         public int GatherCount => Gathering() is { } gather ? gather.CheckAvailableItemCount() : 0;
 
@@ -155,6 +194,7 @@ internal static class GameObjects
             var level = InstanceDestructionLevel.SYSTEM;
             instance.Destroy(ref silent, ref level);
             _taken = true;
+            MarkTaken(instance);
             return true;
         }
 
@@ -171,6 +211,7 @@ internal static class GameObjects
             bool done = GameHarvest.Strike(harvest, options);
             if (!done) return false;
             _taken = true; // used up: the game takes it (seen in game: a felled tree's place held only its loot)
+            MarkTaken(instance);
             if (lying != null) GameHarvest.ChopTrunk(at, resource, lying, options);
             return true;
         }
@@ -183,6 +224,7 @@ internal static class GameObjects
             var level = InstanceDestructionLevel.TERRAFORMING;
             instance.Destroy(ref silent, ref level);
             _taken = true;
+            MarkTaken(instance);
             return true;
         }
 

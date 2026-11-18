@@ -35,6 +35,9 @@ internal abstract class RowView : UnityView
     protected float Inner => Math.Max(40, ContentWidth - 2 * SettingRows.LabelInset);
 
     private float _labelSize = 18, _descriptionSize = 14;
+    private Action? _fitDescription;
+    private float _descriptionGrowth;  // how much taller the row is for its wrapped description
+    private (float Width, string Text, float Size) _fitted;
 
     protected override (float Width, float Height) LayoutDefaults => Bare ? (ContentWidth, RowHeight) : (-1, RowHeight);
 
@@ -47,6 +50,35 @@ internal abstract class RowView : UnityView
         if (DescriptionText != null && description != null && _shownDescription != description)
             DescriptionText.text = _shownDescription = SettingRows.FirstLine(description);
         ShowIcon();
+    }
+
+    // A description wraps over up to three lines and the row grows for them, measured each frame against the width the
+    // row got (it is known only once laid out, and follows the window's).
+    private void FitDescription()
+    {
+        if (Root == null || DescriptionText == null || LabelText == null) return;
+        var hint = DescriptionText.rectTransform;
+        float width = hint.rect.width;
+        string text = DescriptionText.text;
+        float size = DescriptionText.fontSize;
+        if (width <= 0 || _fitted == (width, text, size)) return;
+        _fitted = (width, text, size);
+        float line = DescriptionText.GetPreferredValues("Ag", 10000, 0).y;
+        float preferred = DescriptionText.GetPreferredValues(text, width, 0).y;
+        float growth = SettingRows.DescriptionGrowth(preferred, line);
+        float delta = growth - _descriptionGrowth;
+        if (Math.Abs(delta) < 0.5f) return;
+        _descriptionGrowth = growth;
+        hint.offsetMax += new Vector2(0, delta);
+        LabelText.rectTransform.offsetMin += new Vector2(0, delta);
+        RowHeight += delta;
+        ApplyLayout();
+    }
+
+    public override void Dispose()
+    {
+        if (_fitDescription != null) LiveTree.EveryFrame(_fitDescription, false);
+        base.Dispose();
     }
 
     // The header at the size, the description in proportion.
@@ -118,6 +150,10 @@ internal abstract class RowView : UnityView
         if (labelText != null) _labelSize = labelText.fontSize;
         if (descriptionText != null) _descriptionSize = descriptionText.fontSize;
         RowHeight = height;
+        _descriptionGrowth = 0;
+        _fitted = default;
+        if (descriptionText != null) LiveTree.EveryFrame(_fitDescription ??= FitDescription, true);
+        else if (_fitDescription != null) LiveTree.EveryFrame(_fitDescription, false);
         Bare = header == null;
         // The slot exists only with a picture or a tile: one appearing or going rebuilds the row (HeaderedControl.IconProperty).
         if (!Bare && (Control.Icon != null || Control.Monogram != null))

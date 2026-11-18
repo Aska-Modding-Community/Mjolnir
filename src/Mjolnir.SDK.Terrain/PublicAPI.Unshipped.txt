@@ -1,1 +1,3 @@
 #nullable enable
+Mjolnir.SDK.Terrain.LandscapeOptions.KeepOffLandmarks.get -> bool
+Mjolnir.SDK.Terrain.LandscapeOptions.KeepOffLandmarks.init -> void

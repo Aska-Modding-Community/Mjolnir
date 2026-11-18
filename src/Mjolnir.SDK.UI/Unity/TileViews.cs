@@ -182,6 +182,90 @@ internal sealed class SlotView : UnityView
 }
 
 /// <summary>
+/// A <see cref="UiQuickSlot"/>: a clone of the HUD's quick bar slot (Theme.QuickSlot, 80×80) with the picture, the key under
+/// it and the orange frame of the slot in hand; without the template, a plain frame with the key.
+/// </summary>
+internal sealed class QuickSlotView : UnityView
+{
+    private const float PlainSize = 80;
+    private readonly UiQuickSlot _slot;
+    private readonly float _size = PlainSize;
+    private readonly Image? _icon;
+    private readonly TMP_Text? _key;
+    private readonly GameObject? _selected;
+    private readonly float _keySize;
+    private Bitmap? _shownIcon;
+    private bool _iconShown;
+    private string? _shownKey;
+    private bool? _shownSelected;
+
+    public QuickSlotView(UiQuickSlot slot, RectTransform parent) : base(slot)
+    {
+        _slot = slot;
+        if (Theme.QuickSlot is { } template)
+        {
+            var go = Object.Instantiate(template, parent, false);
+            go.name = DefaultName;
+            go.SetActive(true);
+            Root = RectOf(go);
+            _size = Math.Max(Root.sizeDelta.x, 1);
+            _icon = ViewFactory.FindDeep(Root, "Icon")?.GetComponent<Image>();
+            _key = ViewFactory.FindDeep(Root, "Key")?.GetComponent<TMP_Text>();
+            _selected = ViewFactory.FindDeep(Root, "EquipCheckmark")?.gameObject;
+        }
+        else
+        {
+            Root = ViewFactory.NewRect(parent, DefaultName);
+            Root.gameObject.AddComponent<Image>().color = new Color(0.08f, 0.09f, 0.09f, 0.85f);
+            _icon = ViewFactory.NewRect(Root, "Icon").gameObject.AddComponent<Image>();
+            ViewFactory.Stretch(_icon.rectTransform, 4);
+            _key = ViewFactory.NewText(Root, "Key", "", Theme.TextFont, 22);
+            _key.rectTransform.anchorMin = _key.rectTransform.anchorMax = new Vector2(0.5f, 0);
+            _key.rectTransform.anchoredPosition = new Vector2(0, -18);
+        }
+        if (_icon != null) _icon.raycastTarget = false;
+        _keySize = _key != null ? _key.fontSize : 22;
+        _selected?.SetActive(false);
+        Root.anchorMin = Root.anchorMax = new Vector2(0.5f, 0.5f);
+    }
+
+    protected override string DefaultName => "QuickSlot";
+
+    protected override (float Width, float Height) LayoutDefaults => (_size, _size);
+
+    protected override bool FixedSize => true;
+
+    protected override void ApplyFont(double size)
+    {
+        if (_key != null) _key.fontSize = FontOf(size, _keySize, _keySize);
+    }
+
+    protected override void ApplyOwn(DirtyFlags dirty)
+    {
+        if ((dirty & DirtyFlags.Image) != 0 && _icon != null && (!ReferenceEquals(_shownIcon, _slot.Icon) || _iconShown != (_slot.Icon != null)))
+        {
+            _shownIcon = _slot.Icon;
+            var sprite = Pictures.SpriteOf(_slot.Icon);
+            _iconShown = sprite != null;
+            _icon.sprite = sprite;
+            _icon.color = Color.white;
+            _icon.preserveAspect = true;
+            _icon.enabled = _iconShown;
+        }
+        if ((dirty & DirtyFlags.Text) != 0 && _key != null && _shownKey != _slot.Key)
+        {
+            _key.text = _shownKey = _slot.Key;
+            _key.gameObject.SetActive(_slot.Key.Length > 0);
+        }
+        if ((dirty & DirtyFlags.Value) != 0 && _shownSelected != _slot.IsSelected)
+        {
+            _shownSelected = _slot.IsSelected;
+            _selected?.SetActive(_slot.IsSelected);
+        }
+    }
+}
+
+/// <summary>
 /// A <see cref="UiCard"/>: a clone of the deeds page's god card (Theme.Card) as tall as its portrait, title and
 /// subtitle, scaled as a whole by the element's Width (inside the view, which lays out the scaled size); the portrait's
 /// orange highlight while selected. Hover brightens the card's background; a click goes to the element.

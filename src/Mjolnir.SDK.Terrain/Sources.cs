@@ -31,6 +31,13 @@ internal interface ITerrainSource
     /// <summary>The name of a building standing in the area (its solid colliders), or null for none.</summary>
     string? BuildingIn(LandscapeArea area);
 
+    /// <summary>
+    /// The name of a fixed place of the world standing in the area — a den, or another place the world was made with and its
+    /// rocks (their solid colliders) — or null for none: the game cannot move them, so a change under them leaves them
+    /// hanging or buried.
+    /// </summary>
+    string? LandmarkIn(LandscapeArea area);
+
     /// <summary>Where the local player stands and which way they face on the ground (the console's commands).</summary>
     bool TryGetPlayer(out Vector3 position, out Vector3 forward);
 

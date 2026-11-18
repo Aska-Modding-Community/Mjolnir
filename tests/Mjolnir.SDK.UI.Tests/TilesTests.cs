@@ -43,6 +43,28 @@ public sealed class TilesTests : ViewTestBase
     }
 
     [Fact]
+    public void AQuickSlotsKeyAndSelectionMarkWhatTheyChange()
+    {
+        var slot = new UiQuickSlot();
+        Assert.Equal((null, "", false), (slot.Icon, slot.Key, slot.IsSelected));
+        var view = Mount(slot);
+        int image = view.AppliedCount(DirtyFlags.Image), text = view.AppliedCount(DirtyFlags.Text), value = view.AppliedCount(DirtyFlags.Value);
+        slot.Key = "1";
+        slot.IsSelected = true;
+        Assert.Equal(text + 1, view.AppliedCount(DirtyFlags.Text));
+        Assert.Equal(value + 1, view.AppliedCount(DirtyFlags.Value));
+        Assert.Equal(image, view.AppliedCount(DirtyFlags.Image));
+        slot.Key = null!;
+        Assert.Equal("", slot.Key); // no key, not a null
+    }
+
+    [Fact]
+    public void OnlyAPartTheHudHasCanBeStoodIn()
+    {
+        Assert.Throws<System.ArgumentOutOfRangeException>(() => Hud.AddInPlaceOf(new UiQuickSlot(), (HudPart)42));
+    }
+
+    [Fact]
     public void ASlotsPartsMarkWhatTheyChange()
     {
         var slot = new UiSlot();

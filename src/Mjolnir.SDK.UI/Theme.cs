@@ -114,6 +114,12 @@ internal static partial class Theme
     public static GameObject? Slot { get; private set; }
 
     /// <summary>
+    /// The HUD's quick bar slot (QuickBarWidget.slotPrefab, 80×80): Background, Icon, Frame, Key (the number under it),
+    /// EquipCheckmark (the orange frame of the slot in hand), without the game's scripts and with its count, decay and fill off.
+    /// </summary>
+    public static GameObject? QuickSlot { get; private set; }
+
+    /// <summary>
     /// The deeds page's god card (a DeedCategoryPanel, 187 wide), its parts named by role: Background, Frame, Image (in
     /// its Portrait, beside Highlight), Title, Subtitle; the lore and progress lines hidden, without the game's scripts.
     /// </summary>

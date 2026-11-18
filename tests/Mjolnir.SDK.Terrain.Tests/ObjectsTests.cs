@@ -408,6 +408,17 @@ public sealed class ObjectsTests : IDisposable
     }
 
     [Fact]
+    public void AnObjectOnTheSoftEdgeIsSettledToo()
+    {
+        // The ground moves under the circle's soft edge as well: an object there settled with it does not hang in the air.
+        var area = LandscapeArea.Circle(V(0, 0, 10), 3, blend: 2);
+        var edge = Add(0, 14.6f);
+        Assert.Equal(LandscapeResult.Done, Landscape.Raise(area, 1, new LandscapeOptions { Objects = LandscapeObjects.Settle }));
+        Assert.Equal(1, edge.Moves);
+        Assert.True(Math.Abs(edge.HeightOverGround()) < 0.05f); // the samples between its grid points
+    }
+
+    [Fact]
     public void ObjectsOfAChangeAreNotAskedForWhereNothingIsDoneWithThem()
     {
         var area = LandscapeArea.Circle(V(0, 0, 10), 3, blend: 0);

@@ -3,6 +3,34 @@
 The platform has one version for the loader, the SDK and its modules. Mods built against an earlier minor version
 must be rebuilt.
 
+## Unreleased
+
+### Added
+
+- `LandscapeOptions.KeepOffLandmarks`: a change of the ground is refused (`Blocked`) where a fixed place of the world
+  stands — a den, or the rocks of a place the world was made with. The game cannot move them, and ground dug under a
+  wolves' den left its rocks hanging in the air. True by default, like `KeepOffBuildings`.
+
+- `UiQuickSlot`, a slot of the game's quick bar (its frame, a picture, the key under it, the orange frame of the slot in
+  hand), and `Hud.AddInPlaceOf(element, HudPart.QuickBar)`, which shows an element in the place of the game's quick bar
+  and hides the bar until the element is taken off with `Hud.Remove`: a tool of a mod's own shows its modes on 1–0.
+- `UiKeyHint` shows the mouse: `LeftButton`, `RightButton` and `MiddleButton` in the game's pictures, `Wheel` written
+  out in the player's language (the game has no picture of it), with modifiers: `KeyGesture.Parse("Shift+Wheel")`.
+
+### Changed
+
+- A setting's description in a row wraps over up to three lines, and the row grows for them; it was cut to one line
+  with an ellipsis.
+
+### Fixed
+
+- An object the SDK took away (`Harvest`, `Clear`, `Remove`, and the changes of the ground that take objects) is no
+  longer taken again by the next change a moment later. The game marks it destroyed only in its own copy of the data, so
+  a brush writing ten times a second took the same objects again, the game failed to remove what was no longer in its
+  data, and the game could hang.
+- `LandscapeObjects.Settle` puts on the new ground every object where the ground moves, under the area's soft edge too.
+  An object there stayed where it stood and hung over the ground that went down under it.
+
 ## 0.4.5 — 2026-11-18
 
 ### Added

@@ -20,6 +20,7 @@ internal static class SettingRows
     public const float LabelInset = 27;        // the game's label inset in its settings rows
     public const float ContentWidth = 380;     // the right part of a row, where the game puts its controls
     private const float DescriptionHeight = 20; // added below the label of a row with a description
+    public const int DescriptionLines = 3;      // a description wraps over at most so many lines, the row growing for them
     private const float IconSize = 48;          // a row's picture at most: what a row with a description has room for
     private const float IconPad = 6;            // above and below the picture
     public const float IconLeft = 14;           // from the row's left edge to the picture
@@ -245,10 +246,23 @@ internal static class SettingRows
         var hint = ViewFactory.NewText(parent, "Description", FirstLine(description), Theme.TextFont, 14);
         hint.color = DescriptionColor;
         hint.alignment = TextAlignmentOptions.Left;
-        hint.textWrappingMode = TextWrappingModes.NoWrap;
+        hint.textWrappingMode = TextWrappingModes.Normal;
         hint.overflowMode = TextOverflowModes.Ellipsis;
+        hint.verticalAlignment = VerticalAlignmentOptions.Top;
         hint.raycastTarget = false;
         return hint;
+    }
+
+    /// <summary>
+    /// How much taller a row grows for a description that wraps: its text <paramref name="preferred"/> tall at the width it
+    /// has, one line <paramref name="line"/> tall, at most <see cref="DescriptionLines"/> lines (a longer one is cut with an
+    /// ellipsis). No Unity: unit-tested.
+    /// </summary>
+    internal static float DescriptionGrowth(float preferred, float line)
+    {
+        if (!(line > 0) || !(preferred > line)) return 0;
+        int lines = Math.Min(DescriptionLines, (int)Math.Ceiling(preferred / line - 0.25f));
+        return Math.Max(0, lines - 1) * line;
     }
 
     public static string FirstLine(string text)

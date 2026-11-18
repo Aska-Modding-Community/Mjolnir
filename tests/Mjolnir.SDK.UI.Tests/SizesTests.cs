@@ -254,4 +254,15 @@ public sealed class SizesTests : ViewTestBase
         Assert.Equal("Interface scale", SettingTexts.NameOf("UI", "Menus", null, SdkTexts.Strings));
         Assert.Equal("HUD scale", SettingTexts.NameOf("UI", "Hud", null, SdkTexts.Strings));
     }
+
+    [Fact]
+    public void ADescriptionWrapsOverAtMostThreeLines()
+    {
+        Assert.Equal(0f, SettingRows.DescriptionGrowth(17, 17));        // one line
+        Assert.Equal(0f, SettingRows.DescriptionGrowth(19, 17));        // a line and a little: still one
+        Assert.Equal(17f, SettingRows.DescriptionGrowth(34, 17));       // two lines
+        Assert.Equal(34f, SettingRows.DescriptionGrowth(51, 17));       // three
+        Assert.Equal(34f, SettingRows.DescriptionGrowth(120, 17));      // more is cut at three
+        Assert.Equal(0f, SettingRows.DescriptionGrowth(float.NaN, 17)); // nothing measured
+    }
 }

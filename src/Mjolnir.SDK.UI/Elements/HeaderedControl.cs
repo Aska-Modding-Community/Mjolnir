@@ -42,7 +42,10 @@ public abstract class HeaderedControl : Control
         set => SetValue(HeaderProperty, value);
     }
 
-    /// <summary>A short line under the header (rows only; the first line of the text).</summary>
+    /// <summary>
+    /// A text under the header (rows only; the first line of the text). It wraps over up to three lines, the row growing
+    /// for them, and a longer one is cut with an ellipsis.
+    /// </summary>
     public string? Description
     {
         get => GetValue(DescriptionProperty);

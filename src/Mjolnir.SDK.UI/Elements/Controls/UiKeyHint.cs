@@ -5,7 +5,9 @@ namespace Mjolnir.SDK.UI;
 /// <summary>
 /// A key and what it does, as the game's HUD prompts show them («[Space] Jump»): <see cref="Gesture"/> drawn as the
 /// game's own key pictures (modifiers first: Ctrl + F7), <see cref="Text"/> beside it. A key the game has no picture for
-/// is written out. Bind the gesture to a hotkey setting and the hint follows a rebinding:
+/// is written out. The mouse's buttons are <c>LeftButton</c>, <c>RightButton</c> and <c>MiddleButton</c>, its wheel
+/// <c>Wheel</c> (written out in the player's language: the game has no picture of it), modifiers allowed:
+/// <c>KeyGesture.Parse("Shift+Wheel")</c>. Bind the gesture to a hotkey setting and the hint follows a rebinding:
 /// <c>hint.Bind(UiKeyHint.GestureProperty, settings.ToggleKey)</c>. On the HUD or in a window.
 /// </summary>
 public sealed class UiKeyHint : Control

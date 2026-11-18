@@ -32,6 +32,14 @@ public sealed class LandscapeOptions
     public bool KeepOffBuildings { get; init; } = true;
 
     /// <summary>
+    /// Whether the change is refused (<see cref="LandscapeResult.Blocked"/>) when a fixed place of the world stands in the
+    /// area: a den, or the rocks of a place the world was made with. The game cannot move them with the ground, so ground
+    /// dug or raised under them leaves them hanging or buried. True by default; a snapshot put back over the ground it took
+    /// may say false, as the ground under them is the same.
+    /// </summary>
+    public bool KeepOffLandmarks { get; init; } = true;
+
+    /// <summary>
     /// What becomes of the natural objects (bushes, saplings, small stones) standing where the ground changes:
     /// <see cref="LandscapeObjects.Remove"/>, the game's own way, takes those a change of the ground takes, wherever it
     /// clears the vegetation; <see cref="LandscapeObjects.Keep"/> leaves every one standing; <see cref="LandscapeObjects.Settle"/>

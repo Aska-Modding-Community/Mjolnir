@@ -129,7 +129,17 @@ internal sealed class GameTerrain : ITerrainSource
 
     // Buildings' solid colliders near the area, their boxes on the ground overlapping the turned rectangle: the game's own
     // check of a change does not look at buildings (seen in game: it allowed levelling among the houses).
-    public string? BuildingIn(LandscapeArea area)
+    public string? BuildingIn(LandscapeArea area) => StandingIn(area, collider => collider.GetComponentInParent<Structure>()?.name);
+
+    // The fixed places of the world: a den (its creature and the stones it is struck through), or the rocks of a place
+    // stamped into the world as it was made (a den's own, a ruin's). Neither moves with the ground: a den's rocks were
+    // left 0.66 m in the air over ground dug 2 m under it (seen in game).
+    public string? LandmarkIn(LandscapeArea area) => StandingIn(area, collider =>
+        collider.GetComponentInParent<Den>()?.name ?? collider.GetComponentInParent<BiomeStamp>()?.name);
+
+    // The name of the first solid collider near the area whose box on the ground overlaps the turned rectangle and which
+    // <paramref name="nameOf"/> names.
+    private string? StandingIn(LandscapeArea area, Func<Collider, string?> nameOf)
     {
         float halfX = area.Width / 2 + area.Blend, halfZ = area.Depth / 2 + area.Blend;
         float radius = MathF.Sqrt(halfX * halfX + halfZ * halfZ) + 1f;
@@ -139,7 +149,7 @@ internal sealed class GameTerrain : ITerrainSource
         float cos = (float)Math.Cos(turn), sin = (float)Math.Sin(turn);
         foreach (var collider in colliders)
         {
-            if (collider == null || collider.isTrigger || collider.GetComponentInParent<Structure>() == null) continue;
+            if (collider == null || collider.isTrigger || nameOf(collider) is not { } name) continue;
             var box = collider.bounds;
             Vector3 c = box.center, e = box.extents;
             float minX = float.MaxValue, maxX = float.MinValue, minZ = float.MaxValue, maxZ = float.MinValue;
@@ -152,8 +162,7 @@ internal sealed class GameTerrain : ITerrainSource
                 minZ = Math.Min(minZ, lz);
                 maxZ = Math.Max(maxZ, lz);
             }
-            if (maxX >= -halfX && minX <= halfX && maxZ >= -halfZ && minZ <= halfZ)
-                return collider.GetComponentInParent<Structure>()?.name ?? collider.name;
+            if (maxX >= -halfX && minX <= halfX && maxZ >= -halfZ && minZ <= halfZ) return name;
         }
         return null;
     }

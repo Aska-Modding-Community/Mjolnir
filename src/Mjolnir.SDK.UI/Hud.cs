@@ -21,6 +21,13 @@ public enum HudAnchor
     BottomRight,
 }
 
+/// <summary>A part of the game's own HUD that a mod's element can stand in for (<see cref="Hud.AddInPlaceOf{T}"/>).</summary>
+public enum HudPart
+{
+    /// <summary>The quick bar, the row of slots 1–0 at the bottom middle.</summary>
+    QuickBar,
+}
+
 /// <summary>
 /// The in-world HUD. The game creates a new HUD for every world it loads; elements added here appear on each one, and hide
 /// and scale with the game's HUD: in a corner (<see cref="Add{T}"/>) or over a point in the world
@@ -70,6 +77,23 @@ public static class Hud
     }
 
     /// <summary>
+    /// Puts an element in the place of a part of the game's HUD, on the HUD of every world from now on: the game's part is
+    /// hidden, its scripts left running, and comes back when the element is taken off with <see cref="Remove"/> (or its mod
+    /// is disabled, from the next world on). For a tool of a mod's own with modes chosen by number: a row of
+    /// <see cref="UiQuickSlot"/>s in the quick bar's place while the tool is in hand (a row of ten, 20 apart, stands where
+    /// the game's slots stand). The element is aligned in the part's rectangle as the part aligns its own. Returns the
+    /// element.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static T AddInPlaceOf<T>(T element, HudPart part) where T : Control
+    {
+        ArgumentNullException.ThrowIfNull(element);
+        if (!Enum.IsDefined(part)) throw new ArgumentOutOfRangeException(nameof(part), part, "No such part of the HUD");
+        AddItem(new HudItem(element, HudAnchor.TopLeft, null, default, CallingMod.Of(Assembly.GetCallingAssembly()), part));
+        return element;
+    }
+
+    /// <summary>
     /// Adds an element over a point in the world, on the HUD of every world from now on: a marker over a place, a
     /// building, a creature. The element's bottom middle sits on the point, moved by <paramref name="offset"/> (reference
     /// pixels, y up); it follows the point every frame and hides while the point is behind the camera or off the screen.
@@ -115,7 +139,8 @@ public static class Hud
     }
 
     /// <summary>
-    /// Takes an element added with <see cref="Add{T}"/> or AddAt off the HUD: off the current world's at once (on the next frame
+    /// Takes an element added with <see cref="Add{T}"/>, AddAt or <see cref="AddInPlaceOf{T}"/> off the HUD (the game's part it
+    /// stood in for shows again): off the current world's at once (on the next frame
     /// from another thread) and off every world after. The element can be added again. False if it was not on the HUD.
     /// </summary>
     public static bool Remove(Control element)
@@ -155,7 +180,8 @@ public static class Hud
     }
 
     /// <summary>An element added to the HUD: in a corner, or over a point in the world (<see cref="Point"/>; null hides it).</summary>
-    private sealed record HudItem(Control Element, HudAnchor Anchor, Func<Vector3?>? Point, Vector2 Offset, Assembly? Owner);
+    private sealed record HudItem(Control Element, HudAnchor Anchor, Func<Vector3?>? Point, Vector2 Offset, Assembly? Owner,
+                                  HudPart? InPlaceOf = null);
 
     /// <summary>
     /// One world's HUD: alive while its canvas exists. One stacking container per anchor; an element over a point in the
@@ -165,6 +191,8 @@ public static class Hud
     {
         private readonly Dictionary<HudAnchor, ContainerView> _groups = [];
         private readonly List<(HudItem Item, RectTransform Rect, CanvasGroup Group)> _markers = [];
+        private readonly List<(Control Element, HudPart Part, RectTransform Rect)> _inPlace = [];
+        private readonly Dictionary<HudPart, CanvasGroup> _hidden = [];
         private Action? _place;
         private Camera? _camera;
 
@@ -174,6 +202,11 @@ public static class Hud
 
         public void Mount(HudItem item)
         {
+            if (item.InPlaceOf is { } part)
+            {
+                if (InPlaceOf(item.Element, part) is { } place) Mount(item.Element, new ContainerView(place));
+                return;
+            }
             if (item.Point == null)
             {
                 if (!_groups.TryGetValue(item.Anchor, out var group)) _groups[item.Anchor] = group = new ContainerView(Group(item.Anchor));
@@ -193,6 +226,19 @@ public static class Hud
         public void Remove(Control element)
         {
             Unmount(element);
+            for (int i = _inPlace.Count - 1; i >= 0; i--)
+            {
+                if (!ReferenceEquals(_inPlace[i].Element, element)) continue;
+                var part = _inPlace[i].Part;
+                if (_inPlace[i].Rect != null) Object.Destroy(_inPlace[i].Rect.gameObject);
+                _inPlace.RemoveAt(i);
+                // The game's part comes back once no element stands in its place.
+                if (!_inPlace.Exists(p => p.Part == part) && _hidden.Remove(part, out var group) && group != null)
+                {
+                    group.alpha = 1;
+                    group.blocksRaycasts = true;
+                }
+            }
             for (int i = _markers.Count - 1; i >= 0; i--)
             {
                 if (!ReferenceEquals(_markers[i].Item.Element, element)) continue;
@@ -226,6 +272,42 @@ public static class Hud
                 }
                 fade.alpha = visible ? 1 : 0;
             }
+        }
+
+        // The place of a part of the game's HUD: a rectangle beside the part's own, with its anchors and size, the element
+        // aligned in it as the part aligns its own; the part itself hidden by a CanvasGroup of its own (its scripts keep running, and it shows again as
+        // it was). Null when this HUD has no such part.
+        private RectTransform? InPlaceOf(Control element, HudPart part)
+        {
+            var target = part switch
+            {
+                HudPart.QuickBar => canvas.GetComponentInChildren<QuickBarWidget>(true)?.layoutPanel,
+                _ => null,
+            };
+            if (target == null || target.parent == null)
+            {
+                SdkLog.Warn(GameUi.Source, $"Hud: no {part} on this HUD; {element} is not shown");
+                return null;
+            }
+            var rect = ViewFactory.NewRect(target.parent, $"Mjolnir_Hud_InPlaceOf_{part} {element.Name ?? element.GetType().Name}");
+            rect.SetSiblingIndex(target.GetSiblingIndex() + 1);
+            rect.anchorMin = target.anchorMin;
+            rect.anchorMax = target.anchorMax;
+            rect.pivot = target.pivot;
+            rect.offsetMin = target.offsetMin;
+            rect.offsetMax = target.offsetMax;
+            // Aligned as the part lays out its own (the quick bar's slots sit at the bottom middle of its rectangle).
+            var own = target.GetComponent<HorizontalOrVerticalLayoutGroup>();
+            ViewFactory.Column(rect, align: own != null ? own.childAlignment : TextAnchor.MiddleCenter);
+            _inPlace.Add((element, part, rect));
+            if (!_hidden.ContainsKey(part))
+            {
+                var group = target.GetComponent<CanvasGroup>() ?? target.gameObject.AddComponent<CanvasGroup>();
+                group.alpha = 0;
+                group.blocksRaycasts = false;
+                _hidden[part] = group;
+            }
+            return rect;
         }
 
         // A marker's own container: on the canvas's middle (its position is from there), its pivot at its bottom middle,

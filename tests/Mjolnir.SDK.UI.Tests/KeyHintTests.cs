@@ -9,7 +9,7 @@ namespace Mjolnir.SDK.UI.Tests;
 public sealed class KeyHintTests : ViewTestBase
 {
     // A few of KbdMouseGlyphs' sprite names, as the game has them.
-    private static readonly HashSet<string> s_sprites = ["F7", "E", "1", "Numpad 1", "Space", "Left Shift", "Up Arrow", "`", "Control", "Shift", "Left Alt"];
+    private static readonly HashSet<string> s_sprites = ["F7", "E", "1", "Numpad 1", "Space", "Left Shift", "Up Arrow", "`", "Control", "Shift", "Left Alt", "Left Button", "Right Button", "Middle Button"];
 
     [Theory]
     [InlineData("F7", "F7")]
@@ -36,6 +36,16 @@ public sealed class KeyHintTests : ViewTestBase
                      KeyGlyphs.Text(KeyGesture.Parse("Shift+Ctrl+E"), s_sprites.Contains));
         Assert.Equal("<sprite name=\"Left Alt\"> + F20", KeyGlyphs.Text(KeyGesture.Parse("Alt+F20"), s_sprites.Contains)); // no picture: written out
         Assert.Equal("", KeyGlyphs.Text(KeyGesture.None, s_sprites.Contains));
+    }
+
+    [Fact]
+    public void TheMouseShowsItsButtonsAsPicturesAndItsWheelAsAWord()
+    {
+        Assert.Equal("<sprite name=\"Left Button\">", KeyGlyphs.Text(KeyGesture.Parse("LeftButton"), s_sprites.Contains));
+        Assert.Equal("<sprite name=\"Shift\"> + <sprite name=\"Left Button\">", KeyGlyphs.Text(KeyGesture.Parse("Shift+LeftButton"), s_sprites.Contains));
+        Assert.Equal("<sprite name=\"Middle Button\">", KeyGlyphs.Text(KeyGesture.Parse("MiddleButton"), s_sprites.Contains));
+        Assert.Equal("<sprite name=\"Control\"> + <size=60%><voffset=0.4em>колесо</voffset></size>", KeyGlyphs.Text(KeyGesture.Parse("Ctrl+Wheel"), s_sprites.Contains, "колесо"));
+        Assert.Equal("<size=60%><voffset=0.4em>Wheel</voffset></size>", KeyGlyphs.Text(KeyGesture.Parse("Wheel"), s_sprites.Contains));
     }
 
     [Fact]

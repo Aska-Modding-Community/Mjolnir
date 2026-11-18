@@ -79,3 +79,6 @@ description = "Writes the characters' models and textures to Mjolnir/ModKit for 
 [config.Kit.Animations]
 name = "The game's animations for the kit"
 description = "Writes the game's own animation clips of the people to Mjolnir/ModKit for the Mjolnir kit (about 50 MB, only on this computer); for mod makers"
+
+[keys]
+wheel = "wheel"

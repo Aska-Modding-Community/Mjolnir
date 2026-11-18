@@ -166,6 +166,18 @@ public sealed class LandscapeTests : IDisposable
     }
 
     [Fact]
+    public void ADenOrAPlaceOfTheWorldInTheAreaBlocksItUnlessTheModSaysOtherwise()
+    {
+        _game.Landmarks = true;
+        Assert.Equal(LandscapeResult.Blocked, Landscape.Lower(Square(), 2));
+        Assert.Equal(LandscapeResult.Blocked, Landscape.Check(Square(), LandscapeOperation.Lower));
+        Assert.Empty(_game.Applied);
+        Assert.Equal(LandscapeResult.Done, Landscape.Lower(Square(), 2, new LandscapeOptions { KeepOffLandmarks = false }));
+        Assert.Single(_game.Applied);
+        Assert.NotNull(Landscape.Capture(Square())); // a snapshot is taken there all the same
+    }
+
+    [Fact]
     public void TheGamesAnswerIsPassedOnAndAFaultIsAFailure()
     {
         _game.Result = LandscapeResult.TooSteep;
@@ -325,6 +337,8 @@ internal sealed class FakeTerrain : ITerrainSource
     public HashSet<(float, float)> Cleared { get; } = [];
 
     public bool Buildings { get; set; }
+
+    public bool Landmarks { get; set; }
 
     public LandscapeResult Result { get; set; } = LandscapeResult.Done;
 
@@ -563,6 +577,8 @@ internal sealed class FakeTerrain : ITerrainSource
     public bool IsUnderwater(float x, float z) => x < -40;
 
     public string? BuildingIn(LandscapeArea area) => Buildings ? "House_L1(Clone)" : null;
+
+    public string? LandmarkIn(LandscapeArea area) => Landmarks ? "WolfDenNetworkLogic(Clone)" : null;
 
     public bool TryGetPlayer(out Vector3 position, out Vector3 forward)
     {

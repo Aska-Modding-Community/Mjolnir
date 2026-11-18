@@ -288,6 +288,7 @@ public static partial class Landscape
         if (!source.IsLoaded(x0, z0) || !source.IsLoaded(x1, z0) || !source.IsLoaded(x0, z1) || !source.IsLoaded(x1, z1))
             return LandscapeResult.NotLoaded;
         if (options.KeepOffBuildings && (building = source.BuildingIn(area)) != null) return LandscapeResult.Blocked;
+        if (options.KeepOffLandmarks && (building = source.LandmarkIn(area)) != null) return LandscapeResult.Blocked;
         return null;
     }
 

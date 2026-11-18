@@ -23,7 +23,13 @@ internal static class KeyGlyphs
         ["NumpadPlus"] = "Numpad +", ["NumpadEnter"] = "Numpad Enter", ["NumpadEquals"] = "Numpad Equals",
         ["Quote"] = "'", ["Semicolon"] = ";", ["Comma"] = ",", ["Period"] = ".", ["Slash"] = "/", ["Backslash"] = "\\",
         ["LeftBracket"] = "[", ["RightBracket"] = "]", ["Minus"] = "-", ["Equals"] = "=", ["Backquote"] = "`",
+        // The mouse, named as MouseButton is: the game has pictures of its buttons, not of its wheel.
+        ["LeftButton"] = "Left Button", ["RightButton"] = "Right Button", ["MiddleButton"] = "Middle Button",
+        ["ForwardButton"] = "Forward", ["BackButton"] = "Back",
     };
+
+    /// <summary>The mouse wheel's name in a gesture: it has no picture, so a hint writes it out in the player's language.</summary>
+    public const string Wheel = "Wheel";
 
     /// <summary>The sprite name of an Input System key name (<see cref="KeyGesture.Key"/>): <c>Digit1</c> → "1", <c>LeftShift</c> → "Left Shift".</summary>
     public static string SpriteName(string key)
@@ -41,14 +47,16 @@ internal static class KeyGlyphs
     /// order), then the key, joined by "+"; each the game's picture <c>&lt;sprite name="…"&gt;</c> when its sprite asset
     /// <paramref name="has"/> it, else its name in text. Empty for <see cref="KeyGesture.None"/>.
     /// </summary>
-    public static string Text(KeyGesture gesture, Func<string, bool> has)
+    public static string Text(KeyGesture gesture, Func<string, bool> has, string? wheel = null)
     {
         if (gesture.IsNone) return "";
         var parts = new List<string>(4);
         if ((gesture.Modifiers & KeyModifiers.Control) != 0) parts.Add("Control");
         if ((gesture.Modifiers & KeyModifiers.Shift) != 0) parts.Add("Shift");
         if ((gesture.Modifiers & KeyModifiers.Alt) != 0) parts.Add("Left Alt");
-        parts.Add(SpriteName(gesture.Key));
-        return string.Join(" + ", parts.Select(p => has(p) ? $"<sprite name=\"{p}\">" : p));
+        bool isWheel = gesture.Key.Equals(Wheel, StringComparison.OrdinalIgnoreCase);
+        parts.Add(isWheel ? "" : SpriteName(gesture.Key));
+        // The wheel's word is set smaller, at about the height of the pictures' own letters.
+        return string.Join(" + ", parts.Select((p, i) => isWheel && i == parts.Count - 1 ? $"<size=60%><voffset=0.4em>{wheel ?? Wheel}</voffset></size>" : has(p) ? $"<sprite name=\"{p}\">" : p));
     }
 }

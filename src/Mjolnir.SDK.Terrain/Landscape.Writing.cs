@@ -153,7 +153,7 @@ public static partial class Landscape
         }
     }
 
-    private static readonly LandscapeOptions Unguarded = new() { KeepOffBuildings = false };
+    private static readonly LandscapeOptions Unguarded = new() { KeepOffBuildings = false, KeepOffLandmarks = false };
 
     private static void CheckHeight(float height, string name)
     {
@@ -227,7 +227,12 @@ public static partial class Landscape
                 bool touched = Array.IndexOf(samples.Touched, true) >= 0;
                 if (!touched && Array.IndexOf(samples.BiomeChanged, true) < 0) return LandscapeResult.Done;
                 bool objects = touched && (options.Objects is LandscapeObjects.Settle or LandscapeObjects.Clear or LandscapeObjects.Harvest || (options.Objects == LandscapeObjects.Remove && options.ClearVegetation && !raw));
-                Func<float, float, bool>? objectsAt = objects ? (x, z) => area.Weight(x, z) >= 0.5f : null;
+                // Settled wherever the ground moves, its soft edge too: an object at the edge left standing hangs over ground that
+                // went down under it (a boulder 5.3 m from a lowered circle of 5 m hung 0.57 m in the air, seen in game). The
+                // objects taken away are those of the area's own ground.
+                Func<float, float, bool>? objectsAt = !objects ? null
+                    : options.Objects == LandscapeObjects.Settle ? (x, z) => area.Weight(x, z) > 0
+                    : (x, z) => area.Weight(x, z) >= 0.5f;
                 return source.Write(samples, new GroundWrite(operation, bounds, raw, objectsAt, options.Objects, options.Harvesting));
             });
         }

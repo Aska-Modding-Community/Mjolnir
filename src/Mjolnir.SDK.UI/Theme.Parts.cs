@@ -274,13 +274,31 @@ internal static partial class Theme
                              .FirstOrDefault(g => g.KeyTargetText != null && g.NameTargetText != null);
             KeyHintKey = TextLook.Of(prompt?.KeyTargetText);
             KeyHintName = TextLook.Of(prompt?.NameTargetText);
+            QuickSlot = KeepQuickSlot(hud?.GetComponentsInChildren<QuickBarWidget>(true).FirstOrDefault()?.slotPrefab);
             SdkLog.Info(GameUi.Source, $"HUD parts: progress bar {Has(ProgressBar)}, ring {Has(ProgressRing)}, " +
-                                       $"key prompt {(KeyHintKey != null && KeyHintName != null ? "yes" : "MISSING")}");
+                                       $"key prompt {(KeyHintKey != null && KeyHintName != null ? "yes" : "MISSING")}, quick slot {Has(QuickSlot)}");
         }
         catch (Exception e)
         {
             SdkLog.Error(GameUi.Source, $"HUD parts not loaded, progress bars are plain: {e}");
         }
+    }
+
+    // A quick bar slot without the game's scripts (the item it shows, dragging and dropping, its sounds); what a slot of
+    // ours never shows (the count, the decay bar, the fill, the hover highlight) off.
+    private static GameObject? KeepQuickSlot(ActionTargetPanel? source)
+    {
+        if (source == null) return null;
+        var copy = Keep(source.transform);
+        if (copy == null) return null;
+        foreach (var behaviour in copy.GetComponentsInChildren<MonoBehaviour>(true))
+        {
+            if (behaviour.TryCast<Graphic>() != null) continue; // images and texts stay
+            Object.DestroyImmediate(behaviour);
+        }
+        foreach (var t in copy.GetComponentsInChildren<Transform>(true))
+            if (t.name is "Fill" or "Decay" or "Highlight" or "Label") t.gameObject.SetActive(false);
+        return copy;
     }
 
     // A ring's frame (FoodFrame: holder, background, the fill with the game's ProgressBar, the icon and its frame, the text),
