@@ -3,6 +3,16 @@
 The platform has one version for the loader, the SDK and its modules. Mods built against an earlier minor version
 must be rebuilt.
 
+## Unreleased
+
+### Added
+
+- Protected zones of the ground: `Landscape.Protect(area)` gives a `LandscapeZone` that refuses every change of this
+  machine reaching it — the player's tools, the villagers', buildings and fields, the game's and other mods' — while
+  its own mod still changes the ground there. `Refused` reports what it refused, `Area` moves it and `Dispose` ends it;
+  another mod's change is `Blocked`, and `Check` says so. `LevellingField.LevelNow` leaves the tiles another mod's
+  zone keeps untried. The console's `protect`.
+
 ## 0.4.4 — 2026-11-17
 
 ### Added

@@ -142,8 +142,12 @@ internal interface IFieldView
 
     bool IsGone { get; }
 
-    /// <summary>Levels every tile not levelled yet, as a villager's hoe does; how many are levelled now.</summary>
-    int LevelNow();
+    /// <summary>
+    /// Levels every tile not levelled yet, as a villager's hoe does, but those whose ground <paramref name="skip"/> says to
+    /// leave (the game marks a tile worked before its tool runs, so a tile a zone would refuse is never tried); how many
+    /// are levelled now.
+    /// </summary>
+    int LevelNow(Func<Rect, bool>? skip);
 
     /// <summary>Turns the plan into what it builds, as the game does once it is levelled.</summary>
     bool Finish();

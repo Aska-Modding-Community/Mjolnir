@@ -77,7 +77,8 @@ internal static class TerrainPatches
         {
             var source = SourceOf(tool);
             var op = GameTerrain.OperationOf(operation, tool.setTerrainType);
-            string? modId = source == LandscapeSource.Mod ? Landscape.EditingMod : null;
+            // A mod's call that sets a game's tool going (a field it levels) is that mod's, whoever holds the tool.
+            string? modId = Landscape.EditingMod;
             s_making = new Made(area, op, source, modId);
             cancelled = Landscape.RaiseChanging(area, op, source);
         }

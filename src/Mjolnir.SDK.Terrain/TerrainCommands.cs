@@ -10,8 +10,8 @@ namespace Mjolnir.SDK.Terrain;
 /// The terrain module's console commands (<see cref="DevConsole"/>): <c>ground</c> tells the ground under the player (or a
 /// point); <c>raise</c>, <c>lower</c>, <c>level</c>, <c>paint</c>, <c>clearveg</c>, <c>grass</c>, <c>smooth</c> and
 /// <c>biome</c> change a square in front of the player, through <see cref="Landscape"/> like a mod's change, and <c>undo</c>
-/// puts the last of them back; <c>objects</c> tells what the world grew round the player, and <c>field</c> works the game's
-/// levelling fields.
+/// puts the last of them back; <c>objects</c> tells what the world grew round the player, <c>field</c> works the game's
+/// levelling fields, and <c>protect</c> keeps a square from the player's tools and the villagers.
 /// </summary>
 internal static class TerrainCommands
 {
@@ -42,6 +42,7 @@ internal static class TerrainCommands
         DevConsole.AddFor(owner, "biome", "Lists the biomes here, or gives a square in front of the player one of them.", Biome, "[name|number] [size=8]");
         DevConsole.AddFor(owner, "objects", "Lists the trees, stones and plants of the world round the player.", Objects, "[radius=8] [name]");
         DevConsole.AddFor(owner, "field", "Lists the game's levelling fields, or places, levels, finishes or takes away the nearest one.", Field, "[place [size=8]|level|finish|remove]");
+        DevConsole.AddFor(owner, "protect", "Protects a square in front of the player from the player's tools, the villagers and other mods, or lists or ends the console's zones.", Protect, "[size=8|list|clear]");
         DevConsole.AddFor(owner, "undo", "Puts back the ground the console's last change changed.", Undo);
     }
 
@@ -224,6 +225,36 @@ internal static class TerrainCommands
     /// <summary>The side of the field the console places when none is given, in metres.</summary>
     public const float FieldSize = 8f;
 
+    // The zones the console made, which it lists and ends (main thread).
+    private static readonly List<LandscapeZone> s_zones = [];
+
+    private static void Protect(DevCommandContext context)
+    {
+        string what = context.Arguments.Count > 0 ? context.GetString(0).ToLowerInvariant() : "";
+        if (what == "list")
+        {
+            s_zones.RemoveAll(z => !z.IsActive);
+            if (s_zones.Count == 0) context.Print("The console protects no ground.");
+            foreach (var zone in s_zones) context.Print($"  {zone.Area}");
+            return;
+        }
+        if (what == "clear")
+        {
+            int count = s_zones.Count(z => z.IsActive);
+            foreach (var zone in s_zones) zone.Dispose();
+            s_zones.Clear();
+            context.Print(Invariant($"Ended {count} zone(s)."));
+            return;
+        }
+        var area = Square(context, 0, ZoneSize);
+        var made = Landscape.ProtectFor(typeof(TerrainCommands).Assembly, area);
+        s_zones.Add(made);
+        context.Print($"Protected {area}.");
+    }
+
+    /// <summary>The side of the square the console protects when none is given, in metres.</summary>
+    public const float ZoneSize = 8f;
+
     private static void Undo(DevCommandContext context)
     {
         if (s_before is not { } before) throw new DevCommandException("Nothing to undo.");
@@ -236,7 +267,11 @@ internal static class TerrainCommands
     private static void Keep(LandscapeArea area) => s_before = Landscape.Capture(area);
 
     /// <summary>Forgets the last change, between unit tests.</summary>
-    internal static void ResetForTests() => s_before = null;
+    internal static void ResetForTests()
+    {
+        s_before = null;
+        s_zones.Clear();
+    }
 
     /// <summary>A height typed as a number, or ~ and an offset from <paramref name="feet"/> (~ alone: the feet).</summary>
     public static float ParseHeight(string text, float feet)

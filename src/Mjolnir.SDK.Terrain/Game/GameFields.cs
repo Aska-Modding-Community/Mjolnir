@@ -144,15 +144,22 @@ internal static class GameFields
             }
         }
 
-        public int LevelNow()
+        public int LevelNow(Func<Rect, bool>? skip)
         {
             if (IsGone) return 0;
             int tiles = grid.GetCellsCount();
-            // The villagers' own interaction levels a tile where there is one; the grid itself does it otherwise.
+            float size = grid.dynamicBuilding.TileSize;
+            // The villagers' own interaction levels a tile where there is one; the grid itself does it otherwise. Either
+            // marks the tile worked before its tool runs, so a tile whose change would be refused is not tried at all.
             var interaction = grid.terraformingInteraction;
             for (int i = 0; i < tiles; i++)
             {
                 if (grid.IsCellLeveled(i)) continue;
+                if (skip != null)
+                {
+                    var middle = grid.GetCellPosition(i);
+                    if (skip(new Rect(middle.x - size / 2, middle.z - size / 2, size, size))) continue;
+                }
                 if (interaction != null) interaction.TryLevelTile(i);
                 else grid.TryLevelTile(i);
             }

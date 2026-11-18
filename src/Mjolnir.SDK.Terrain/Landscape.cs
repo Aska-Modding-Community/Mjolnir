@@ -170,13 +170,17 @@ public static partial class Landscape
     /// the default <see cref="LandscapeOptions.KeepOffBuildings"/>) and, for a change the game's tool makes (one of the five
     /// basic changes over a rectangle or a brush), the game's own check at the area's middle.
     /// </summary>
-    /// <returns><see cref="LandscapeResult.Done"/> when it could; <see cref="LandscapeResult.NotAvailable"/> off the main thread.</returns>
+    /// <returns><see cref="LandscapeResult.Done"/> when it could; <see cref="LandscapeResult.Blocked"/> also where another
+    /// mod's protected zone keeps the ground; <see cref="LandscapeResult.NotAvailable"/> off the main thread.</returns>
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public static LandscapeResult Check(LandscapeArea area, LandscapeOperation operation)
     {
         if (!Enum.IsDefined(operation)) throw new ArgumentOutOfRangeException(nameof(operation), operation, "No such change.");
+        string modId = Owner(CallingMod.Of(Assembly.GetCallingAssembly()));
         var edit = new LandscapeEdit(area, operation, operation == LandscapeOperation.Level ? area.Center.y : 0.5f, null, LandscapeOptions.Default);
         if (Live() is not { } source) return LandscapeResult.NotAvailable;
         if (Refused(source, area, edit.Options, out _) is { } refused) return refused;
+        if (LandscapeZone.Refusing(area.Bounds, modId) != null) return LandscapeResult.Blocked;
         return area.IsGameShape && operation <= LandscapeOperation.ClearVegetation ? Guarded(() => source.Check(edit)) : LandscapeResult.Done;
     }
 
@@ -200,6 +204,7 @@ public static partial class Landscape
             if (building != null) SdkLog.Info(Platform, $"{edit.Operation} over {edit.Area} refused: '{building}' stands there");
             return refused;
         }
+        if (Zoned(modId, edit.Area, edit.Operation)) return LandscapeResult.Blocked;
         s_editingMod = modId;
         s_editing = true;
         s_cancelled = false;
@@ -244,7 +249,31 @@ public static partial class Landscape
         if (!(amount > 0 && amount <= MaximumStep)) throw new ArgumentOutOfRangeException(name, amount, $"A step is over 0 and at most {MaximumStep} m.");
     }
 
-    private static string Owner(Assembly mod) => DevConsole.OwnerOf(mod);
+    /// <summary>The id the module knows a mod's (or the platform's) changes by.</summary>
+    internal static string Owner(Assembly mod) => DevConsole.OwnerOf(mod);
+
+    /// <summary>
+    /// Runs <paramref name="run"/> as <paramref name="modId"/>'s change on this thread: the game's tools it sets going (a
+    /// field's own, which a mod levels) report that mod, so its own protected zones let them through.
+    /// </summary>
+    internal static T Editing<T>(string modId, Func<T> run)
+    {
+        string? mod = s_editingMod;
+        bool editing = s_editing, cancelled = s_cancelled;
+        s_editingMod = modId;
+        s_editing = true;
+        s_cancelled = false;
+        try
+        {
+            return run();
+        }
+        finally
+        {
+            s_editingMod = mod;
+            s_editing = editing;
+            s_cancelled = cancelled;
+        }
+    }
 
     /// <summary>The source for the module's log lines.</summary>
     internal const string Platform = "SDK.Terrain";
@@ -259,16 +288,32 @@ public static partial class Landscape
     internal static bool IsEditing => s_editing;
 
     /// <summary>
-    /// Raises <see cref="GroundChanging"/> for a change the game's tool is about to make (the game's patch; the fake in tests).
+    /// Raises <see cref="GroundChanging"/> for a change the game's tool is about to make (the game's patch; the fake in tests),
+    /// once the protected zones let it: a change a zone refuses is cancelled before any handler sees it.
     /// </summary>
-    /// <returns>Whether a handler cancelled it.</returns>
+    /// <returns>Whether a zone or a handler cancelled it.</returns>
     internal static bool RaiseChanging(Rect area, LandscapeOperation operation, LandscapeSource source)
     {
-        if (s_changing is not { Count: > 0 } handlers) return false;
-        var args = new LandscapeChangingEventArgs(area, operation, source, source == LandscapeSource.Mod ? EditingMod : null);
-        handlers.Raise(h => h(null, args));
+        var handlers = s_changing is { Count: > 0 } listening ? listening : null;
+        bool zones = LandscapeZone.Active.Count > 0;
+        if (handlers == null && !zones) return false;
+        var args = new LandscapeChangingEventArgs(area, operation, source, EditingMod);
+        if (!(zones && LandscapeZone.Refuse(args))) handlers?.Raise(h => h(null, args));
         if (args.Cancel && s_editing) s_cancelled = true;
         return args.Cancel;
+    }
+
+    /// <summary>
+    /// Whether a protected zone of another mod refuses a mod's change over <paramref name="area"/> before it is made: then
+    /// the zone raises its refusal and the change is <see cref="LandscapeResult.Blocked"/> (logged).
+    /// </summary>
+    internal static bool Zoned(string modId, LandscapeArea area, LandscapeOperation operation)
+    {
+        if (LandscapeZone.Active.Count == 0) return false;
+        var args = new LandscapeChangingEventArgs(area.Bounds, operation, LandscapeSource.Mod, modId);
+        if (!LandscapeZone.Refuse(args)) return false;
+        SdkLog.Info(Platform, $"{operation} over {area} by {modId} refused: a protected zone keeps the ground");
+        return true;
     }
 
     /// <summary>Whether anyone listens to <see cref="GroundChanged"/>: the game's side keeps nothing for it otherwise.</summary>
@@ -295,6 +340,7 @@ public static partial class Landscape
     {
         TerrainCommands.ResetForTests();
         LandscapeOutline.ResetForTests();
+        LandscapeZone.ResetForTests();
         Source = null;
         s_changing = null;
         s_changed = null;

@@ -27,7 +27,10 @@ public sealed class LandscapeChangingEventArgs : CancelEventArgs
     /// <summary>Who makes it.</summary>
     public LandscapeSource Source { get; }
 
-    /// <summary>The mod that makes it through <see cref="Landscape"/>, or null when the game does.</summary>
+    /// <summary>
+    /// The mod whose call makes it — a change through <see cref="Landscape"/>, or a levelling field's tool it sets going
+    /// (<see cref="LevellingField.LevelNow"/>) — or null when the game makes it of itself.
+    /// </summary>
     public string? ModId { get; }
 }
 

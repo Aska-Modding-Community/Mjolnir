@@ -206,6 +206,7 @@ public static partial class Landscape
             if (building != null) SdkLog.Info(Platform, $"{operation} over {area} refused: '{building}' stands there");
             return refused;
         }
+        if (Zoned(modId, area, operation)) return LandscapeResult.Blocked;
         s_editingMod = modId;
         s_editing = true;
         s_cancelled = false;

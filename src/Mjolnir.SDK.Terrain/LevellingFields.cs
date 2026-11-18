@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace Mjolnir.SDK.Terrain;
@@ -142,15 +144,21 @@ public sealed class LevellingField
     /// <summary>
     /// Levels every tile that is not levelled yet, as the villagers level them one by one with their hoes: the ground is
     /// changed by the game, saved and sent to the other players. Once the last tile is levelled the game finishes the plan
-    /// itself, so the field is <see cref="IsGone"/> right after (there is nothing left to <see cref="Finish"/>).
+    /// itself, so the field is <see cref="IsGone"/> right after (there is nothing left to <see cref="Finish"/>). A tile
+    /// another mod's protected zone keeps is left as it is (<see cref="Landscape.Protect"/>); the mod's own zones let it
+    /// level.
     /// </summary>
     /// <returns>How many tiles are levelled now; 0 off the main thread or once the field is gone.</returns>
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public int LevelNow()
     {
+        string modId = Landscape.Owner(CallingMod.Of(Assembly.GetCallingAssembly()));
         if (!Landscape.IsMainThread || IsGone) return 0;
         try
         {
-            return _field.LevelNow();
+            // The field's own tool levels it, as the mod's change: the mod's own zones let it through, and a tile another's
+            // zone keeps is left untried, since the game would mark it worked though its ground stayed.
+            return Landscape.Editing(modId, () => _field.LevelNow(rect => LandscapeZone.Refusing(rect, modId) != null));
         }
         catch (Exception e)
         {

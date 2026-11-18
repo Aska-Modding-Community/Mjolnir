@@ -1,1 +1,10 @@
 #nullable enable
+Mjolnir.SDK.Terrain.LandscapeZone
+Mjolnir.SDK.Terrain.LandscapeZone.Area.get -> Mjolnir.SDK.Terrain.LandscapeArea
+Mjolnir.SDK.Terrain.LandscapeZone.Area.set -> void
+Mjolnir.SDK.Terrain.LandscapeZone.Dispose() -> void
+Mjolnir.SDK.Terrain.LandscapeZone.IsActive.get -> bool
+Mjolnir.SDK.Terrain.LandscapeZone.ModId.get -> string!
+Mjolnir.SDK.Terrain.LandscapeZone.Refused -> System.EventHandler<Mjolnir.SDK.Terrain.LandscapeChangingEventArgs!>?
+override Mjolnir.SDK.Terrain.LandscapeZone.ToString() -> string!
+static Mjolnir.SDK.Terrain.Landscape.Protect(Mjolnir.SDK.Terrain.LandscapeArea area) -> Mjolnir.SDK.Terrain.LandscapeZone!

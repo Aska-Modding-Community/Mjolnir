@@ -200,13 +200,14 @@ internal sealed class FakeField : IFieldView
 
     public bool IsGone { get; private set; }
 
-    public int LevelNow()
+    public int LevelNow(Func<UnityEngine.Rect, bool>? skip)
     {
         if (IsGone) return 0;
         for (int i = 0; i < _levelled.Length; i++)
         {
             if (_levelled[i]) continue;
             var (x, z) = Middle(i);
+            if (skip != null && skip(LandscapeArea.MakeRect(x - TileSize / 2, z - TileSize / 2, TileSize, TileSize))) continue;
             // The ground of the tile goes to the field's height, as a villager's hoe levels it.
             for (float dx = -TileSize / 2; dx <= TileSize / 2; dx += 0.5f)
                 for (float dz = -TileSize / 2; dz <= TileSize / 2; dz += 0.5f)

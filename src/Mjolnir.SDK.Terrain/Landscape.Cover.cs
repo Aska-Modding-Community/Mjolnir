@@ -110,6 +110,20 @@ public static partial class Landscape
     public static LandscapeOutline ShowOutline(LandscapeArea area, Color color) =>
         LandscapeOutline.Add(CallingMod.Of(Assembly.GetCallingAssembly()), area, color);
 
+    /// <summary>
+    /// Protects the area's ground from every change of this machine but this mod's own: the player's tools, the villagers',
+    /// a building's footprint or field, the game's and other mods'. A mod keeps its shrine, its arena or a player's claim
+    /// as it is. The zone lasts until it is disposed; it is not saved with the world.
+    /// </summary>
+    /// <param name="area">The ground to protect: where the area is at least half (its blend's inner half).</param>
+    /// <returns>The zone: move it with <see cref="LandscapeZone.Area"/>, hear what it refused with
+    /// <see cref="LandscapeZone.Refused"/>, end it with <see cref="LandscapeZone.Dispose"/>.</returns>
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static LandscapeZone Protect(LandscapeArea area) => ProtectFor(CallingMod.Of(Assembly.GetCallingAssembly()), area);
+
+    /// <summary>A zone kept by <paramref name="owner"/>: the platform's own (the console's) or a mod's.</summary>
+    internal static LandscapeZone ProtectFor(Assembly owner, LandscapeArea area) => LandscapeZone.Add(owner, Owner(owner), area);
+
     // A change of the ground's cover: only the buildings and the kind it is limited to count, and it takes no object.
     private static LandscapeOptions Narrowed(LandscapeOptions? options) => new()
     {

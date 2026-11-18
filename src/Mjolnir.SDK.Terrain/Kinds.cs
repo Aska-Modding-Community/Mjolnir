@@ -160,7 +160,10 @@ public enum LandscapeResult
     /// <summary>The area is not all in the part of the world loaded around the player.</summary>
     NotLoaded,
 
-    /// <summary>A building stands in the area, or the game will not change the ground there.</summary>
+    /// <summary>
+    /// A building stands in the area, another mod's protected zone keeps the ground (<see cref="Landscape.Protect"/>), or the
+    /// game will not change the ground there.
+    /// </summary>
     Blocked,
 
     /// <summary>The ground there is too steep for the game.</summary>
