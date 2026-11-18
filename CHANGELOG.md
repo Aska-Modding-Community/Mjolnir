@@ -29,6 +29,10 @@ must be rebuilt.
 - Wide roads: `RoadPlan.Width` and `RoadPlans.Place(…, width)` give a road plan a strip of its own, 1 to 16 m (the
   game's road levels 3.5 m), on this machine until the game closes: the game keeps no width per plan. The console's
   `road width`.
+- Placing the world's kinds: `NaturalObjects.Place(kind, position, rotation, scale)` places a tree, a bush, a crop, a
+  stone or a boulder of the scenery — any of the 70 kinds the game grows but its grass (`NaturalObjects.Kinds`,
+  `PlaceableKind`) — as a world item that looks, is felled, mined or gathered and drops its loot as the world's do, and
+  is saved; a tree's scale is its age. Every player needs the same Mjolnir. The console's `place`.
 
 ## 0.4.4 — 2026-11-17
 

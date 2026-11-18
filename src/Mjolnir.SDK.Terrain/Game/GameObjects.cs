@@ -84,6 +84,9 @@ internal static class GameObjects
         return items;
     }
 
+    /// <summary>One object of the world as the model sees it.</summary>
+    public static IWorldObject Wrap(WorldItemInstance instance) => new GameObjectHandle(instance);
+
     private static Vector3 At(float x, float y, float z)
     {
         Vector3 v = default;
@@ -102,8 +105,11 @@ internal static class GameObjects
         public string AssetName => Info()?.Name ?? instance.Descriptor?.itemInfo?.name ?? "";
 
         public NaturalObjectKind Kind => Info() is { } info ? KindOf(info.VegetationType)
-            : instance.TryCast<InventoryItemInstance>() != null ? NaturalObjectKind.Item
+            : instance.TryCast<InventoryItemInstance>() != null ? GamePlacement.KindOf(ItemName) ?? NaturalObjectKind.Item
             : NaturalObjectKind.Other;
+
+        // A world item's kind name: a placed object's is the SDK's own (GamePlacement).
+        private string ItemName => instance.Descriptor?.itemInfo?.name ?? "";
 
         public Vector3 Position => instance.GetPosition();
 
@@ -111,11 +117,11 @@ internal static class GameObjects
 
         public int Quantity => _biome != null ? _biome.GetQuantity() : 0;
 
-        public string ResourceName => (_biome != null ? _biome.GetResourceInfo()?.itemInfo?.name : instance.Descriptor?.itemInfo?.name) ?? "";
+        public string ResourceName => (_biome != null ? _biome.GetResourceInfo()?.itemInfo?.name : GamePlacement.ResourceOf(ItemName) ?? instance.Descriptor?.itemInfo?.name) ?? "";
 
         public bool IsRemovable => instance.IsRemovable(InstanceDestructionLevel.TERRAFORMING);
 
-        public bool IsHarvestable => instance.Descriptor?.TryCast<BiomeItemDescriptor>()?.IsHarvestable ?? false;
+        public bool IsHarvestable => instance.Descriptor?.TryCast<BiomeItemDescriptor>()?.IsHarvestable ?? GamePlacement.IsHarvestable(ItemName);
 
         // The game keeps the destroyed mark in the instance's own copy of the data, which a handle that was taken out of
         // the world no longer follows: what this mod took is remembered here (seen in game: right after a nest was taken

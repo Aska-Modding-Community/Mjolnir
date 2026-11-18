@@ -55,11 +55,19 @@ internal sealed class GameTerrain : ITerrainSource
             }
             catch (Exception e)
             {
-                SdkLog.Warn(Landscape.Platform, $"Road plans keep the game's width: their patch failed: {e.Message}");
+                SdkLog.Warn(Landscape.Platform, $"No kinds of the world can be placed: their patches failed: {e.Message}");
             }
             try
             {
                 patched += s_harmony.CreateClassProcessor(typeof(RoadPatches)).Patch()?.Count ?? 0;
+            }
+            catch (Exception e)
+            {
+                SdkLog.Warn(Landscape.Platform, $"Road plans keep the game's width: their patch failed: {e.Message}");
+            }
+            try
+            {
+                patched += s_harmony.CreateClassProcessor(typeof(PlacementPatches)).Patch()?.Count ?? 0;
             }
             catch (Exception e)
             {
@@ -357,6 +365,10 @@ internal sealed class GameTerrain : ITerrainSource
     public IOutlineView NewOutline() => new GameOutline();
 
     public IReadOnlyList<IWorldObject> ObjectsIn(float centerX, float centerZ, float radius) => GameObjects.In(centerX, centerZ, radius);
+
+    public IReadOnlyList<PlaceableKindData> PlaceableKinds => GamePlacement.Kinds;
+
+    public IWorldObject? Place(string name, Vector3 position, float rotation, float scale) => GamePlacement.Place(name, position, rotation, scale);
 
     public IReadOnlyList<IFieldView> Fields => GameFields.All();
 

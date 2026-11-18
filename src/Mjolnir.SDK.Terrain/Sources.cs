@@ -46,6 +46,12 @@ internal interface ITerrainSource
     /// <summary>The world's natural objects whose place lies within <paramref name="radius"/> metres of a point.</summary>
     IReadOnlyList<IWorldObject> ObjectsIn(float centerX, float centerZ, float radius);
 
+    /// <summary>The kinds of the world a mod can place, made once the game has its item database; empty before.</summary>
+    IReadOnlyList<PlaceableKindData> PlaceableKinds { get; }
+
+    /// <summary>Places a world item of a kind at a point of the loaded world; null when the game takes none.</summary>
+    IWorldObject? Place(string name, Vector3 position, float rotation, float scale);
+
     /// <summary>The game's levelling fields in the loaded world.</summary>
     IReadOnlyList<IFieldView> Fields { get; }
 
@@ -226,6 +232,9 @@ internal interface IOutlineView
     /// <summary>Takes the lines out of the world for good.</summary>
     void Destroy();
 }
+
+/// <summary>A kind of the world a mod can place, as the game side made it (<see cref="PlaceableKind"/>).</summary>
+internal readonly record struct PlaceableKindData(string Name, NaturalObjectKind Kind, string AssetName, float MinimumScale, float MaximumScale, bool IsHarvestable, bool IsGathered);
 
 /// <summary>How samples are written (<see cref="ITerrainSource.Write"/>).</summary>
 /// <param name="Operation">The change, for <see cref="Landscape.GroundChanged"/>.</param>

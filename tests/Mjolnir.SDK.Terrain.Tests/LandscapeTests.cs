@@ -356,6 +356,28 @@ internal sealed class FakeTerrain : ITerrainSource
     /// <summary>How many times the model asked for the world's objects.</summary>
     public int ObjectLookups { get; private set; }
 
+    /// <summary>The kinds the fake world places.</summary>
+    public List<PlaceableKindData> PlaceKinds { get; } =
+    [
+        new("tree_willow", NaturalObjectKind.Tree, "Mjolnir_World_tree_willow", 1f, 1.6f, true, false),
+        new("bush_sloe_berries", NaturalObjectKind.Object, "Mjolnir_World_bush_sloe_berries", 0.8f, 1.2f, false, true),
+        new("rock_shoreline_big", NaturalObjectKind.LargeObject, "Mjolnir_World_rock_shoreline_big", 1f, 1f, false, false),
+    ];
+
+    public IReadOnlyList<PlaceableKindData> PlaceableKinds => PlaceKinds;
+
+    /// <summary>The placements asked for: kind, place, turn and scale.</summary>
+    public List<(string Name, Vector3 Position, float Rotation, float Scale)> Placed { get; } = [];
+
+    public IWorldObject? Place(string name, Vector3 position, float rotation, float scale)
+    {
+        Placed.Add((name, position, rotation, scale));
+        var kind = PlaceKinds.Find(k => k.Name == name);
+        var placed = new FakeObject { AssetName = kind.AssetName, Kind = kind.Kind, Position = position, IsHarvestable = kind.IsHarvestable };
+        Objects.Add(placed);
+        return placed;
+    }
+
     public IReadOnlyList<IWorldObject> ObjectsIn(float centerX, float centerZ, float radius)
     {
         ObjectLookups++;

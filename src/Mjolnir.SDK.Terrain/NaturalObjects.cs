@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace Mjolnir.SDK.Terrain;
@@ -56,6 +58,78 @@ public static class NaturalObjects
 
     /// <summary>The farthest the world's objects can be asked for round a point, in metres.</summary>
     public const float MaximumRadius = 64f;
+
+    /// <summary>The largest scale an object is placed at: four times its kind's own size.</summary>
+    public const float MaximumScale = 4f;
+
+    /// <summary>
+    /// The kinds of the world a mod can place (<see cref="Place"/>), every kind the game grows but its grass. They are made
+    /// as the game builds its item database, in the main menu already; empty before that and without the game.
+    /// </summary>
+    public static IReadOnlyList<PlaceableKind> Kinds
+    {
+        get
+        {
+            var made = Landscape.Source?.PlaceableKinds;
+            if (made == null || made.Count == 0) return [];
+            if (s_kinds is { } kinds && ReferenceEquals(s_from, made) && kinds.Count == made.Count) return kinds;
+            var list = new PlaceableKind[made.Count];
+            for (int i = 0; i < list.Length; i++) list[i] = new PlaceableKind(made[i]);
+            s_kinds = list;
+            s_from = made;
+            return list;
+        }
+    }
+
+    private static IReadOnlyList<PlaceableKind>? s_kinds;
+    private static object? s_from;
+
+    /// <summary>A kind by its name ("tree_willow") or its <see cref="PlaceableKind.AssetName"/>; null for none.</summary>
+    public static PlaceableKind? FindKind(string name)
+    {
+        ArgumentNullException.ThrowIfNull(name);
+        foreach (var kind in Kinds)
+            if (string.Equals(kind.Name, name, StringComparison.OrdinalIgnoreCase) || string.Equals(kind.AssetName, name, StringComparison.OrdinalIgnoreCase))
+                return kind;
+        return null;
+    }
+
+    /// <summary>
+    /// Places an object of a kind of the world (<see cref="Kinds"/>) on the ground at a point of the loaded world: a tree, a
+    /// bush, a stone, a boulder of the scenery. It is a world item of the SDK's own that looks as the kind does and is
+    /// harvested or gathered as it is: a tree falls to its stump and drops the game's trunk, a bush gives its berries. The
+    /// game saves it and tells the other players, who need the same SDK. A tree's scale is its age: the world's own trees
+    /// stand between <see cref="PlaceableKind.MinimumScale"/> and <see cref="PlaceableKind.MaximumScale"/>.
+    /// </summary>
+    /// <param name="kind">The kind's name ("tree_willow") or asset name.</param>
+    /// <param name="position">Where it stands; its y is the ground's.</param>
+    /// <param name="rotation">Its turn round the vertical, in degrees.</param>
+    /// <param name="scale">Its size against the kind's own, over 0 and at most <see cref="MaximumScale"/>.</param>
+    /// <returns>What was placed; null without a world, off the loaded part, off the main thread, or when the game took none.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="kind"/> is null.</exception>
+    /// <exception cref="ArgumentException">No such kind.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">A scale out of its range, or a point that is not one.</exception>
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static NaturalObject? Place(string kind, Vector3 position, float rotation = 0f, float scale = 1f)
+    {
+        ArgumentNullException.ThrowIfNull(kind);
+        if (!(scale > 0 && scale <= MaximumScale)) throw new ArgumentOutOfRangeException(nameof(scale), scale, $"A scale is over 0 and at most {MaximumScale}.");
+        if (!float.IsFinite(position.x) || !float.IsFinite(position.z) || !float.IsFinite(rotation)) throw new ArgumentOutOfRangeException(nameof(position), "A point is a point of the world.");
+        var found = FindKind(kind) ?? throw new ArgumentException($"No kind '{kind}' to place (NaturalObjects.Kinds).", nameof(kind));
+        string modId = Landscape.Owner(CallingMod.Of(Assembly.GetCallingAssembly()));
+        if (Landscape.LiveSource() is not { } source) return null;
+        if (!source.IsLoaded(position.x, position.z) || !source.TryGetHeight(position.x, position.z, out position.y)) return null;
+        try
+        {
+            var placed = source.Place(found.Name, position, rotation, scale);
+            return placed != null ? new NaturalObject(placed) : null;
+        }
+        catch (Exception e)
+        {
+            SdkLog.Warn(Landscape.Platform, $"{modId}: '{found.Name}' could not be placed: {e.Message}");
+            return null;
+        }
+    }
 
     private static IReadOnlyList<NaturalObject> Found(ITerrainSource source, float x, float z, float radius, Func<float, float, bool>? where)
     {

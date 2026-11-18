@@ -258,6 +258,58 @@ public sealed class ObjectsTests : IDisposable
     }
 
     [Fact]
+    public void KindsOfTheWorldArePlacedOnTheGround()
+    {
+        Assert.Equal(3, NaturalObjects.Kinds.Count);
+        var willow = NaturalObjects.FindKind("tree_willow")!;
+        Assert.Equal(NaturalObjectKind.Tree, willow.Kind);
+        Assert.Equal("Mjolnir_World_tree_willow", willow.AssetName);
+        Assert.Equal(1.6f, willow.MaximumScale);
+        Assert.True(willow.IsHarvestable);
+        Assert.False(willow.IsGathered);
+        Assert.Equal("tree_willow (Tree)", willow.ToString());
+        Assert.Same(willow, NaturalObjects.FindKind("Mjolnir_World_tree_willow"));
+        Assert.True(NaturalObjects.FindKind("BUSH_SLOE_BERRIES")!.IsGathered);
+        Assert.Null(NaturalObjects.FindKind("no_such_kind"));
+
+        var placed = NaturalObjects.Place("tree_willow", V(0, 99, 10), 30f, 0.6f)!;
+        Assert.Equal("Mjolnir_World_tree_willow", placed.AssetName);
+        Assert.Equal(NaturalObjectKind.Tree, placed.Kind);
+        var (name, at, rotation, scale) = _game.Placed.Single();
+        Assert.Equal("tree_willow", name);
+        Assert.Equal(FakeTerrain.Ground(0), at.y, 3); // on the ground, whatever y was given
+        Assert.Equal(30f, rotation);
+        Assert.Equal(0.6f, scale);
+        Assert.Same(placed.AssetName, NaturalObjects.Nearest(V(0, 0, 10), 1)?.AssetName);
+
+        Assert.Throws<ArgumentException>(() => NaturalObjects.Place("no_such_kind", V(0, 0, 10)));
+        Assert.Throws<ArgumentNullException>(() => NaturalObjects.Place(null!, V(0, 0, 10)));
+        Assert.Throws<ArgumentOutOfRangeException>(() => NaturalObjects.Place("tree_willow", V(0, 0, 10), scale: 0));
+        Assert.Throws<ArgumentOutOfRangeException>(() => NaturalObjects.Place("tree_willow", V(0, 0, 10), scale: NaturalObjects.MaximumScale + 1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => NaturalObjects.Place("tree_willow", V(float.NaN, 0, 10)));
+        Assert.Null(NaturalObjects.Place("tree_willow", V(500, 0, 10))); // not loaded
+        _game.IsAvailable = false;
+        Assert.Null(NaturalObjects.Place("tree_willow", V(0, 0, 10)));
+        Assert.Single(_game.Placed);
+    }
+
+    [Fact]
+    public void TheConsoleListsAndPlacesKinds()
+    {
+        DevConsole.Execute("place");
+        Assert.Contains(DevConsole.Lines, l => l.Text == "3 kinds of the world to place:");
+        Assert.Contains(DevConsole.Lines, l => l.Text == "  Tree: tree_willow");
+        DevConsole.Execute("place rock_shoreline_big 2");
+        var (name, at, _, scale) = _game.Placed.Single();
+        Assert.Equal("rock_shoreline_big", name);
+        Assert.Equal(TerrainCommands.PlaceAhead, at.z, 3); // ahead of the player at (0, 0) facing z
+        Assert.Equal(2f, scale);
+        Assert.Contains(DevConsole.Lines, l => l.Text.StartsWith("Placed Mjolnir_World_rock_shoreline_big", StringComparison.Ordinal));
+        DevConsole.Execute("place no_such_kind");
+        Assert.Contains(DevConsole.Lines, l => l.Kind == ConsoleLineKind.Error && l.Text.Contains("No kind 'no_such_kind'", StringComparison.Ordinal));
+    }
+
+    [Fact]
     public void AnObjectIsGatheredByHand()
     {
         var bush = Add(0, 10);

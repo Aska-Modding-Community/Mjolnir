@@ -40,6 +40,7 @@ internal static class TerrainCommands
         DevConsole.AddFor(owner, "grass", "Gives a square in front of the player its natural ground and grass back.", Grass, "[size=4]");
         DevConsole.AddFor(owner, "smooth", "Smooths a square in front of the player.", Smooth, "[strength=0.5] [size=4]");
         DevConsole.AddFor(owner, "biome", "Lists the biomes here, or gives a square in front of the player one of them.", Biome, "[name|number] [size=8]");
+        DevConsole.AddFor(owner, "place", "Lists the kinds of the world a mod can place, or places one ahead of the player.", Place, "[kind] [scale=1]");
         DevConsole.AddFor(owner, "objects", "Lists the trees, stones and plants of the world round the player, clears them, or harvests them with their loot.", Objects, "[radius=8] [name] | clear [radius=4] | harvest [radius=4] [player]");
         DevConsole.AddFor(owner, "field", "Lists the game's levelling fields, or places, levels, finishes or takes away the nearest one.", Field, "[place [size=8]|level|finish|remove]");
         DevConsole.AddFor(owner, "road", "Lists the game's road plans, or lays one ahead of the player, or widens, builds, paves or takes away the nearest one.", Road, "[place [length=16] [dirt]|width <metres>|build|level|remove]");
@@ -154,6 +155,32 @@ internal static class TerrainCommands
         Keep(area);
         Answer(context, Landscape.Smooth(area, strength), Invariant($"Smoothed {area} by {strength:0.##}"));
     }
+
+    private static void Place(DevCommandContext context)
+    {
+        if (context.Arguments.Count == 0)
+        {
+            var kinds = NaturalObjects.Kinds;
+            context.Print(Invariant($"{kinds.Count} kinds of the world to place:"));
+            foreach (var group in kinds.GroupBy(k => k.Kind)) context.Print($"  {group.Key}: {string.Join(", ", group.Select(k => k.Name))}");
+            return;
+        }
+        string name = context.GetString(0);
+        var kind = NaturalObjects.FindKind(name) ?? throw new DevCommandException($"No kind '{name}' to place: 'place' lists them.");
+        float scale = context.GetFloat(1, 1f);
+        if (!(scale > 0 && scale <= NaturalObjects.MaximumScale)) throw new DevCommandException(Invariant($"A scale is over 0 and at most {NaturalObjects.MaximumScale}."));
+        var (position, forward) = Player();
+        float fl = MathF.Sqrt(forward.x * forward.x + forward.z * forward.z);
+        Vector3 at = default;
+        at.x = position.x + (fl > 0 ? forward.x / fl : 0) * PlaceAhead;
+        at.z = position.z + (fl > 0 ? forward.z / fl : 1) * PlaceAhead;
+        var placed = NaturalObjects.Place(kind.Name, at, 0f, scale);
+        if (placed == null) context.Error("Nothing placed (see the log).");
+        else context.Print($"Placed {placed}.");
+    }
+
+    /// <summary>How far ahead of the player the console's <c>place</c> places, in metres.</summary>
+    public const float PlaceAhead = 4f;
 
     private static void Objects(DevCommandContext context)
     {
