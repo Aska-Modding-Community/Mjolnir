@@ -186,7 +186,8 @@ internal interface IRoadPlanView
     /// <summary>What it lays: a road, or dirt for the levelling plan.</summary>
     GroundKind Kind { get; }
 
-    float Width { get; }
+    /// <summary>The strip each section levels, in metres; set, it is this machine's width for the plan until the game closes.</summary>
+    float Width { get; set; }
 
     int Sections { get; }
 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using HarmonyLib;
 using SandSailorStudio;
 using SSSGame;
 using SSSGame.Network;
@@ -20,6 +21,27 @@ internal static class GameRoads
 
     private static SplineStructureTemplate? s_road;
     private static SplineStructureTemplate? s_level;
+
+    /// <summary>
+    /// The widths mods gave plans, by the plan's layout state: the template's own field, half the strip a section levels,
+    /// put in its place while one of that plan's sections is levelled (<see cref="RoadPatches"/>). Holding the state keeps
+    /// its pointer from being given to another object.
+    /// </summary>
+    private static readonly Dictionary<IntPtr, (NetworkStructureSplineLayoutState State, SplineStructureTemplate Template, float Half)> s_widths = [];
+
+    /// <summary>The template's half width to level a plan's section with, where a mod gave the plan its own.</summary>
+    internal static bool TryGetWidth(NetworkStructureSplineLayoutState state, out SplineStructureTemplate template, out float half)
+    {
+        if (s_widths.TryGetValue(state.Pointer, out var entry))
+        {
+            template = entry.Template;
+            half = entry.Half;
+            return true;
+        }
+        template = null!;
+        half = 0;
+        return false;
+    }
 
     /// <summary>Every road plan of the loaded world.</summary>
     public static IReadOnlyList<IRoadPlanView> All()
@@ -114,7 +136,30 @@ internal static class GameRoads
             ? GameTerrain.KindOf(tool.overpaint ? tool.overpaintTerrainType : tool.levelTerrainType)
             : GroundKind.Road;
 
-        public float Width => Owner()?.GetComponentInChildren<StructureSplineLayout>(true)?.SplineWidth ?? 0f;
+        // The strip a section levels is twice the template's width field (the road's 1.75 levels 3.5 m and paves about
+        // 2.5 m, seen in game); a mod's width stands in for it while one of the plan's sections is levelled.
+        public float Width
+        {
+            get
+            {
+                if (State() is { } state && s_widths.TryGetValue(state.Pointer, out var entry)) return entry.Half * 2f;
+                return Template() is { } template ? template.width * 2f : 0f;
+            }
+            set
+            {
+                var state = State();
+                var template = Template();
+                if (state == null || template == null) return;
+                var dead = new List<IntPtr>();
+                foreach (var (pointer, entry) in s_widths)
+                    if (entry.State == null) dead.Add(pointer);
+                foreach (var pointer in dead) s_widths.Remove(pointer);
+                s_widths[state.Pointer] = (state, template, value / 2f);
+            }
+        }
+
+        private SplineStructureTemplate? Template() =>
+            Owner()?.GetComponentInChildren<StructureSplineLayout>(true)?.GetStructureTemplate()?.TryCast<SplineStructureTemplate>();
 
         public int Sections => IsGone ? 0 : spline.GetCellsCount();
 
@@ -180,5 +225,33 @@ internal static class GameRoads
             _taken = true;
             return true;
         }
+    }
+}
+
+/// <summary>
+/// A plan's own width: while one of its sections is levelled (by the SDK or a villager), its template's width is the one
+/// a mod gave it, and the template's own comes back after. The method is the game's own (its code is shared with no other).
+/// </summary>
+[HarmonyPatch]
+internal static class RoadPatches
+{
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(TerraformingSplineInteraction), nameof(TerraformingSplineInteraction.LevelSection))]
+    private static void Widen(TerraformingSplineInteraction __instance, out float __state)
+    {
+        __state = float.NaN;
+        var state = __instance.splineLayoutState;
+        if (state == null || !GameRoads.TryGetWidth(state, out var template, out float half)) return;
+        __state = template.width;
+        template.width = half;
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(TerraformingSplineInteraction), nameof(TerraformingSplineInteraction.LevelSection))]
+    private static void Restore(TerraformingSplineInteraction __instance, float __state)
+    {
+        if (float.IsNaN(__state)) return;
+        var state = __instance.splineLayoutState;
+        if (state != null && GameRoads.TryGetWidth(state, out var template, out _)) template.width = __state;
     }
 }

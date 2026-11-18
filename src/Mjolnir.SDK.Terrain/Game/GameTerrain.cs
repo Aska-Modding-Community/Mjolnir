@@ -55,6 +55,14 @@ internal sealed class GameTerrain : ITerrainSource
             }
             catch (Exception e)
             {
+                SdkLog.Warn(Landscape.Platform, $"Road plans keep the game's width: their patch failed: {e.Message}");
+            }
+            try
+            {
+                patched += s_harmony.CreateClassProcessor(typeof(RoadPatches)).Patch()?.Count ?? 0;
+            }
+            catch (Exception e)
+            {
                 SdkLog.Warn(Landscape.Platform, $"Harvesting gives the player what the game gives: its patches failed: {e.Message}");
             }
             TerrainCommands.Register();

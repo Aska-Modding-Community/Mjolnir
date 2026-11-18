@@ -56,6 +56,35 @@ public sealed class RoadsTests : IDisposable
     }
 
     [Fact]
+    public void APlanTakesAWidthOfItsOwn()
+    {
+        var plan = RoadPlans.Place([V(0, 0, 10), V(10, 0, 10)])!;
+        Assert.Equal(3.5f, plan.Width); // the game's road
+        var wide = RoadPlans.Place([V(0, 0, 20), V(10, 0, 20)], width: 8f)!;
+        Assert.Equal(8f, wide.Width);
+        plan.Width = 12f;
+        Assert.Equal(12f, plan.Width);
+        Assert.Throws<ArgumentOutOfRangeException>(() => plan.Width = RoadPlans.MaximumWidth + 1);
+        Assert.Throws<ArgumentOutOfRangeException>(() => plan.Width = 0.5f);
+        Assert.Throws<ArgumentOutOfRangeException>(() => plan.Width = float.NaN);
+        Assert.Throws<ArgumentOutOfRangeException>(() => RoadPlans.Place([V(0, 0, 30), V(10, 0, 30)], width: 40f));
+        Assert.Equal(12f, plan.Width);
+
+        // Set off the main thread, it is applied on the main thread's next frame.
+        Dispatcher.Tick(); // this thread is the main one now
+        var thread = new System.Threading.Thread(() => plan.Width = 6f);
+        thread.Start();
+        thread.Join();
+        Dispatcher.Tick();
+        Assert.Equal(6f, plan.Width);
+
+        DevConsole.Execute("road width 9");
+        Assert.Contains(Lines(), l => l.EndsWith("levels 9 m now.", StringComparison.Ordinal));
+        DevConsole.Execute("road width 99");
+        Assert.Contains(DevConsole.Lines, l => l.Kind == ConsoleLineKind.Error && l.Text.Contains("A width is from", StringComparison.Ordinal));
+    }
+
+    [Fact]
     public void APlanTheGameWillNotTakeIsRefused()
     {
         Assert.Throws<ArgumentOutOfRangeException>(() => RoadPlans.Place([V(0, 0, 0)]));
@@ -184,7 +213,7 @@ internal sealed class FakeRoadPlan : IRoadPlanView
 
     public GroundKind Kind { get; }
 
-    public float Width => 1.75f;
+    public float Width { get; set; } = 3.5f;
 
     public int Sections => IsGone ? 0 : _done.Length;
 

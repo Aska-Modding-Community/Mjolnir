@@ -26,6 +26,9 @@ must be rebuilt.
 - Stones and changes of the ground with their loot: `Harvest` takes the game's stone clumps too. `LandscapeObjects.Harvest`
   takes every natural object a change of the ground reaches with its loot (harvested, gathered by hand, or cleared
   where it gives nothing), the loot falling on the new ground; `LandscapeOptions.Harvesting` says who strikes.
+- Wide roads: `RoadPlan.Width` and `RoadPlans.Place(…, width)` give a road plan a strip of its own, 1 to 16 m (the
+  game's road levels 3.5 m), on this machine until the game closes: the game keeps no width per plan. The console's
+  `road width`.
 
 ## 0.4.4 — 2026-11-17
 

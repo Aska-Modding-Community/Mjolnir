@@ -42,7 +42,7 @@ internal static class TerrainCommands
         DevConsole.AddFor(owner, "biome", "Lists the biomes here, or gives a square in front of the player one of them.", Biome, "[name|number] [size=8]");
         DevConsole.AddFor(owner, "objects", "Lists the trees, stones and plants of the world round the player, clears them, or harvests them with their loot.", Objects, "[radius=8] [name] | clear [radius=4] | harvest [radius=4] [player]");
         DevConsole.AddFor(owner, "field", "Lists the game's levelling fields, or places, levels, finishes or takes away the nearest one.", Field, "[place [size=8]|level|finish|remove]");
-        DevConsole.AddFor(owner, "road", "Lists the game's road plans, or lays one ahead of the player, or builds, paves or takes away the nearest one.", Road, "[place [length=16] [dirt]|build|level|remove]");
+        DevConsole.AddFor(owner, "road", "Lists the game's road plans, or lays one ahead of the player, or widens, builds, paves or takes away the nearest one.", Road, "[place [length=16] [dirt]|width <metres>|build|level|remove]");
         DevConsole.AddFor(owner, "protect", "Protects a square in front of the player from the player's tools, the villagers and other mods, or lists or ends the console's zones.", Protect, "[size=8|list|clear]");
         DevConsole.AddFor(owner, "undo", "Puts back the ground the console's last change changed.", Undo);
     }
@@ -285,10 +285,17 @@ internal static class TerrainCommands
             foreach (var one in all.Take(ListedObjects)) context.Print($"  {one}");
             return;
         }
-        if (what is not ("build" or "level" or "remove")) throw new DevCommandException($"'{what}' is nothing a road plan does: place, build, level or remove.");
+        if (what is not ("width" or "build" or "level" or "remove")) throw new DevCommandException($"'{what}' is nothing a road plan does: place, width, build, level or remove.");
         var plan = RoadPlans.Nearest(position, 32f) ?? throw new DevCommandException("No road plan within 32 m.");
         switch (what)
         {
+            case "width":
+                if (context.Arguments.Count < 2) throw new DevCommandException(Invariant($"Give the width, from {RoadPlans.MinimumWidth} to {RoadPlans.MaximumWidth} m."));
+                float width = context.GetFloat(1, 0f);
+                if (!(width >= RoadPlans.MinimumWidth && width <= RoadPlans.MaximumWidth)) throw new DevCommandException(Invariant($"A width is from {RoadPlans.MinimumWidth} to {RoadPlans.MaximumWidth} m."));
+                plan.Width = width;
+                context.Print(Invariant($"The {plan} levels {plan.Width:0.#} m now."));
+                break;
             case "build":
                 context.Print(plan.Build() ? $"Built the {plan}." : "The road plan could not be built (see the log).");
                 break;

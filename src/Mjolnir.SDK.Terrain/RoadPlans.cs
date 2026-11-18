@@ -29,6 +29,12 @@ public static class RoadPlans
     /// <summary>The metres of line each section of a plan covers, as the game cuts it.</summary>
     public const float SectionLength = 2f;
 
+    /// <summary>The narrowest strip a plan of a mod's width levels (<see cref="RoadPlan.Width"/>), in metres.</summary>
+    public const float MinimumWidth = 1f;
+
+    /// <summary>The widest strip a plan of a mod's width levels (<see cref="RoadPlan.Width"/>), in metres.</summary>
+    public const float MaximumWidth = 16f;
+
     /// <summary>The road plans of the loaded world.</summary>
     public static IReadOnlyList<RoadPlan> All
     {
@@ -78,14 +84,17 @@ public static class RoadPlans
     /// used), together at most <see cref="MaximumSections"/> × <see cref="SectionLength"/> metres long.</param>
     /// <param name="kind">What it lays: <see cref="GroundKind.Road"/> (the default), or <see cref="GroundKind.Dirt"/> for the
     /// game's levelling plan along a line, which levels the strip and leaves it bare earth.</param>
+    /// <param name="width">How wide a strip its sections level, from <see cref="MinimumWidth"/> to
+    /// <see cref="MaximumWidth"/> metres (<see cref="RoadPlan.Width"/>); 0 (the default) for the game's own.</param>
     /// <returns>The plan, or null where the world will not take one (logged).</returns>
     /// <exception cref="ArgumentNullException"><paramref name="points"/> is null.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Too few or too many points, one not a point of the world, two at one
-    /// place, a line too long, or a kind that is neither a road nor dirt.</exception>
+    /// place, a line too long, a kind that is neither a road nor dirt, or a width out of its range.</exception>
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public static RoadPlan? Place(IEnumerable<Vector3> points, GroundKind kind = GroundKind.Road)
+    public static RoadPlan? Place(IEnumerable<Vector3> points, GroundKind kind = GroundKind.Road, float width = 0f)
     {
         ArgumentNullException.ThrowIfNull(points);
+        if (width != 0f) RoadPlan.CheckWidth(width, nameof(width));
         var list = points.ToArray();
         if (list.Length < 2 || list.Length > MaximumPoints) throw new ArgumentOutOfRangeException(nameof(points), list.Length, $"A road plan has 2 to {MaximumPoints} points.");
         if (kind is not (GroundKind.Road or GroundKind.Dirt)) throw new ArgumentOutOfRangeException(nameof(kind), kind, "A road plan lays a road, or levels a strip of dirt.");
@@ -110,6 +119,7 @@ public static class RoadPlans
         {
             var placed = source.PlaceRoadPlan(list, kind);
             if (placed == null) return null;
+            if (width != 0f) placed.Width = width;
             SdkLog.Info(Landscape.Platform, FormattableString.Invariant($"{modId} laid a {kind.ToString().ToLowerInvariant()} plan of {list.Length} points, {length:0.#} m"));
             return new RoadPlan(placed);
         }
@@ -138,8 +148,43 @@ public sealed class RoadPlan
     /// <summary>What it lays: <see cref="GroundKind.Road"/>, or <see cref="GroundKind.Dirt"/> for a levelling plan.</summary>
     public GroundKind Kind => Read(() => _plan.Kind, GroundKind.Road);
 
-    /// <summary>How wide the road it lays is, in metres.</summary>
-    public float Width => Read(() => _plan.Width, 0f);
+    /// <summary>
+    /// How wide a strip each of its sections levels, in metres: the game's road levels 3.5 m and paves about a metre less
+    /// in its middle. Set, it is the plan's width on this machine, whoever levels a section here — <see cref="LevelNow"/> or
+    /// the villagers — from <see cref="RoadPlans.MinimumWidth"/> to <see cref="RoadPlans.MaximumWidth"/>. The game keeps
+    /// no width of its own for a plan, so it is not saved and not sent: once the world is loaded again, or on another
+    /// player's machine, the plan levels the game's width until it is set again; the ground already paved stays as it is.
+    /// Set off the main thread, it is applied on the main thread's next frame; 0 is read there and once it is gone.
+    /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException">A width out of its range.</exception>
+    public float Width
+    {
+        get => Read(() => _plan.Width, 0f);
+        set
+        {
+            CheckWidth(value, nameof(value));
+            if (Landscape.IsMainThread) ApplyWidth(value);
+            else Mjolnir.SDK.Threading.Dispatcher.MainThread.Post(() => ApplyWidth(value));
+        }
+    }
+
+    internal static void CheckWidth(float width, string name)
+    {
+        if (!(width >= RoadPlans.MinimumWidth && width <= RoadPlans.MaximumWidth))
+            throw new ArgumentOutOfRangeException(name, width, FormattableString.Invariant($"A road plan's width is from {RoadPlans.MinimumWidth} to {RoadPlans.MaximumWidth} m."));
+    }
+
+    private void ApplyWidth(float width)
+    {
+        try
+        {
+            if (!_plan.IsGone) _plan.Width = width;
+        }
+        catch (Exception e)
+        {
+            SdkLog.Warn(Landscape.Platform, $"The {this} could not be made {width} m wide: {e.Message}");
+        }
+    }
 
     /// <summary>How many sections it has, each <see cref="RoadPlans.SectionLength"/> metres of its line.</summary>
     public int Sections => Read(() => _plan.Sections, 0);
