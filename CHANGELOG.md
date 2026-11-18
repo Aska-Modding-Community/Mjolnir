@@ -3,7 +3,7 @@
 The platform has one version for the loader, the SDK and its modules. Mods built against an earlier minor version
 must be rebuilt.
 
-## Unreleased
+## 0.4.5 — 2026-11-18
 
 ### Added
 
@@ -47,6 +47,8 @@ must be rebuilt.
   world is left or its mod is disabled (`Ended`); hotkeys and mod windows still work. `MouseInput` reads the mouse:
   `Position`, `IsPressed`/`WasPressed`/`WasReleased(MouseButton)`, `Wheel` in notches and `IsOverInterface`;
   `KeyboardInput` the keys held, pressed and released by name, the modifiers held and whether the player types.
+
+0.4.0's to 0.4.4's mods work unchanged: nothing was taken out of the API.
 
 ## 0.4.4 — 2026-11-17
 

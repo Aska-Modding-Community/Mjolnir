@@ -58,6 +58,12 @@ Mjolnir.SDK.UI.Controls
 Mjolnir.SDK.UI.Controls.Add(System.Collections.Generic.IEnumerable<Mjolnir.SDK.UI.Control?>? elements) -> void
 Mjolnir.SDK.UI.Controls.AddRange(System.Collections.Generic.IEnumerable<Mjolnir.SDK.UI.Control?>! elements) -> void
 Mjolnir.SDK.UI.Controls.Move(int oldIndex, int newIndex) -> void
+Mjolnir.SDK.UI.ControlsCapture
+Mjolnir.SDK.UI.ControlsCapture.Dispose() -> void
+Mjolnir.SDK.UI.ControlsCapture.Ended -> System.EventHandler?
+Mjolnir.SDK.UI.ControlsCapture.IsActive.get -> bool
+Mjolnir.SDK.UI.ControlsCapture.ShowsCursor.get -> bool
+Mjolnir.SDK.UI.ControlsCapture.ShowsCursor.set -> void
 Mjolnir.SDK.UI.Dialog
 Mjolnir.SDK.UI.Dock
 Mjolnir.SDK.UI.Dock.Bottom = 1 -> Mjolnir.SDK.UI.Dock
@@ -99,6 +105,7 @@ Mjolnir.SDK.UI.IDataTemplate
 Mjolnir.SDK.UI.IDataTemplate.Build(object? data) -> Mjolnir.SDK.UI.Control?
 Mjolnir.SDK.UI.IDataTemplate.Match(object? data) -> bool
 Mjolnir.SDK.UI.InterfaceScale
+Mjolnir.SDK.UI.KeyboardInput
 Mjolnir.SDK.UI.LoadedEventArgs
 Mjolnir.SDK.UI.LoadedEventArgs.LoadedEventArgs(UnityEngine.RectTransform! rectTransform) -> void
 Mjolnir.SDK.UI.LoadedEventArgs.RectTransform.get -> UnityEngine.RectTransform!
@@ -142,12 +149,18 @@ Mjolnir.SDK.UI.MjolnirPropertyChangedEventArgs<T>
 Mjolnir.SDK.UI.MjolnirPropertyChangedEventArgs<T>.NewValue.get -> T
 Mjolnir.SDK.UI.MjolnirPropertyChangedEventArgs<T>.OldValue.get -> T
 Mjolnir.SDK.UI.MjolnirPropertyChangedEventArgs<T>.Property.get -> Mjolnir.SDK.UI.MjolnirProperty<T>!
+Mjolnir.SDK.UI.MouseButton
+Mjolnir.SDK.UI.MouseButton.Left = 0 -> Mjolnir.SDK.UI.MouseButton
+Mjolnir.SDK.UI.MouseButton.Middle = 2 -> Mjolnir.SDK.UI.MouseButton
+Mjolnir.SDK.UI.MouseButton.Right = 1 -> Mjolnir.SDK.UI.MouseButton
+Mjolnir.SDK.UI.MouseInput
 Mjolnir.SDK.UI.Notify
 Mjolnir.SDK.UI.Orientation
 Mjolnir.SDK.UI.Orientation.Horizontal = 1 -> Mjolnir.SDK.UI.Orientation
 Mjolnir.SDK.UI.Orientation.Vertical = 0 -> Mjolnir.SDK.UI.Orientation
 Mjolnir.SDK.UI.Panel
 Mjolnir.SDK.UI.Panel.Children.get -> Mjolnir.SDK.UI.Controls!
+Mjolnir.SDK.UI.PlayerControls
 Mjolnir.SDK.UI.ProgressBase
 Mjolnir.SDK.UI.ProgressBase.Foreground.get -> UnityEngine.Color?
 Mjolnir.SDK.UI.ProgressBase.Foreground.set -> void
@@ -497,6 +510,7 @@ const Mjolnir.SDK.UI.InterfaceScale.Minimum = 0.75 -> double
 override Mjolnir.SDK.UI.BindableValue<T>.ToString() -> string!
 override Mjolnir.SDK.UI.Bitmap.ToString() -> string!
 override Mjolnir.SDK.UI.Control.ToString() -> string!
+override Mjolnir.SDK.UI.ControlsCapture.ToString() -> string!
 override Mjolnir.SDK.UI.HeaderedControl.ToString() -> string!
 override Mjolnir.SDK.UI.MjolnirProperty.ToString() -> string!
 override Mjolnir.SDK.UI.Thickness.Equals(object? obj) -> bool
@@ -547,15 +561,30 @@ static Mjolnir.SDK.UI.Hud.Remove(Mjolnir.SDK.UI.Control! element) -> bool
 static Mjolnir.SDK.UI.Hud.Root.get -> UnityEngine.RectTransform?
 static Mjolnir.SDK.UI.InterfaceScale.Hud.get -> Mjolnir.SDK.IBindable<double>!
 static Mjolnir.SDK.UI.InterfaceScale.Menus.get -> Mjolnir.SDK.IBindable<double>!
+static Mjolnir.SDK.UI.KeyboardInput.IsAvailable.get -> bool
+static Mjolnir.SDK.UI.KeyboardInput.IsPressed(string! key) -> bool
+static Mjolnir.SDK.UI.KeyboardInput.IsTyping.get -> bool
+static Mjolnir.SDK.UI.KeyboardInput.Modifiers.get -> Mjolnir.SDK.KeyModifiers
+static Mjolnir.SDK.UI.KeyboardInput.WasPressed(string! key) -> bool
+static Mjolnir.SDK.UI.KeyboardInput.WasReleased(string! key) -> bool
 static Mjolnir.SDK.UI.Menus.Journal.get -> Mjolnir.SDK.UI.MenuTabs!
 static Mjolnir.SDK.UI.Menus.Main.get -> Mjolnir.SDK.UI.MenuButtons!
 static Mjolnir.SDK.UI.Menus.Pause.get -> Mjolnir.SDK.UI.MenuButtons!
 static Mjolnir.SDK.UI.Menus.Settings.get -> Mjolnir.SDK.UI.MenuTabs!
 static Mjolnir.SDK.UI.MjolnirProperty.Register<TOwner, T>(string! name, T defaultValue = default(T), Mjolnir.SDK.UI.BindingMode defaultBindingMode = Mjolnir.SDK.UI.BindingMode.OneWay) -> Mjolnir.SDK.UI.MjolnirProperty<T>!
+static Mjolnir.SDK.UI.MouseInput.IsAvailable.get -> bool
+static Mjolnir.SDK.UI.MouseInput.IsOverInterface.get -> bool
+static Mjolnir.SDK.UI.MouseInput.IsPressed(Mjolnir.SDK.UI.MouseButton button) -> bool
+static Mjolnir.SDK.UI.MouseInput.Position.get -> UnityEngine.Vector2
+static Mjolnir.SDK.UI.MouseInput.WasPressed(Mjolnir.SDK.UI.MouseButton button) -> bool
+static Mjolnir.SDK.UI.MouseInput.WasReleased(Mjolnir.SDK.UI.MouseButton button) -> bool
+static Mjolnir.SDK.UI.MouseInput.Wheel.get -> float
 static Mjolnir.SDK.UI.Notify.Banner(string! title, string! text, float seconds = 3) -> void
 static Mjolnir.SDK.UI.Notify.Counter(string! key, string! text, double amount, Mjolnir.SDK.UI.Bitmap? icon = null) -> void
 static Mjolnir.SDK.UI.Notify.Message(string! text) -> void
 static Mjolnir.SDK.UI.Notify.Message(string! text, Mjolnir.SDK.UI.Bitmap? icon) -> void
+static Mjolnir.SDK.UI.PlayerControls.Capture(bool showCursor = true) -> Mjolnir.SDK.UI.ControlsCapture!
+static Mjolnir.SDK.UI.PlayerControls.IsCaptured.get -> bool
 static Mjolnir.SDK.UI.SettingControls.For<T>(Mjolnir.SDK.Config.ConfigEntry<T>! entry) -> Mjolnir.SDK.UI.HeaderedControl!
 static Mjolnir.SDK.UI.Thickness.operator !=(Mjolnir.SDK.UI.Thickness a, Mjolnir.SDK.UI.Thickness b) -> bool
 static Mjolnir.SDK.UI.Thickness.operator ==(Mjolnir.SDK.UI.Thickness a, Mjolnir.SDK.UI.Thickness b) -> bool
