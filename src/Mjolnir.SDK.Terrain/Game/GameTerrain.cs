@@ -496,6 +496,8 @@ internal sealed class GameTerrain : ITerrainSource
 
     public IRoadPlanView? PlaceRoadPlan(IReadOnlyList<Vector3> points, GroundKind kind, float width) => GameRoads.Place(points, kind, width);
 
+    public (IReadOnlyList<Vector3> Samples, int Sections)? RoadLine(IReadOnlyList<Vector3> points, GroundKind kind) => GameRoads.Line(points, kind);
+
     // As the game's tool writes its own change: the data filled from the ground, the samples set and marked, the removable
     // objects taken, the data sent to the other players, then applied (the game's routine, the events through the patch).
     public LandscapeResult Write(LandscapeSamples samples, in GroundWrite write)
@@ -591,30 +593,31 @@ internal sealed class GameTerrain : ITerrainSource
         return fits;
     }
 
-    // Ground put back as it was (a snapshot: an undo, a redo), exactly: two rows of samples at a time, each pair in data of
-    // its own two rows deep, which the game's blur leaves alone (it blurs only the samples inside a square's edge). Heights,
-    // kinds and marks as kept; the biomes go with the whole square.
+    // Ground put back as it was (a snapshot: an undo, a redo), exactly: a row of samples at a time, each in data of its own
+    // two rows deep (the row before it, then the row), which the game's blur leaves alone (it blurs only the samples inside a
+    // square's edge). The row put back is the strip's second: a row the strip starts on is applied to the world's tiles from
+    // that row on only, so on a tile's edge the tile before kept its old edge and the ground showed a crack (seen in game,
+    // light through the ground along x = −192 and z = 256 after an undo there). Heights, kinds and marks as kept; the biomes go
+    // with the whole square.
     private void PutBack(LandscapeSamples samples, TerrainToolData square, LandscapeOperation operation)
     {
         int n = samples.Size;
-        for (int r0 = 0; r0 < n; r0 += 2)
+        for (int row = 0; row < n; row++)
         {
-            int first = Math.Min(r0, n - 2);
             bool any = false;
-            for (int r = first; r < first + 2 && !any; r++)
-                for (int c = 0; c < n && !any; c++)
-                    any = samples.Touched[samples.Index(r, c)];
+            for (int c = 0; c < n && !any; c++)
+                any = samples.Touched[samples.Index(row, c)];
             if (!any) continue;
+            int first = Math.Max(0, row - 1);
             var strip = Strip(square, samples, first);
-            for (int r = 0; r < 2; r++)
-                for (int c = 0; c < n; c++)
-                {
-                    int i = samples.Index(first + r, c);
-                    if (!samples.Touched[i]) continue;
-                    strip.SetFullHeightmap(r, c, _surface!.GetNormalizedHeight(Math.Clamp(samples.Heights[i], 0f, Landscape.MaximumHeight)));
-                    strip.SetTerraformingFlags(r, c, samples.Flags[i]);
-                    strip.SetModified(r, c, Targets);
-                }
+            for (int c = 0; c < n; c++)
+            {
+                int i = samples.Index(row, c);
+                if (!samples.Touched[i]) continue;
+                strip.SetFullHeightmap(row - first, c, _surface!.GetNormalizedHeight(Math.Clamp(samples.Heights[i], 0f, Landscape.MaximumHeight)));
+                strip.SetTerraformingFlags(row - first, c, samples.Flags[i]);
+                strip.SetModified(row - first, c, Targets);
+            }
             Send(strip, operation);
         }
     }

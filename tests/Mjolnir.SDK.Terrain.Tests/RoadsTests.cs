@@ -56,6 +56,27 @@ public sealed class RoadsTests : IDisposable
     }
 
     [Fact]
+    public void ALineIsDrawnWithoutLayingAPlan()
+    {
+        var line = RoadPlans.Line([V(0, 99, 10), V(10, 99, 10), V(20, 0, 14)]);
+        Assert.NotNull(line);
+        Assert.Equal(FakeTerrain.Ground(10), line.Samples[10].y, 3); // on the ground, whatever y was given
+        Assert.Equal(20.77f, line.Length, 1);
+        Assert.Equal(11, line.Sections);
+        Assert.True(line.Fits);
+        Assert.Empty(RoadPlans.All); // nothing laid
+
+        var tooLong = RoadPlans.Line([V(-100, 0, 10), V(0, 0, 60), V(100, 0, 10)])!;
+        Assert.False(tooLong.Fits); // over 192 m: drawn, but no plan may run along it
+        Assert.True(tooLong.Sections > RoadPlans.MaximumSections);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => RoadPlans.Line([V(0, 0, 10)]));
+        Assert.Throws<ArgumentOutOfRangeException>(() => RoadPlans.Line([V(0, 0, 10), V(0.2f, 0, 10)]));
+        Assert.Throws<ArgumentOutOfRangeException>(() => RoadPlans.Line([V(0, 0, 10), V(9, 0, 10)], GroundKind.Path));
+        Assert.Null(RoadPlans.Line([V(0, 0, 10), V(150, 0, 10)])); // a point out of the loaded ground
+    }
+
+    [Fact]
     public void APlanTakesAWidthOfItsOwn()
     {
         var plan = RoadPlans.Place([V(0, 0, 10), V(10, 0, 10)])!;

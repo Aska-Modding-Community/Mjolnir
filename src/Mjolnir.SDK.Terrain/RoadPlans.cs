@@ -78,6 +78,59 @@ public static class RoadPlans
     }
 
     /// <summary>
+    /// The line a road plan through <paramref name="points"/> would run along, as the game lays it, without laying one: for
+    /// a preview of a road being planned. Its samples lie on the game's own spline through the points on the ground, each at
+    /// the height its sections level the road to; a line longer than a plan may be (<see cref="MaximumSections"/>) is
+    /// given too, with its <see cref="RoadLine.Sections"/> telling so. Main thread; elsewhere, outside a world, and where a
+    /// point is not loaded, null.
+    /// </summary>
+    /// <param name="points">Where it runs: 2 to <see cref="MaximumPoints"/> points of the world (their y is not used).</param>
+    /// <param name="kind">What it lays, as for <see cref="Place"/>.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="points"/> is null.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Too few or too many points, one not a point of the world, two at one
+    /// place, or a kind that is neither a road nor dirt.</exception>
+    public static RoadLine? Line(IEnumerable<Vector3> points, GroundKind kind = GroundKind.Road)
+    {
+        ArgumentNullException.ThrowIfNull(points);
+        var list = Checked(points, kind, out float length);
+        if (!Landscape.IsMainThread || Landscape.LiveSource() is not { } source) return null;
+        for (int i = 0; i < list.Length; i++)
+        {
+            if (!source.IsLoaded(list[i].x, list[i].z)) return null;
+            source.TryGetHeight(list[i].x, list[i].z, out list[i].y);
+        }
+        try
+        {
+            if (source.RoadLine(list, kind) is not var (samples, sections) || samples.Count < 2) return null;
+            return new RoadLine(samples, sections, length);
+        }
+        catch (Exception e)
+        {
+            SdkLog.Warn(Landscape.Platform, $"A road's line could not be drawn: {e.Message}");
+            return null;
+        }
+    }
+
+    // The points of a plan as given, checked: how many, each a point of the world, none at another's place; and how long
+    // the line through them is, point to point.
+    private static Vector3[] Checked(IEnumerable<Vector3> points, GroundKind kind, out float length)
+    {
+        var list = points.ToArray();
+        if (list.Length < 2 || list.Length > MaximumPoints) throw new ArgumentOutOfRangeException(nameof(points), list.Length, $"A road plan has 2 to {MaximumPoints} points.");
+        if (kind is not (GroundKind.Road or GroundKind.Dirt)) throw new ArgumentOutOfRangeException(nameof(kind), kind, "A road plan lays a road, or levels a strip of dirt.");
+        length = 0;
+        for (int i = 0; i < list.Length; i++)
+        {
+            if (!float.IsFinite(list[i].x) || !float.IsFinite(list[i].z)) throw new ArgumentOutOfRangeException(nameof(points), "A point is a point of the world.");
+            if (i == 0) continue;
+            float dx = list[i].x - list[i - 1].x, dz = list[i].z - list[i - 1].z, step = MathF.Sqrt(dx * dx + dz * dz);
+            if (step < SectionLength / 2) throw new ArgumentOutOfRangeException(nameof(points), "Two points of a road plan stand at one place.");
+            length += step;
+        }
+        return list;
+    }
+
+    /// <summary>
     /// Lays a road plan along <paramref name="points"/>, as a player sets one down with the road maker: the villagers then
     /// bring what it needs, level its sections and pave them, and the game saves it and tells the other players. The line
     /// runs smoothly through the points on the ground; the game's own checks of the road maker (its turns, its slope, the
@@ -98,18 +151,7 @@ public static class RoadPlans
     {
         ArgumentNullException.ThrowIfNull(points);
         if (width != 0f) RoadPlan.CheckWidth(width, nameof(width));
-        var list = points.ToArray();
-        if (list.Length < 2 || list.Length > MaximumPoints) throw new ArgumentOutOfRangeException(nameof(points), list.Length, $"A road plan has 2 to {MaximumPoints} points.");
-        if (kind is not (GroundKind.Road or GroundKind.Dirt)) throw new ArgumentOutOfRangeException(nameof(kind), kind, "A road plan lays a road, or levels a strip of dirt.");
-        float length = 0;
-        for (int i = 0; i < list.Length; i++)
-        {
-            if (!float.IsFinite(list[i].x) || !float.IsFinite(list[i].z)) throw new ArgumentOutOfRangeException(nameof(points), "A point is a point of the world.");
-            if (i == 0) continue;
-            float dx = list[i].x - list[i - 1].x, dz = list[i].z - list[i - 1].z, step = MathF.Sqrt(dx * dx + dz * dz);
-            if (step < SectionLength / 2) throw new ArgumentOutOfRangeException(nameof(points), "Two points of a road plan stand at one place.");
-            length += step;
-        }
+        var list = Checked(points, kind, out float length);
         if (length > MaximumSections * SectionLength) throw new ArgumentOutOfRangeException(nameof(points), length, $"A road plan is at most {MaximumSections * SectionLength} m long.");
         string modId = Landscape.Owner(CallingMod.Of(Assembly.GetCallingAssembly()));
         if (Landscape.LiveSource() is not { } source) return null;
@@ -276,4 +318,36 @@ public sealed class RoadPlan
             return none;
         }
     }
+}
+
+/// <summary>
+/// The line a road plan would run along (<see cref="RoadPlans.Line"/>): the game's spline through its points, sampled as
+/// the game samples it. Read once; it does not follow the ground.
+/// </summary>
+public sealed class RoadLine
+{
+    internal RoadLine(IReadOnlyList<Vector3> samples, int sections, float pointsLength)
+    {
+        Samples = samples;
+        Sections = sections;
+        float length = 0;
+        for (int i = 1; i < samples.Count; i++)
+        {
+            float dx = samples[i].x - samples[i - 1].x, dz = samples[i].z - samples[i - 1].z;
+            length += MathF.Sqrt(dx * dx + dz * dz);
+        }
+        Length = samples.Count > 1 ? length : pointsLength;
+    }
+
+    /// <summary>Its samples from the first point to the last, each at the height the road is levelled to there.</summary>
+    public IReadOnlyList<Vector3> Samples { get; }
+
+    /// <summary>How many sections the game cuts it in; over <see cref="RoadPlans.MaximumSections"/>, too long for a plan.</summary>
+    public int Sections { get; }
+
+    /// <summary>How long it is along the ground, in metres.</summary>
+    public float Length { get; }
+
+    /// <summary>Whether a plan may run along it: not cut in more sections than a plan keeps.</summary>
+    public bool Fits => Sections <= RoadPlans.MaximumSections;
 }

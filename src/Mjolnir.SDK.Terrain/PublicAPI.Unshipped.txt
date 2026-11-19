@@ -14,7 +14,13 @@ Mjolnir.SDK.Terrain.LandscapeOptions.KeepOffLandmarks.init -> void
 Mjolnir.SDK.Terrain.LandscapeOptions.ObstacleMode.get -> Mjolnir.SDK.Terrain.LandscapeObstacleMode
 Mjolnir.SDK.Terrain.LandscapeOptions.ObstacleMode.init -> void
 Mjolnir.SDK.Terrain.LandscapeResult.Partial = 10 -> Mjolnir.SDK.Terrain.LandscapeResult
+Mjolnir.SDK.Terrain.RoadLine
+Mjolnir.SDK.Terrain.RoadLine.Fits.get -> bool
+Mjolnir.SDK.Terrain.RoadLine.Length.get -> float
+Mjolnir.SDK.Terrain.RoadLine.Samples.get -> System.Collections.Generic.IReadOnlyList<UnityEngine.Vector3>!
+Mjolnir.SDK.Terrain.RoadLine.Sections.get -> int
 override Mjolnir.SDK.Terrain.LandscapeObstacles.ToString() -> string!
 static Mjolnir.SDK.Terrain.Landscape.Check(Mjolnir.SDK.Terrain.LandscapeArea area, Mjolnir.SDK.Terrain.LandscapeOperation operation, Mjolnir.SDK.Terrain.LandscapeOptions! options) -> Mjolnir.SDK.Terrain.LandscapeResult
 static Mjolnir.SDK.Terrain.Landscape.ObstaclesIn(Mjolnir.SDK.Terrain.LandscapeArea area, Mjolnir.SDK.Terrain.LandscapeOptions? options = null) -> Mjolnir.SDK.Terrain.LandscapeObstacles!
 static Mjolnir.SDK.Terrain.LandscapeObstacles.None.get -> Mjolnir.SDK.Terrain.LandscapeObstacles!
+static Mjolnir.SDK.Terrain.RoadPlans.Line(System.Collections.Generic.IEnumerable<UnityEngine.Vector3>! points, Mjolnir.SDK.Terrain.GroundKind kind = Mjolnir.SDK.Terrain.GroundKind.Road) -> Mjolnir.SDK.Terrain.RoadLine?

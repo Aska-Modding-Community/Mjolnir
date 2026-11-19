@@ -147,6 +147,20 @@ internal static class GameRoads
         return new GameRoadPlan(spline);
     }
 
+    // The line a plan would run along: the layout's own spline (`StructureSplineLayout.Setup` makes it with the template's
+    // sampling step, 1 m where the template has none, and its section length), through the points on the ground.
+    public static (IReadOnlyList<Vector3> Samples, int Sections)? Line(IReadOnlyList<Vector3> points, GroundKind kind)
+    {
+        if (Template(kind == GroundKind.Dirt ? LevelTemplate : RoadTemplate) is not { } template) return null;
+        float step = template.samplingStep > 0 ? template.samplingStep : 1f;
+        var spline = new SandSailorStudio.Splines.HermiteSplineInterpolator(step, template.sectionLength);
+        foreach (var at in points) spline.AddPoint(at);
+        int count = spline.GetSampleCount();
+        var samples = new Vector3[count];
+        for (int i = 0; i < count; i++) samples[i] = spline.GetSample(i);
+        return (samples, spline.GetSectionCount());
+    }
+
     private static SplineStructureTemplate? Template(string name)
     {
         ref var cached = ref name == RoadTemplate ? ref s_road : ref s_level;

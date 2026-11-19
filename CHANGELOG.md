@@ -15,6 +15,9 @@ must be rebuilt.
   underside, so they neither hang nor sink. Either answers `LandscapeResult.Partial`. `Landscape.ObstaclesIn(area,
   options)` gives what is there (`LandscapeObstacles`: `Names`, `Covers(x, z)`, `HeightAfter(x, z, now, changed)`) for a
   preview, and `Landscape.Check(area, operation, options)` checks a change made with options.
+- `RoadPlans.Line(points, kind)` → `RoadLine` (`Samples`, `Sections`, `Length`, `Fits`): the line a road plan through
+  the points would run along, drawn by the game's own spline without laying a plan, each sample at the height the road
+  is levelled to there — for a preview of a road being planned.
 - `LandscapeOptions.KeepOffLandmarks`: a change of the ground is refused (`Blocked`) where a fixed place of the world
   stands — a den, or the rocks of a place the world was made with. The game cannot move them, and ground dug under a
   wolves' den left its rocks hanging in the air. True by default, like `KeepOffBuildings`.
@@ -42,7 +45,8 @@ must be rebuilt.
   kernel over the change's square), so a snapshot put back left the ground off by up to 0.35 m and every change was
   smoothed a little. `LandscapeSnapshot.Restore` now puts the ground back exactly, in strips the blur does not reach;
   every other change gives the game heights that its blur turns into what was asked (to a few millimetres on the
-  sharpest edges).
+  sharpest edges). A strip puts back its second row only: a row a strip starts on reached only the tiles of the world
+  from that row on, and a tile's edge put back so left a crack in the ground.
 
 ## 0.4.5 — 2026-11-18
 

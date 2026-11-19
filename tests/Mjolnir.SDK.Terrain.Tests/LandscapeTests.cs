@@ -595,6 +595,27 @@ internal sealed class FakeTerrain : ITerrainSource
 
     IReadOnlyList<IRoadPlanView> ITerrainSource.RoadPlans => Roads;
 
+    // A straight line through the points every metre, at the ground's height: the game's spline stands in for itself.
+    public (IReadOnlyList<Vector3> Samples, int Sections)? RoadLine(IReadOnlyList<Vector3> points, GroundKind kind)
+    {
+        var samples = new List<Vector3>();
+        float length = 0;
+        for (int i = 1; i < points.Count; i++)
+        {
+            var a = points[i - 1];
+            var b = points[i];
+            float d = MathF.Sqrt((b.x - a.x) * (b.x - a.x) + (b.z - a.z) * (b.z - a.z));
+            length += d;
+            int steps = Math.Max(1, (int)MathF.Ceiling(d));
+            for (int k = i == 1 ? 0 : 1; k <= steps; k++)
+            {
+                float t = (float)k / steps, x = a.x + (b.x - a.x) * t, z = a.z + (b.z - a.z) * t;
+                samples.Add(LandscapeTests.V(x, Ground(x), z));
+            }
+        }
+        return (samples, (int)MathF.Ceiling(length / RoadPlans.SectionLength));
+    }
+
     public IRoadPlanView? PlaceRoadPlan(IReadOnlyList<Vector3> points, GroundKind kind, float width)
     {
         if (NoRoads) return null;

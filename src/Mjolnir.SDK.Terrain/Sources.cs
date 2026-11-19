@@ -86,6 +86,13 @@ internal interface ITerrainSource
     /// <summary>Lays a road plan of <paramref name="kind"/> through the points (on the ground); null when the game will not take one.</summary>
     IRoadPlanView? PlaceRoadPlan(IReadOnlyList<Vector3> points, GroundKind kind, float width);
 
+    /// <summary>
+    /// The line a plan of <paramref name="kind"/> through the points (on the ground) would run along, as the game draws it:
+    /// its samples (each at the height its sections level to) and how many sections it is cut in; null without the game's
+    /// template.
+    /// </summary>
+    (IReadOnlyList<Vector3> Samples, int Sections)? RoadLine(IReadOnlyList<Vector3> points, GroundKind kind);
+
     /// <summary>Makes the change with the game's tool; the game's patch raises <see cref="Landscape.GroundChanging"/> for it.</summary>
     LandscapeResult Apply(in LandscapeEdit edit);
 
