@@ -62,7 +62,7 @@ public sealed class RoadsTests : IDisposable
         Assert.NotNull(line);
         Assert.Equal(FakeTerrain.Ground(10), line.Samples[10].y, 3); // on the ground, whatever y was given
         Assert.Equal(20.77f, line.Length, 1);
-        Assert.Equal(11, line.Sections);
+        Assert.Equal(10, line.Sections);
         Assert.True(line.Fits);
         Assert.Empty(RoadPlans.All); // nothing laid
 
@@ -74,6 +74,9 @@ public sealed class RoadsTests : IDisposable
         Assert.Throws<ArgumentOutOfRangeException>(() => RoadPlans.Line([V(0, 0, 10), V(0.2f, 0, 10)]));
         Assert.Throws<ArgumentOutOfRangeException>(() => RoadPlans.Line([V(0, 0, 10), V(9, 0, 10)], GroundKind.Path));
         Assert.Null(RoadPlans.Line([V(0, 0, 10), V(150, 0, 10)])); // a point out of the loaded ground
+        Assert.False(RoadPlans.Line([V(0, 0, 10), V(1.5f, 0, 10)])!.Fits); // shorter than a section: cut in none
+        Assert.Throws<ArgumentOutOfRangeException>(() => RoadPlans.Place([V(0, 0, 10), V(1.5f, 0, 10)]));
+        Assert.Empty(RoadPlans.All);
     }
 
     [Fact]

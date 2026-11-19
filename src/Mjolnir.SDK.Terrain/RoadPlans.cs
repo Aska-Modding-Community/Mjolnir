@@ -137,7 +137,8 @@ public static class RoadPlans
     /// water) are not made.
     /// </summary>
     /// <param name="points">Where it runs: 2 to <see cref="MaximumPoints"/> points of the loaded world (their y is not
-    /// used), together at most <see cref="MaximumSections"/> × <see cref="SectionLength"/> metres long.</param>
+    /// used), together at least <see cref="SectionLength"/> and at most <see cref="MaximumSections"/> × <see cref="SectionLength"/>
+    /// metres long (shorter, the game cuts it in no section and never finishes it).</param>
     /// <param name="kind">What it lays: <see cref="GroundKind.Road"/> (the default), or <see cref="GroundKind.Dirt"/> for the
     /// game's levelling plan along a line, which levels the strip and leaves it bare earth.</param>
     /// <param name="width">How wide a strip its sections level, from <see cref="MinimumWidth"/> to
@@ -145,7 +146,7 @@ public static class RoadPlans
     /// <returns>The plan, or null where the world will not take one (logged).</returns>
     /// <exception cref="ArgumentNullException"><paramref name="points"/> is null.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Too few or too many points, one not a point of the world, two at one
-    /// place, a line too long, a kind that is neither a road nor dirt, or a width out of its range.</exception>
+    /// place, a line too short or too long, a kind that is neither a road nor dirt, or a width out of its range.</exception>
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static RoadPlan? Place(IEnumerable<Vector3> points, GroundKind kind = GroundKind.Road, float width = 0f)
     {
@@ -153,6 +154,9 @@ public static class RoadPlans
         if (width != 0f) RoadPlan.CheckWidth(width, nameof(width));
         var list = Checked(points, kind, out float length);
         if (length > MaximumSections * SectionLength) throw new ArgumentOutOfRangeException(nameof(points), length, $"A road plan is at most {MaximumSections * SectionLength} m long.");
+        // A line shorter than a section is cut in none: nothing to level, so the game never finishes the plan and its stakes
+        // stay (seen in game with 1.1 and 1.7 m; 2 m made one section, levelled and finished).
+        if (length < SectionLength) throw new ArgumentOutOfRangeException(nameof(points), length, $"A road plan is at least {SectionLength} m long.");
         string modId = Landscape.Owner(CallingMod.Of(Assembly.GetCallingAssembly()));
         if (Landscape.LiveSource() is not { } source) return null;
         for (int i = 0; i < list.Length; i++)
@@ -348,6 +352,9 @@ public sealed class RoadLine
     /// <summary>How long it is along the ground, in metres.</summary>
     public float Length { get; }
 
-    /// <summary>Whether a plan may run along it: not cut in more sections than a plan keeps.</summary>
-    public bool Fits => Sections <= RoadPlans.MaximumSections;
+    /// <summary>
+    /// Whether a plan may run along it: cut in one section at least (a line shorter than <see cref="RoadPlans.SectionLength"/>
+    /// is cut in none, and its plan would never be finished) and in no more than a plan keeps.
+    /// </summary>
+    public bool Fits => Sections >= 1 && Sections <= RoadPlans.MaximumSections;
 }

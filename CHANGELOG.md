@@ -41,6 +41,8 @@ must be rebuilt.
   data, and the game could hang.
 - `LandscapeObjects.Settle` puts on the new ground every object where the ground moves, under the area's soft edge too.
   An object there stayed where it stood and hung over the ground that went down under it.
+- `RoadPlans.Place` refuses a line shorter than a section (2 m), and `RoadLine.Fits` says no to one: the game cut it in
+  no section, so there was nothing to level and the plan's stakes stayed in the world for good.
 - The SDK's own changes of the ground come out as asked. The game blurs every change of heights it applies (a 3 × 3
   kernel over the change's square), so a snapshot put back left the ground off by up to 0.35 m and every change was
   smoothed a little. `LandscapeSnapshot.Restore` now puts the ground back exactly, in strips the blur does not reach;

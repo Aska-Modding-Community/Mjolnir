@@ -613,7 +613,8 @@ internal sealed class FakeTerrain : ITerrainSource
                 samples.Add(LandscapeTests.V(x, Ground(x), z));
             }
         }
-        return (samples, (int)MathF.Ceiling(length / RoadPlans.SectionLength));
+        // As the game cuts a line (seen in game): 1.7 m in none, 2 and 3 m in one, 3.9 m in two, 6 m in three.
+        return (samples, (int)(length / RoadPlans.SectionLength + 0.05f));
     }
 
     public IRoadPlanView? PlaceRoadPlan(IReadOnlyList<Vector3> points, GroundKind kind, float width)
