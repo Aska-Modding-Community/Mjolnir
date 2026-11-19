@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Mjolnir.SDK.Threading;
@@ -206,14 +207,17 @@ public static partial class Landscape
             if (building != null) SdkLog.Info(Platform, $"{operation} over {area} refused: '{building}' stands there");
             return refused;
         }
-        if (Zoned(modId, area, operation)) return LandscapeResult.Blocked;
+        // Going round or fitting: what stands there keeps the ground under it or has it fitted, found once before the write.
+        bool around = options.ObstacleMode != LandscapeObstacleMode.Refuse;
+        var obstacles = around ? Obstacles(source, area, options, modId) : LandscapeObstacles.None;
+        if (!around && Zoned(modId, area, operation)) return LandscapeResult.Blocked;
         s_editingMod = modId;
         s_editing = true;
         s_cancelled = false;
         try
         {
             var bounds = area.Bounds;
-            if (RaiseChanging(bounds, operation, LandscapeSource.Mod)) return LandscapeResult.Cancelled;
+            if (RaiseChanging(bounds, operation, LandscapeSource.Mod, around)) return LandscapeResult.Cancelled;
             return Guarded(() =>
             {
                 var samples = readAs != null ? source.Read(readAs.CenterX, readAs.CenterZ, readAs.Side) : Read(source, area, margin);
@@ -223,9 +227,17 @@ public static partial class Landscape
                     SdkLog.Warn(Platform, $"{operation} over {area}: the ground's samples no longer lie where the snapshot's did");
                     return LandscapeResult.Failed;
                 }
+                var kept = obstacles.IsEmpty ? null : Keep(samples, obstacles);
                 if (!change(samples)) return LandscapeResult.Failed;
+                bool wentRound = kept != null && PutBack(samples, kept, obstacles);
                 bool touched = Array.IndexOf(samples.Touched, true) >= 0;
-                if (!touched && Array.IndexOf(samples.BiomeChanged, true) < 0) return LandscapeResult.Done;
+                if (!touched && Array.IndexOf(samples.BiomeChanged, true) < 0)
+                {
+                    if (!wentRound) return LandscapeResult.Done;
+                    if (options.ObstacleMode == LandscapeObstacleMode.Fit) return LandscapeResult.Partial; // already as it should be
+                    SdkLog.Info(Platform, $"{operation} over {area}: all of it under {obstacles}");
+                    return LandscapeResult.Blocked;
+                }
                 bool objects = touched && (options.Objects is LandscapeObjects.Settle or LandscapeObjects.Clear or LandscapeObjects.Harvest || (options.Objects == LandscapeObjects.Remove && options.ClearVegetation && !raw));
                 // Settled wherever the ground moves, its soft edge too: an object at the edge left standing hangs over ground that
                 // went down under it (a boulder 5.3 m from a lowered circle of 5 m hung 0.57 m in the air, seen in game). The
@@ -233,7 +245,13 @@ public static partial class Landscape
                 Func<float, float, bool>? objectsAt = !objects ? null
                     : options.Objects == LandscapeObjects.Settle ? (x, z) => area.Weight(x, z) > 0
                     : (x, z) => area.Weight(x, z) >= 0.5f;
-                return source.Write(samples, new GroundWrite(operation, bounds, raw, objectsAt, options.Objects, options.Harvesting));
+                if (objectsAt != null && !obstacles.IsEmpty)
+                {
+                    var within = objectsAt;
+                    objectsAt = (x, z) => within(x, z) && !obstacles.Covers(x, z); // what stands there is left with its ground
+                }
+                var written = source.Write(samples, new GroundWrite(operation, bounds, raw, objectsAt, options.Objects, options.Harvesting));
+                return wentRound && written == LandscapeResult.Done ? LandscapeResult.Partial : written;
             });
         }
         finally
@@ -241,6 +259,50 @@ public static partial class Landscape
             s_editing = false;
             s_editingMod = null;
         }
+    }
+
+    // The samples under what is gone round or fitted, as they were read: indices and every value a change may set.
+    private static List<(int Index, float Height, int Flags, GroundKind Kind, bool Cleared, int Biome)> Keep(LandscapeSamples samples, LandscapeObstacles obstacles)
+    {
+        var kept = new List<(int, float, int, GroundKind, bool, int)>();
+        for (int r = 0; r < samples.Size; r++)
+            for (int c = 0; c < samples.Size; c++)
+            {
+                if (!obstacles.Covers(samples.X(c), samples.Z(r))) continue;
+                int i = samples.Index(r, c);
+                kept.Add((i, samples.Heights[i], samples.Flags[i], samples.Kinds[i], samples.Cleared[i], samples.Biomes[i]));
+            }
+        return kept;
+    }
+
+    // Gives the kept samples the change touched what the obstacles leave there: kept as they were and unwritten, or with a
+    // fitted height (under a levelled footprint the ground's look stays too; round it, and under rocks, the change's look
+    // goes with it). Whether the change was altered anywhere.
+    private static bool PutBack(LandscapeSamples samples, List<(int Index, float Height, int Flags, GroundKind Kind, bool Cleared, int Biome)> kept,
+        LandscapeObstacles obstacles)
+    {
+        bool any = false;
+        foreach (var (i, height, flags, kind, cleared, biome) in kept)
+        {
+            if (!samples.Touched[i] && !samples.BiomeChanged[i]) continue; // the change left it: so is it left
+            int r = i / samples.Size, c = i % samples.Size;
+            float changed = samples.Heights[i];
+            var (fitted, keepsLook) = obstacles.Resolve(samples.X(c), samples.Z(r), height, changed);
+            if (fitted == changed && !keepsLook) continue;
+            any = true;
+            if (fitted == height || keepsLook)
+            {
+                samples.Flags[i] = flags;
+                samples.Kinds[i] = kind;
+                samples.Cleared[i] = cleared;
+                samples.Biomes[i] = biome;
+                samples.BiomeChanged[i] = false;
+            }
+            samples.Heights[i] = fitted;
+            samples.HeightChanged[i] = fitted != height;
+            samples.Touched[i] = fitted != height;
+        }
+        return any;
     }
 
     private static LandscapeSamples? Read(ITerrainSource source, LandscapeArea area, int margin)

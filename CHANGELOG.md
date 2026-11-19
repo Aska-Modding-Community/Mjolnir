@@ -7,6 +7,14 @@ must be rebuilt.
 
 ### Added
 
+- `LandscapeOptions.ObstacleMode` (`LandscapeObstacleMode`): what a change does where its area reaches a building, a
+  fixed place of the world or another mod's protected zone. `Refuse` (the default) refuses it whole, as before; `GoAround`
+  leaves the ground under them as it is and changes the rest; `Fit` changes the rest and fits the ground to them — under a
+  building to the height the game levels its footprint to (filling and cutting, or only filling or only cutting, as the
+  building says), with an embankment of 45° round it; under a den's rocks only between where the ground was and their
+  underside, so they neither hang nor sink. Either answers `LandscapeResult.Partial`. `Landscape.ObstaclesIn(area,
+  options)` gives what is there (`LandscapeObstacles`: `Names`, `Covers(x, z)`, `HeightAfter(x, z, now, changed)`) for a
+  preview, and `Landscape.Check(area, operation, options)` checks a change made with options.
 - `LandscapeOptions.KeepOffLandmarks`: a change of the ground is refused (`Blocked`) where a fixed place of the world
   stands — a den, or the rocks of a place the world was made with. The game cannot move them, and ground dug under a
   wolves' den left its rocks hanging in the air. True by default, like `KeepOffBuildings`.
@@ -30,6 +38,11 @@ must be rebuilt.
   data, and the game could hang.
 - `LandscapeObjects.Settle` puts on the new ground every object where the ground moves, under the area's soft edge too.
   An object there stayed where it stood and hung over the ground that went down under it.
+- The SDK's own changes of the ground come out as asked. The game blurs every change of heights it applies (a 3 × 3
+  kernel over the change's square), so a snapshot put back left the ground off by up to 0.35 m and every change was
+  smoothed a little. `LandscapeSnapshot.Restore` now puts the ground back exactly, in strips the blur does not reach;
+  every other change gives the game heights that its blur turns into what was asked (to a few millimetres on the
+  sharpest edges).
 
 ## 0.4.5 — 2026-11-18
 

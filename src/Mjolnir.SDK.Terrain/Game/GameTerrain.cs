@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using HarmonyLib;
 using Il2CppInterop.Runtime;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using Mjolnir.SDK.Threading;
 using SSSGame;
 using SSSGame.Network;
@@ -136,6 +138,111 @@ internal sealed class GameTerrain : ITerrainSource
     // left 0.66 m in the air over ground dug 2 m under it (seen in game).
     public string? LandmarkIn(LandscapeArea area) => StandingIn(area, collider =>
         collider.GetComponentInParent<Den>()?.name ?? collider.GetComponentInParent<BiomeStamp>()?.name);
+
+    // How far round what stands on the ground its footprint reaches, in metres: the ground right under a wall's foot stays.
+    private const float FootprintMargin = 0.25f;
+
+    // Every solid collider near the area of a building or a fixed place, as the rectangle it covers on the ground: a box's
+    // or a mesh's own box turned with it where it stands upright (a house turned 30° covers its walls, not the square round
+    // them), else the box of its bounds along the world's axes (a rock lying askew). Fitting, a building the game levels the
+    // ground for gives that footprint instead, at the height it levels it to (its own levelling at its making: the
+    // structure's height, the footprint's width along its x and depth along its z, its blend), and a fixed place's mesh
+    // tells its underside by a ray from under it.
+    public IReadOnlyList<GroundFootprint> ObstaclesIn(LandscapeArea area, bool buildings, bool landmarks, bool fit)
+    {
+        var found = new List<GroundFootprint>();
+        if (!buildings && !landmarks) return found;
+        float halfX = area.Width / 2 + area.Blend, halfZ = area.Depth / 2 + area.Blend;
+        float radius = MathF.Sqrt(halfX * halfX + halfZ * halfZ) + 1f;
+        TryGetHeight(area.Center.x, area.Center.z, out float ground);
+        var levelled = new HashSet<IntPtr>();
+        foreach (var collider in Physics.OverlapSphere(At(area.Center.x, ground, area.Center.z), radius))
+        {
+            if (collider == null || collider.isTrigger) continue;
+            var structure = buildings ? collider.GetComponentInParent<Structure>() : null;
+            if (structure != null)
+            {
+                if (fit && Levelled(structure, found, levelled)) continue;
+                found.Add(Footprint(collider, structure.name));
+                continue;
+            }
+            if (!landmarks) continue;
+            string? name = collider.GetComponentInParent<Den>()?.name ?? collider.GetComponentInParent<BiomeStamp>()?.name;
+            if (name == null) continue;
+            var footprint = Footprint(collider, name);
+            if (fit && collider.TryCast<MeshCollider>() != null) footprint = footprint with { Underside = UndersideOf(collider) };
+            found.Add(footprint);
+        }
+        return found;
+    }
+
+    // A building's levelled footprints, added once per building; whether it has any (then its colliders are not kept). Its
+    // own `StructureFootprintLevel`s (not those of buildings set on it): the game levels the ground there to the building's
+    // height — a house's and a warehouse's ground was at it within a millimetre in the test save. Where the game levels it
+    // itself as the building is made (`autoLevelWithOwnFootprint`: wells, lanterns) the building says how: filling and
+    // cutting, or only filling (a well's ground 0.31 m over its foot was left so) or only cutting; else filling and cutting.
+    private static bool Levelled(Structure structure, List<GroundFootprint> found, HashSet<IntPtr> done)
+    {
+        if (done.Contains(structure.Pointer)) return true;
+        var levels = structure.GetComponentsInChildren<StructureFootprintLevel>();
+        if (levels == null) return false;
+        bool any = false;
+        var operation = structure.autoLevelWithOwnFootprint ? structure.autoLevelOperation : TerraformingToolOperation.LEVEL;
+        foreach (var level in levels)
+        {
+            if (level == null || level.width <= 0 || level.height <= 0) continue;
+            if (level.GetComponentInParent<Structure>() is not { } owner || owner.Pointer != structure.Pointer) continue;
+            var t = level.transform;
+            var at = t.position;
+            var right = t.right;
+            float length = MathF.Sqrt(right.x * right.x + right.z * right.z);
+            float cos = length > 0.001f ? right.x / length : 1, sin = length > 0.001f ? right.z / length : 0;
+            found.Add(new GroundFootprint(structure.name, at.x, at.z, level.width / 2, level.height / 2, cos, sin)
+            {
+                Level = structure.transform.position.y,
+                LevelsUp = operation != TerraformingToolOperation.DIG,
+                LevelsDown = operation != TerraformingToolOperation.RAISE,
+            });
+            any = true;
+        }
+        if (any) done.Add(structure.Pointer);
+        return any;
+    }
+
+    // The lowest face of a collider over a point, by a ray up from under it: the underside of a den's rocks where they
+    // overhang, their foot in the ground where they stand on it; null where the collider is not over the point.
+    private static Func<float, float, float?> UndersideOf(Collider collider)
+    {
+        float from = collider.bounds.min.y - 1f, reach = collider.bounds.size.y + 2f;
+        return (x, z) =>
+        {
+            if (collider == null) return null;
+            var ray = new Ray(new Vector3(x, from, z), Vector3.up);
+            return collider.Raycast(ray, out var hit, reach) ? hit.point.y : null;
+        };
+    }
+
+    private static GroundFootprint Footprint(Collider collider, string name)
+    {
+        var t = collider.transform;
+        Bounds? local = null;
+        if (collider.TryCast<BoxCollider>() is { } box) local = new Bounds(box.center, box.size);
+        else if (collider.TryCast<MeshCollider>()?.sharedMesh is { } mesh) local = mesh.bounds;
+        var up = t.up;
+        if (local is { } own && up.y > 0.95f)
+        {
+            var middle = t.TransformPoint(own.center);
+            var scale = t.lossyScale;
+            var right = t.right;
+            float length = MathF.Sqrt(right.x * right.x + right.z * right.z);
+            if (length > 0.001f)
+                return new GroundFootprint(name, middle.x, middle.z,
+                    MathF.Abs(own.extents.x * scale.x) + FootprintMargin, MathF.Abs(own.extents.z * scale.z) + FootprintMargin,
+                    right.x / length, right.z / length);
+        }
+        var bounds = collider.bounds;
+        return new GroundFootprint(name, bounds.center.x, bounds.center.z, bounds.extents.x + FootprintMargin, bounds.extents.z + FootprintMargin, 1, 0);
+    }
 
     // The name of the first solid collider near the area whose box on the ground overlaps the turned rectangle and which
     // <paramref name="nameOf"/> names.
@@ -403,11 +510,15 @@ internal sealed class GameTerrain : ITerrainSource
         }
         int clear = TerraformingMap.c_ClearVegetationFlag, heightmap = TerraformingMap.c_HeightmapFlag;
         int n = samples.Size, written = 0;
+        // Ground put back as it was goes in strips the game does not blur, when they lie on the samples.
+        bool strips = write.Raw && StripsFit(data, samples);
         for (int r = 0; r < n; r++)
             for (int c = 0; c < n; c++)
             {
                 int i = samples.Index(r, c);
                 if (!samples.Touched[i]) continue;
+                written++;
+                if (strips) continue; // put back in strips the game does not blur, below
                 if (samples.HeightChanged[i] || write.Raw)
                     data.SetFullHeightmap(r, c, _surface.GetNormalizedHeight(Math.Clamp(samples.Heights[i], 0f, Landscape.MaximumHeight)));
                 int flags;
@@ -421,17 +532,18 @@ internal sealed class GameTerrain : ITerrainSource
                 }
                 data.SetTerraformingFlags(r, c, flags);
                 data.SetModified(r, c, Targets);
-                written++;
             }
         if (biomes.Count > 0) written += MarkBiome(data, samples, biomes[0]);
         if (written == 0) return LandscapeResult.Done;
+        if (!strips) Unblur(data, samples);
         if (write.ObjectsAt is { } objectsAt && write.Objects == LandscapeObjects.Remove) RemoveObjects(samples, objectsAt);
         if (write.ObjectsAt is { } clearAt && write.Objects == LandscapeObjects.Clear) ClearObjects(samples, clearAt);
         var settling = write.ObjectsAt is { } settleAt && write.Objects is LandscapeObjects.Settle or LandscapeObjects.Harvest ? Standing(samples, settleAt) : null;
         var made = TerrainPatches.Begin(write.Area, write.Operation);
         try
         {
-            Send(data, write.Operation);
+            if (strips) PutBack(samples, data, write.Operation);
+            if (!strips || biomes.Count > 0) Send(data, write.Operation);
             // The data carries one biome: each other biome (a snapshot put back over several) is written by data of its own.
             for (int b = 1; b < biomes.Count; b++)
             {
@@ -447,6 +559,116 @@ internal sealed class GameTerrain : ITerrainSource
         // Harvested once the drawn ground has followed, so the loot falls on the new ground, not into it.
         if (settling != null && write.Objects == LandscapeObjects.Harvest) GameHarvest.Later(settling, write.Harvesting ?? HarvestOptions.Default);
         return LandscapeResult.Done;
+    }
+
+    private float[]? _blurKernel;
+
+    // A strip of two rows of the square from row `first`, filled from the ground.
+    private TerrainToolData Strip(TerrainToolData square, LandscapeSamples samples, int first)
+    {
+        int n = samples.Size;
+        float step = samples.Step;
+        var area = square.worldArea;
+        var strip = new TerrainToolData(n, 2, step, Targets);
+        strip.SetPosition(area.m_XMin + n * step / 2, area.m_YMin + first * step + step);
+        strip.ClearFlags();
+        _surface!.FillTerrainToolData(strip);
+        return strip;
+    }
+
+    // Whether a strip lies on the square's samples: its corner where the square's row is, its first sample the same ground.
+    private bool StripsFit(TerrainToolData square, LandscapeSamples samples)
+    {
+        int n = samples.Size, row = n / 2;
+        if (n < 2) return false;
+        var strip = Strip(square, samples, row);
+        var at = strip.worldArea;
+        var area = square.worldArea;
+        bool fits = strip.size.x == n && strip.size.y == 2 && Math.Abs(at.m_XMin - area.m_XMin) < 0.01f
+            && Math.Abs(at.m_YMin - (area.m_YMin + row * samples.Step)) < 0.01f
+            && Math.Abs(strip.GetFullHeightmap(0, n / 2) - square.GetFullHeightmap(row, n / 2)) < 1e-6f;
+        if (!fits) SdkLog.Warn(Landscape.Platform, "A strip of the ground does not lie on its samples: ground put back is undone from the game's blur instead");
+        return fits;
+    }
+
+    // Ground put back as it was (a snapshot: an undo, a redo), exactly: two rows of samples at a time, each pair in data of
+    // its own two rows deep, which the game's blur leaves alone (it blurs only the samples inside a square's edge). Heights,
+    // kinds and marks as kept; the biomes go with the whole square.
+    private void PutBack(LandscapeSamples samples, TerrainToolData square, LandscapeOperation operation)
+    {
+        int n = samples.Size;
+        for (int r0 = 0; r0 < n; r0 += 2)
+        {
+            int first = Math.Min(r0, n - 2);
+            bool any = false;
+            for (int r = first; r < first + 2 && !any; r++)
+                for (int c = 0; c < n && !any; c++)
+                    any = samples.Touched[samples.Index(r, c)];
+            if (!any) continue;
+            var strip = Strip(square, samples, first);
+            for (int r = 0; r < 2; r++)
+                for (int c = 0; c < n; c++)
+                {
+                    int i = samples.Index(first + r, c);
+                    if (!samples.Touched[i]) continue;
+                    strip.SetFullHeightmap(r, c, _surface!.GetNormalizedHeight(Math.Clamp(samples.Heights[i], 0f, Landscape.MaximumHeight)));
+                    strip.SetTerraformingFlags(r, c, samples.Flags[i]);
+                    strip.SetModified(r, c, Targets);
+                }
+            Send(strip, operation);
+        }
+    }
+
+    // The game blurs every change of heights it applies (`_ApplyTerrainToolDataInternal`: the full heightmap copied to the
+    // raw one, each sample inside the square's edge made the 3 × 3 `_blurKernel`'s sum of the copy round it, before the
+    // marked samples are applied), so heights written as they are came out moved: a snapshot put straight back moved the ground
+    // by 9.5 mm on average, an undo over four tiles by up to 0.35 m (seen in game). The square's heights are given what,
+    // blurred, makes every applied sample what the change asked (`GroundBlur`); the other players blur the same data alike.
+    private void Unblur(TerrainToolData data, LandscapeSamples samples)
+    {
+        var kernel = BlurKernel();
+        int n = samples.Size;
+        var heights = new float[n * n];
+        var applied = new bool[n * n];
+        for (int r = 0; r < n; r++)
+            for (int c = 0; c < n; c++)
+            {
+                int i = samples.Index(r, c);
+                heights[i] = _surface!.GetWorldHeight(data.GetFullHeightmap(r, c));
+                applied[i] = samples.Touched[i];
+            }
+        var before = (float[])heights.Clone();
+        float left = GroundBlur.Compensate(heights, applied, n, kernel, tolerance: 0.0001f);
+        if (left > 0.05f) SdkLog.Info(Landscape.Platform, $"The game's blur of a change is undone to within {left * 1000:0} mm");
+        for (int r = 0; r < n; r++)
+            for (int c = 0; c < n; c++)
+            {
+                int i = samples.Index(r, c);
+                if (heights[i] != before[i]) data.SetFullHeightmap(r, c, _surface!.GetNormalizedHeight(heights[i]));
+            }
+    }
+
+    private float[] BlurKernel()
+    {
+        if (_blurKernel != null) return _blurKernel;
+        try
+        {
+            if (_surface?._blurKernel is { } kernel)
+            {
+                var values = new Il2CppStructArray<float>(kernel.Pointer);
+                if (values.Length == 9)
+                {
+                    _blurKernel = values.ToArray();
+                    SdkLog.Info(Landscape.Platform, $"The game blurs changes of heights by [{string.Join(", ", Array.ConvertAll(_blurKernel, k => k.ToString("0.####", System.Globalization.CultureInfo.InvariantCulture)))}]");
+                    return _blurKernel;
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            SdkLog.Warn(Landscape.Platform, $"The game's blur of a change could not be read: {e.Message}");
+        }
+        return _blurKernel = GroundBlur.Identity;
     }
 
     // Every natural object where the change reaches, trees and boulders too, taken at the game's own level; the items lying

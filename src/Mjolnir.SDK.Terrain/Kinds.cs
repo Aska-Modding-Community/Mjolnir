@@ -44,6 +44,30 @@ public enum NaturalObjectKind
     Other,
 }
 
+/// <summary>
+/// What a change does where its area reaches something it keeps off (<see cref="LandscapeOptions.KeepOffBuildings"/>,
+/// <see cref="LandscapeOptions.KeepOffLandmarks"/>) or another mod's protected zone.
+/// </summary>
+public enum LandscapeObstacleMode
+{
+    /// <summary>The whole change is refused (<see cref="LandscapeResult.Blocked"/>).</summary>
+    Refuse,
+
+    /// <summary>
+    /// The ground under what stands there stays as it is, the rest changes, and the change answers
+    /// <see cref="LandscapeResult.Partial"/>.
+    /// </summary>
+    GoAround,
+
+    /// <summary>
+    /// The rest changes, and the ground under what stands there is fitted to it: under a building the game levels the ground
+    /// for, at the height it levels it to, blending into the change round it as the game's levelling does; under a fixed
+    /// place's rocks, only between where it was and their underside, so they neither hang nor sink deeper. What has neither
+    /// (a fence, a wall, another mod's zone) is gone round. The change answers <see cref="LandscapeResult.Partial"/>.
+    /// </summary>
+    Fit,
+}
+
 /// <summary>What becomes of the natural objects standing where the ground changes.</summary>
 public enum LandscapeObjects
 {
@@ -194,4 +218,10 @@ public enum LandscapeResult
 
     /// <summary>The game failed to make the change (logged).</summary>
     Failed,
+
+    /// <summary>
+    /// Made round what stands in the area (<see cref="LandscapeOptions.ObstacleMode"/>): a building, a fixed place of the
+    /// world or another mod's protected zone kept the ground under it or had it fitted to it, and the rest of the area changed.
+    /// </summary>
+    Partial,
 }

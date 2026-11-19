@@ -38,6 +38,14 @@ internal interface ITerrainSource
     /// </summary>
     string? LandmarkIn(LandscapeArea area);
 
+    /// <summary>
+    /// The footprints on the ground of what stands in the area and is to be kept off: buildings and fixed places of the world
+    /// (as <see cref="BuildingIn"/> and <see cref="LandmarkIn"/> find them), each a turned rectangle. With
+    /// <paramref name="fit"/>, a building the game levels the ground under gives that footprint with its height instead of
+    /// its colliders', and a fixed place's rocks tell their underside.
+    /// </summary>
+    IReadOnlyList<GroundFootprint> ObstaclesIn(LandscapeArea area, bool buildings, bool landmarks, bool fit);
+
     /// <summary>Where the local player stands and which way they face on the ground (the console's commands).</summary>
     bool TryGetPlayer(out Vector3 position, out Vector3 forward);
 
@@ -279,6 +287,46 @@ internal readonly record struct GroundWrite(LandscapeOperation Operation, Rect A
 /// height, the kind of ground, whether its vegetation was cleared, and its raw flags), the biome of the coarser cell each lies
 /// in, and what the model changed.
 /// </summary>
+/// <summary>
+/// What stands on the ground, as a rectangle on it turned by its cosine and sine, with a name for the log. Kept as it is,
+/// unless it says how the ground under it fits it: a building's <see cref="Level"/> (the game's own levelling of its
+/// footprint, with its blend round it), or a fixed place's <see cref="Underside"/>. Pure but for the underside's own ray.
+/// </summary>
+internal readonly record struct GroundFootprint(string Name, float X, float Z, float HalfX, float HalfZ, float Cos, float Sin)
+{
+    /// <summary>The height the ground under it is levelled to, or null.</summary>
+    public float? Level { get; init; }
+
+    /// <summary>Whether ground under it lower than <see cref="Level"/> is filled up to it (else left lower).</summary>
+    public bool LevelsUp { get; init; } = true;
+
+    /// <summary>Whether ground under it higher than <see cref="Level"/> is cut down to it (else left higher).</summary>
+    public bool LevelsDown { get; init; } = true;
+
+    /// <summary>
+    /// The height a levelled footprint leaves where the ground was <paramref name="now"/> and a change makes it
+    /// <paramref name="changed"/>: the level, or, where the game only fills or only cuts, between the level and where it was.
+    /// </summary>
+    public float Fit(float level, float now, float changed) =>
+        Math.Clamp(changed, LevelsUp ? level : MathF.Min(now, level), LevelsDown ? level : MathF.Max(now, level));
+
+    /// <summary>The height of its underside over a point of the ground, null where nothing of it is over the point.</summary>
+    public Func<float, float, float?>? Underside { get; init; }
+
+    /// <summary>Whether a point of the ground lies under it.</summary>
+    public bool Covers(float x, float z) => Outside(x, z) <= 0;
+
+    /// <summary>How far a point lies outside the rectangle, 0 inside it.</summary>
+    public float Outside(float x, float z)
+    {
+        float dx = x - X, dz = z - Z;
+        float u = MathF.Abs(dx * Cos + dz * Sin) - HalfX, v = MathF.Abs(-dx * Sin + dz * Cos) - HalfZ;
+        if (u <= 0 && v <= 0) return 0;
+        float ou = MathF.Max(u, 0), ov = MathF.Max(v, 0);
+        return MathF.Sqrt(ou * ou + ov * ov);
+    }
+}
+
 internal sealed class LandscapeSamples
 {
     public LandscapeSamples(float centerX, float centerZ, float side, int size, float originX, float originZ, float step)

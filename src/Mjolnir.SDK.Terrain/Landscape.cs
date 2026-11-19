@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Mjolnir.SDK.Threading;
@@ -233,15 +234,65 @@ public static partial class Landscape
     /// <returns><see cref="LandscapeResult.Done"/> when it could; <see cref="LandscapeResult.Blocked"/> also where another
     /// mod's protected zone keeps the ground; <see cref="LandscapeResult.NotAvailable"/> off the main thread.</returns>
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public static LandscapeResult Check(LandscapeArea area, LandscapeOperation operation)
+    public static LandscapeResult Check(LandscapeArea area, LandscapeOperation operation) =>
+        CheckFor(Owner(CallingMod.Of(Assembly.GetCallingAssembly())), area, operation, LandscapeOptions.Default);
+
+    /// <summary>
+    /// Whether a change made with <paramref name="options"/> could be made in the area now, without making it. With an
+    /// <see cref="LandscapeOptions.ObstacleMode"/> other than <see cref="LandscapeObstacleMode.Refuse"/> what stands in the
+    /// area does not refuse it: the answer is <see cref="LandscapeResult.Partial"/> when something is there.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static LandscapeResult Check(LandscapeArea area, LandscapeOperation operation, LandscapeOptions options)
+    {
+        ArgumentNullException.ThrowIfNull(options);
+        return CheckFor(Owner(CallingMod.Of(Assembly.GetCallingAssembly())), area, operation, options);
+    }
+
+    private static LandscapeResult CheckFor(string modId, LandscapeArea area, LandscapeOperation operation, LandscapeOptions options)
     {
         if (!Enum.IsDefined(operation)) throw new ArgumentOutOfRangeException(nameof(operation), operation, "No such change.");
-        string modId = Owner(CallingMod.Of(Assembly.GetCallingAssembly()));
-        var edit = new LandscapeEdit(area, operation, operation == LandscapeOperation.Level ? area.Center.y : 0.5f, null, LandscapeOptions.Default);
+        var edit = new LandscapeEdit(area, operation, operation == LandscapeOperation.Level ? area.Center.y : 0.5f, null, options);
         if (Live() is not { } source) return LandscapeResult.NotAvailable;
         if (Refused(source, area, edit.Options, out _) is { } refused) return refused;
+        if (options.ObstacleMode != LandscapeObstacleMode.Refuse)
+            return Obstacles(source, area, options, modId).IsEmpty ? LandscapeResult.Done : LandscapeResult.Partial;
         if (LandscapeZone.Refusing(area.Bounds, modId) != null) return LandscapeResult.Blocked;
         return area.IsGameShape && operation <= LandscapeOperation.ClearVegetation ? Guarded(() => source.Check(edit)) : LandscapeResult.Done;
+    }
+
+    /// <summary>
+    /// What a change of the calling mod made with <paramref name="options"/> would go round or fit in the area
+    /// (<see cref="LandscapeOptions.ObstacleMode"/>): the footprints of the buildings and fixed places standing there, as the
+    /// options keep off them, and the protected zones of other mods. For a preview: <see cref="LandscapeObstacles.HeightAfter"/>
+    /// tells the height the change leaves at a point.
+    /// Main thread; elsewhere, and outside a world, <see cref="LandscapeObstacles.None"/>.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static LandscapeObstacles ObstaclesIn(LandscapeArea area, LandscapeOptions? options = null)
+    {
+        string modId = Owner(CallingMod.Of(Assembly.GetCallingAssembly()));
+        if (!Dispatcher.IsMainThread || Live() is not { } source) return LandscapeObstacles.None;
+        try
+        {
+            return Obstacles(source, area, options ?? LandscapeOptions.Default, modId);
+        }
+        catch (Exception e)
+        {
+            SdkLog.Warn(Platform, $"What stands on the ground could not be found: {e.Message}");
+            return LandscapeObstacles.None;
+        }
+    }
+
+    // What stands in the area that a change of the mod keeps off: footprints, and other mods' zones.
+    internal static LandscapeObstacles Obstacles(ITerrainSource source, LandscapeArea area, LandscapeOptions options, string modId)
+    {
+        bool fit = options.ObstacleMode == LandscapeObstacleMode.Fit;
+        var footprints = source.ObstaclesIn(area, options.KeepOffBuildings, options.KeepOffLandmarks, fit);
+        var zones = new List<(string, LandscapeArea)>();
+        foreach (var zone in LandscapeZone.Active)
+            if (zone.ModId != modId && zone.Reaches(area.Bounds)) zones.Add(($"the protected zone of {zone.ModId}", zone.Area));
+        return footprints.Count == 0 && zones.Count == 0 ? LandscapeObstacles.None : new LandscapeObstacles(footprints, zones, fit);
     }
 
     // A change of kind keeps the vegetation unless asked: painting a road does not mow the meadow beside it.
@@ -252,7 +303,8 @@ public static partial class Landscape
     // would take itself.
     private static LandscapeResult Basic(string modId, LandscapeEdit edit)
     {
-        if (!edit.Area.IsGameShape || edit.Options.OnlyOn != null || edit.Options.Objects != LandscapeObjects.Remove) return WriteBasic(modId, edit);
+        if (!edit.Area.IsGameShape || edit.Options.OnlyOn != null || edit.Options.Objects != LandscapeObjects.Remove || edit.Options.ObstacleMode != LandscapeObstacleMode.Refuse)
+            return WriteBasic(modId, edit);
         if (!Dispatcher.IsMainThread)
         {
             Dispatcher.Run(() => Basic(modId, edit));
@@ -287,6 +339,7 @@ public static partial class Landscape
         float x0 = bounds.m_XMin, z0 = bounds.m_YMin, x1 = x0 + bounds.m_Width, z1 = z0 + bounds.m_Height;
         if (!source.IsLoaded(x0, z0) || !source.IsLoaded(x1, z0) || !source.IsLoaded(x0, z1) || !source.IsLoaded(x1, z1))
             return LandscapeResult.NotLoaded;
+        if (options.ObstacleMode != LandscapeObstacleMode.Refuse) return null; // gone round or fitted in the write, not refused
         if (options.KeepOffBuildings && (building = source.BuildingIn(area)) != null) return LandscapeResult.Blocked;
         if (options.KeepOffLandmarks && (building = source.LandmarkIn(area)) != null) return LandscapeResult.Blocked;
         return null;
@@ -353,10 +406,10 @@ public static partial class Landscape
     /// once the protected zones let it: a change a zone refuses is cancelled before any handler sees it.
     /// </summary>
     /// <returns>Whether a zone or a handler cancelled it.</returns>
-    internal static bool RaiseChanging(Rect area, LandscapeOperation operation, LandscapeSource source)
+    internal static bool RaiseChanging(Rect area, LandscapeOperation operation, LandscapeSource source, bool zonesGoneRound = false)
     {
         var handlers = s_changing is { Count: > 0 } listening ? listening : null;
-        bool zones = LandscapeZone.Active.Count > 0;
+        bool zones = !zonesGoneRound && LandscapeZone.Active.Count > 0; // a change going round the zones leaves their ground
         if (handlers == null && !zones) return false;
         var args = new LandscapeChangingEventArgs(area, operation, source, EditingMod);
         if (!(zones && LandscapeZone.Refuse(args))) handlers?.Raise(h => h(null, args));

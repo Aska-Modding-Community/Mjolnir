@@ -1,3 +1,20 @@
 #nullable enable
+Mjolnir.SDK.Terrain.LandscapeObstacleMode
+Mjolnir.SDK.Terrain.LandscapeObstacleMode.Fit = 2 -> Mjolnir.SDK.Terrain.LandscapeObstacleMode
+Mjolnir.SDK.Terrain.LandscapeObstacleMode.GoAround = 1 -> Mjolnir.SDK.Terrain.LandscapeObstacleMode
+Mjolnir.SDK.Terrain.LandscapeObstacleMode.Refuse = 0 -> Mjolnir.SDK.Terrain.LandscapeObstacleMode
+Mjolnir.SDK.Terrain.LandscapeObstacles
+Mjolnir.SDK.Terrain.LandscapeObstacles.Covers(float x, float z) -> bool
+Mjolnir.SDK.Terrain.LandscapeObstacles.Fits.get -> bool
+Mjolnir.SDK.Terrain.LandscapeObstacles.HeightAfter(float x, float z, float now, float changed) -> float
+Mjolnir.SDK.Terrain.LandscapeObstacles.IsEmpty.get -> bool
+Mjolnir.SDK.Terrain.LandscapeObstacles.Names.get -> System.Collections.Generic.IReadOnlyList<string!>!
 Mjolnir.SDK.Terrain.LandscapeOptions.KeepOffLandmarks.get -> bool
 Mjolnir.SDK.Terrain.LandscapeOptions.KeepOffLandmarks.init -> void
+Mjolnir.SDK.Terrain.LandscapeOptions.ObstacleMode.get -> Mjolnir.SDK.Terrain.LandscapeObstacleMode
+Mjolnir.SDK.Terrain.LandscapeOptions.ObstacleMode.init -> void
+Mjolnir.SDK.Terrain.LandscapeResult.Partial = 10 -> Mjolnir.SDK.Terrain.LandscapeResult
+override Mjolnir.SDK.Terrain.LandscapeObstacles.ToString() -> string!
+static Mjolnir.SDK.Terrain.Landscape.Check(Mjolnir.SDK.Terrain.LandscapeArea area, Mjolnir.SDK.Terrain.LandscapeOperation operation, Mjolnir.SDK.Terrain.LandscapeOptions! options) -> Mjolnir.SDK.Terrain.LandscapeResult
+static Mjolnir.SDK.Terrain.Landscape.ObstaclesIn(Mjolnir.SDK.Terrain.LandscapeArea area, Mjolnir.SDK.Terrain.LandscapeOptions? options = null) -> Mjolnir.SDK.Terrain.LandscapeObstacles!
+static Mjolnir.SDK.Terrain.LandscapeObstacles.None.get -> Mjolnir.SDK.Terrain.LandscapeObstacles!

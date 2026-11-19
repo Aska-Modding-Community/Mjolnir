@@ -40,6 +40,17 @@ public sealed class LandscapeOptions
     public bool KeepOffLandmarks { get; init; } = true;
 
     /// <summary>
+    /// What a change the area of which reaches something it keeps off (<see cref="KeepOffBuildings"/>,
+    /// <see cref="KeepOffLandmarks"/>, another mod's protected zone) does there: refused whole
+    /// (<see cref="LandscapeObstacleMode.Refuse"/>, the default), made round it (<see cref="LandscapeObstacleMode.GoAround"/>)
+    /// or made with the ground under it fitted to it (<see cref="LandscapeObstacleMode.Fit"/>). What stands there is found by
+    /// its footprint on the ground (a building's walls and roof or the ground the game levels for it, a den's rocks, a zone's
+    /// own shape), which <see cref="Landscape.ObstaclesIn"/> gives for a preview. To change the ground under buildings or
+    /// fixed places as under anything else, keep off neither.
+    /// </summary>
+    public LandscapeObstacleMode ObstacleMode { get; init; }
+
+    /// <summary>
     /// What becomes of the natural objects (bushes, saplings, small stones) standing where the ground changes:
     /// <see cref="LandscapeObjects.Remove"/>, the game's own way, takes those a change of the ground takes, wherever it
     /// clears the vegetation; <see cref="LandscapeObjects.Keep"/> leaves every one standing; <see cref="LandscapeObjects.Settle"/>

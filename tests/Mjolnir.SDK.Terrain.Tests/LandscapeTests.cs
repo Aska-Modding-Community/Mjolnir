@@ -178,6 +178,131 @@ public sealed class LandscapeTests : IDisposable
     }
 
     [Fact]
+    public void AChangeThatGoesRoundLeavesTheGroundUnderWhatStandsThere()
+    {
+        // A house over the square's west side, x from -2.5 to -0.5.
+        _game.Buildings = true;
+        _game.Footprints.Add(new GroundFootprint("House_L1(Clone)", -1.5f, 10, 1, 3, 1, 0));
+        var around = new LandscapeOptions { ObstacleMode = LandscapeObstacleMode.GoAround };
+
+        Assert.Equal(LandscapeResult.Blocked, Landscape.Raise(Square(), 1)); // refused, as ever, without it
+        Assert.Equal(LandscapeResult.Partial, Landscape.Check(Square(), LandscapeOperation.Raise, around));
+        Assert.Equal(LandscapeResult.Partial, Landscape.Raise(Square(), 1, around));
+        Assert.True(Landscape.TryGetHeight(-1.5f, 10, out float under));
+        Assert.Equal(FakeTerrain.Ground(-1.5f), under, 3);          // the house's ground as it was
+        Assert.True(Landscape.TryGetHeight(1, 10, out float beside));
+        Assert.Equal(FakeTerrain.Ground(1) + 1, beside, 2);          // the rest raised
+        Assert.Empty(_game.Applied);                                // written by the SDK, not the game's tool
+
+        var obstacles = Landscape.ObstaclesIn(Square(), around);
+        Assert.Equal(["House_L1(Clone)"], obstacles.Names);
+        Assert.True(obstacles.Covers(-1.5f, 10));
+        Assert.False(obstacles.Covers(1, 10));
+    }
+
+    [Fact]
+    public void AChangeAllUnderWhatStandsThereIsRefusedAndNothingInTheWayIsDone()
+    {
+        var around = new LandscapeOptions { ObstacleMode = LandscapeObstacleMode.GoAround };
+        Assert.Equal(LandscapeResult.Done, Landscape.Check(Square(), LandscapeOperation.Raise, around));
+        Assert.True(Landscape.ObstaclesIn(Square(), around).IsEmpty);
+
+        _game.Buildings = true;
+        _game.Footprints.Add(new GroundFootprint("House_L1(Clone)", 0, 10, 10, 10, 1, 0));
+        Assert.Equal(LandscapeResult.Blocked, Landscape.Raise(Square(), 1, around));
+        Assert.True(Landscape.TryGetHeight(0, 10, out float h));
+        Assert.Equal(FakeTerrain.Ground(0), h, 3);
+
+        // A turned footprint covers its own rectangle, not the square round it.
+        var turned = new GroundFootprint("Wall", 0, 0, 2, 0.5f, 0.7071f, 0.7071f);
+        Assert.True(turned.Covers(1, 1));
+        Assert.False(turned.Covers(1, -1));
+    }
+
+    [Fact]
+    public void AChangeGoesRoundAnotherModsZone()
+    {
+        Landscape.ProtectFor(typeof(Landscape).Assembly, LandscapeArea.Circle(V(1, 0, 10), 0.8f, 0));
+        var around = new LandscapeOptions { ObstacleMode = LandscapeObstacleMode.GoAround };
+        Assert.Equal(LandscapeResult.Blocked, Landscape.Raise(Square(), 1));
+        Assert.Equal(LandscapeResult.Partial, Landscape.Raise(Square(), 1, around));
+        Assert.True(Landscape.TryGetHeight(1, 10, out float kept));
+        Assert.Equal(FakeTerrain.Ground(1), kept, 3);
+        Assert.True(Landscape.TryGetHeight(-1, 10, out float raised));
+        Assert.Equal(FakeTerrain.Ground(-1) + 1, raised, 2);
+    }
+
+    [Fact]
+    public void AFittingChangeLevelsTheGroundUnderABuildingToItsHeightWithAnEmbankmentRoundIt()
+    {
+        // The ground the game levels for a house over the square's west side, x from -2.5 to -0.5, at 29.5.
+        _game.Buildings = true;
+        _game.Footprints.Add(new GroundFootprint("House_L1(Clone)", -1.5f, 10, 1, 3, 1, 0) { Level = 29.5f });
+        var fit = new LandscapeOptions { ObstacleMode = LandscapeObstacleMode.Fit };
+
+        Assert.Equal(LandscapeResult.Partial, Landscape.Check(Square(), LandscapeOperation.Raise, fit));
+        Assert.Equal(LandscapeResult.Partial, Landscape.Raise(Square(), 2, fit));
+        Assert.True(Landscape.TryGetHeight(-1.5f, 10, out float under));
+        Assert.Equal(29.5f, under, 3);                                // levelled to the house's height
+        Assert.True(Landscape.TryGetHeight(0, 10, out float round));
+        Assert.Equal(29.5f + 0.5f, round, 2);                         // half a metre out: half a metre up, 45°
+        Assert.True(Landscape.TryGetHeight(1.5f, 10, out float beside));
+        Assert.Equal(29.5f + 2, beside, 2);                           // 2 m out: no more than 2 m over it
+        Assert.Equal(GroundKind.Natural, Landscape.KindAt(-1.5f, 10));  // the house's ground keeps its look
+
+        // Again: the embankment does not creep towards the house's height.
+        Landscape.Raise(Square(), 2, fit);
+        Assert.True(Landscape.TryGetHeight(0, 10, out float again));
+        Assert.Equal(round, again, 2);
+
+        var obstacles = Landscape.ObstaclesIn(Square(), fit);
+        Assert.True(obstacles.Fits);
+        Assert.Equal(29.5f, obstacles.HeightAfter(-1.5f, 10, 30, 40));
+        Assert.Equal(29.5f + 3, obstacles.HeightAfter(2.5f, 10, 30, 40)); // 3 m out
+        Assert.Equal(31, obstacles.HeightAfter(2.5f, 10, 30, 31));
+        Assert.True(obstacles.Covers(10, 10));                        // within the embankment's reach
+    }
+
+    [Fact]
+    public void AFittingChangeUnderABuildingTheGameOnlyFillsForLeavesItsGroundHigher()
+    {
+        // A well whose ground the game only fills up to 29.5: its ground at 30 and over is left so.
+        _game.Buildings = true;
+        _game.Footprints.Add(new GroundFootprint("WaterWell_L1(Clone)", -1.5f, 10, 1, 3, 1, 0) { Level = 29.5f, LevelsDown = false });
+        var fit = new LandscapeOptions { ObstacleMode = LandscapeObstacleMode.Fit };
+
+        Assert.Equal(LandscapeResult.Partial, Landscape.Lower(Square(), 1, fit));
+        Assert.True(Landscape.TryGetHeight(-1.5f, 10, out float dug));
+        Assert.Equal(29.5f, dug, 3);                                  // dug down to its foot, no further
+        Assert.Equal(LandscapeResult.Partial, Landscape.Raise(Square(), 2, fit));
+        Assert.True(Landscape.TryGetHeight(-1.5f, 10, out float raised));
+        Assert.Equal(29.5f, raised, 3);                               // not buried by a raise either
+    }
+
+    [Fact]
+    public void AFittingChangeMovesTheGroundUnderRocksOnlyUpToTheirUnderside()
+    {
+        // Rocks over x from 0 to 2 of the square whose underside is 0.2 m over the ground there; under the rest of their box,
+        // nothing of them.
+        _game.Landmarks = true;
+        _game.Footprints.Add(new GroundFootprint("WolfDen", 0.5f, 10, 1.5f, 1, 1, 0)
+        {
+            Underside = (x, z) => x >= 0 ? FakeTerrain.Ground(x) + 0.2f : null,
+        });
+        var fit = new LandscapeOptions { ObstacleMode = LandscapeObstacleMode.Fit };
+
+        Assert.Equal(LandscapeResult.Partial, Landscape.Raise(Square(), 1, fit));
+        Assert.True(Landscape.TryGetHeight(1, 10, out float under));
+        Assert.Equal(FakeTerrain.Ground(1) + 0.2f, under, 2);         // up to the rocks, not into them
+        Assert.True(Landscape.TryGetHeight(-0.5f, 10, out float free));
+        Assert.Equal(FakeTerrain.Ground(-0.5f) + 1, free, 2);          // in their box, but nothing over it
+
+        Assert.Equal(LandscapeResult.Partial, Landscape.Lower(Square(), 2, fit));
+        Assert.True(Landscape.TryGetHeight(1, 10, out float dug));
+        Assert.Equal(FakeTerrain.Ground(1) + 0.2f, dug, 2);           // not dug out from under them: they would hang
+    }
+
+    [Fact]
     public void TheGamesAnswerIsPassedOnAndAFaultIsAFailure()
     {
         _game.Result = LandscapeResult.TooSteep;
@@ -579,6 +704,12 @@ internal sealed class FakeTerrain : ITerrainSource
     public string? BuildingIn(LandscapeArea area) => Buildings ? "House_L1(Clone)" : null;
 
     public string? LandmarkIn(LandscapeArea area) => Landmarks ? "WolfDenNetworkLogic(Clone)" : null;
+
+    /// <summary>What stands on the ground, for a change that goes round it.</summary>
+    public List<GroundFootprint> Footprints { get; } = [];
+
+    public IReadOnlyList<GroundFootprint> ObstaclesIn(LandscapeArea area, bool buildings, bool landmarks, bool fit) =>
+        buildings || landmarks ? Footprints : [];
 
     public bool TryGetPlayer(out Vector3 position, out Vector3 forward)
     {
