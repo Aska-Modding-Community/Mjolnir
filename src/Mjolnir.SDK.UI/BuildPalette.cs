@@ -98,7 +98,7 @@ public sealed class BuildPalette : IDisposable
         if (Categories.Count == 0) return;
         int index = SelectedCategory is { } current ? Categories.IndexOf(current) : -1;
         SelectedCategory = Categories[PaletteRules.Step(Math.Max(index, 0), index < 0 ? 0 : step, Categories.Count)];
-        if (_view is { IsOpen: true } view) view.Build();
+        Refresh();
     }
 
     /// <summary>Closes the palette and destroys its objects.</summary>
@@ -183,6 +183,19 @@ internal static class PaletteRules
 {
     /// <summary>How many diamonds go into the upper row: the larger half, as the game's 9 over 8.</summary>
     public static int UpperRow(int count) => (count + 1) / 2;
+
+    /// <summary>
+    /// How far the lower row's diamonds are moved right of the upper's, both centred, so that they stand between them as
+    /// the game's do: half a step when the rows are as long (a longer upper row staggers them by itself), else none.
+    /// </summary>
+    public static float LowerRowShift(int upper, int lower, float step) => upper == lower && lower > 0 ? step / 2 : 0;
+
+    /// <summary>
+    /// Where the strip's left edge goes in the view (0 its left edge) when it fits: its middle at <paramref name="middle"/>
+    /// (the diamonds' middle, in the view's units), kept inside the view; a strip wider than the view starts at 0.
+    /// </summary>
+    public static float FittedLeft(float content, float view, float middle) =>
+        content >= view ? 0 : Math.Clamp(middle - content / 2, 0, view - content);
 
     /// <summary>The index <paramref name="step"/> places from <paramref name="index"/>, going round.</summary>
     public static int Step(int index, int step, int count) => count <= 0 ? 0 : ((index + step) % count + count) % count;

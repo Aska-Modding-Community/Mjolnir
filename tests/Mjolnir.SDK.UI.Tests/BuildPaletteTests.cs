@@ -15,6 +15,23 @@ public sealed class BuildPaletteTests
     }
 
     [Fact]
+    public void RowsAsLongAreStaggeredByHalfAStep()
+    {
+        Assert.Equal(25, PaletteRules.LowerRowShift(5, 5, 50));
+        Assert.Equal(0, PaletteRules.LowerRowShift(9, 8, 50)); // centred, a longer upper row staggers them itself
+        Assert.Equal(0, PaletteRules.LowerRowShift(1, 0, 50));
+    }
+
+    [Fact]
+    public void TilesThatFitStandOverTheDiamonds()
+    {
+        Assert.Equal(200, PaletteRules.FittedLeft(200, 600, 300));  // centred on the diamonds' middle
+        Assert.Equal(0, PaletteRules.FittedLeft(200, 600, 50));     // kept inside the view
+        Assert.Equal(400, PaletteRules.FittedLeft(200, 600, 590));
+        Assert.Equal(0, PaletteRules.FittedLeft(700, 600, 300));    // wider than the view: scrolled from its left
+    }
+
+    [Fact]
     public void QAndEGoRoundTheCategories()
     {
         var palette = new BuildPalette();

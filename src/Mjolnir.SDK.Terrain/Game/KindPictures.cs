@@ -25,8 +25,14 @@ internal static class KindPictures
     /// <summary>The background, the build menu's dark: the HDRP camera's buffer keeps no transparency.</summary>
     private static readonly Color Background = new(0.035f, 0.04f, 0.04f, 1f);
 
+    /// <summary>How long the sun's intensity read for the lights is used again, in seconds: a scene-wide search each time.</summary>
+    private const float SunKept = 1f;
+
     private static readonly Dictionary<(string, int, int), Texture2D> s_taken = [];
     private static int s_layer = -2;
+    private static VolumeProfile? s_profile;
+    private static Exposure? s_exposure;
+    private static float s_sun, s_sunRead = float.NegativeInfinity;
 
     /// <summary>The picture of a model, <paramref name="width"/> × <paramref name="height"/>; null when it has no mesh.</summary>
     public static Texture2D? Of(string key, GameObject model, int width, int height)
@@ -58,9 +64,7 @@ internal static class KindPictures
             hd.backgroundColorHDR = Background;
             hd.volumeLayerMask = 1 << layer;
 
-            float sun = 0;
-            foreach (var light in Object.FindObjectsOfType<Light>())
-                if (light != null && light.type == LightType.Directional && light.isActiveAndEnabled) sun = Math.Max(sun, light.intensity);
+            float sun = Sun();
             float keyLux = 3 * sun + 2000;
             AddLight(root.transform, camera.transform.position + new Vector3(0, size, 0), keyLux, distance, layer);
             AddLight(root.transform, bounds.center + new Vector3(size * 1.5f, size * 0.5f, size * 1.5f), keyLux * 0.4f, size * 2.2f, layer);
@@ -135,6 +139,8 @@ internal static class KindPictures
         light.shadows = LightShadows.None;
     }
 
+    // The picture's own volume: a fixed exposure, no fog, no bloom. Its profile is one for every picture, kept for the
+    // game's run (a profile is an asset the volume's object does not take with it).
     private static void AddVolume(Transform root, int layer, float exposureValue)
     {
         var holder = new GameObject("Volume") { layer = layer };
@@ -142,13 +148,29 @@ internal static class KindPictures
         var volume = holder.AddComponent<Volume>();
         volume.isGlobal = true;
         volume.priority = 1000;
-        var profile = ScriptableObject.CreateInstance<VolumeProfile>();
-        var exposure = profile.Add<Exposure>(true);
-        exposure.mode.Override(ExposureMode.Fixed);
-        exposure.fixedExposure.Override(exposureValue);
-        profile.Add<Fog>(true).enabled.Override(false);
-        profile.Add<Bloom>(true).intensity.Override(0f);
-        volume.sharedProfile = profile;
+        if (s_profile == null || s_exposure == null)
+        {
+            s_profile = ScriptableObject.CreateInstance<VolumeProfile>();
+            s_profile.hideFlags |= HideFlags.DontUnloadUnusedAsset;
+            s_exposure = s_profile.Add<Exposure>(true);
+            s_exposure.mode.Override(ExposureMode.Fixed);
+            s_profile.Add<Fog>(true).enabled.Override(false);
+            s_profile.Add<Bloom>(true).intensity.Override(0f);
+        }
+        s_exposure.fixedExposure.Override(exposureValue);
+        volume.sharedProfile = s_profile;
+    }
+
+    // The strongest directional light's intensity (the sun's), read again at most once a second.
+    private static float Sun()
+    {
+        float now = Time.realtimeSinceStartup;
+        if (now - s_sunRead < SunKept) return s_sun;
+        s_sunRead = now;
+        s_sun = 0;
+        foreach (var light in Object.FindObjectsOfType<Light>())
+            if (light != null && light.type == LightType.Directional && light.isActiveAndEnabled) s_sun = Math.Max(s_sun, light.intensity);
+        return s_sun;
     }
 
     // The highest layer the game names nothing on (29 in this build), looked up once.

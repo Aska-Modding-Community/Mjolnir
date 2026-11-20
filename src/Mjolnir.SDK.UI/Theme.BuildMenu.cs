@@ -52,6 +52,8 @@ internal static partial class Theme
             {
                 foreach (var t in BuildCategory.GetComponentsInChildren<Transform>(true))
                     if (t.name is "Text" or "NewItemsHighlight" or "Image_h") t.gameObject.SetActive(false);
+                // The prefab may be kept in the middle of a hover tween (its icon turned 325 degrees).
+                if (BuildCategory.transform.Find("Image") is { } icon) icon.localEulerAngles = Vector3.zero;
             }
             BuildMenu = KeepMenu(prefab.transform);
             SdkLog.Info(GameUi.Source, $"Build menu parts: frame {Has(BuildMenu)}, category {Has(BuildCategory)}, tile {Has(BuildTile)}");

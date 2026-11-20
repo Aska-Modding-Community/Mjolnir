@@ -45,6 +45,9 @@ must be rebuilt.
 
 ### Fixed
 
+- A placed kind of the world (`NaturalObjects.Place`) shows the world's own name, description and icon in the game's
+  card (a flax bush showed a missing key and another item's icon), and is outlined as the world's object is, along its
+  leaves (a bush was outlined as flat cards).
 - An object the SDK took away (`Harvest`, `Clear`, `Remove`, and the changes of the ground that take objects) is no
   longer taken again by the next change a moment later. The game marks it destroyed only in its own copy of the data, so
   a brush writing ten times a second took the same objects again, the game failed to remove what was no longer in its

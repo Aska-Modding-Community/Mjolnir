@@ -26,14 +26,15 @@ internal sealed class BuildPaletteView
     private static bool s_ticking;
 
     private readonly BuildPalette _palette;
-    private readonly List<(RectTransform Rect, PaletteCategory Category, Image? Background, GameObject? Highlight)> _diamonds = [];
+    private readonly List<(RectTransform Rect, PaletteCategory Category, Image? Frame, GameObject? Highlight, bool Upper)> _diamonds = [];
     private readonly List<(RectTransform Rect, PaletteItem Item, GameObject? Hover, GameObject? Selected)> _tiles = [];
     private GameObject? _root;
     private Canvas? _canvas;
     private RectTransform? _row1, _row2, _content, _viewport, _close, _labelDiv;
     private TMP_Text? _label;
-    private HorizontalLayoutGroup? _contentLayout;
+    private HorizontalLayoutGroup? _contentLayout, _row1Layout, _row2Layout;
     private float _scroll;
+    private bool _placeAgain;
     private object? _hover;
 
     public BuildPaletteView(BuildPalette palette) => _palette = palette;
@@ -100,6 +101,21 @@ internal sealed class BuildPaletteView
         _content = Rect(ViewFactory.FindDeep(root, "Content"));
         _viewport = Rect(ViewFactory.FindDeep(root, "Viewport"));
         _contentLayout = _content?.GetComponent<HorizontalLayoutGroup>();
+        // The game's rows are laid for its 17 categories from their left; a palette's fewer stand centred, the lower row
+        // between the upper's diamonds (the shift in Build), on the same middle.
+        _row1Layout = _row1?.GetComponent<HorizontalLayoutGroup>();
+        _row2Layout = _row2?.GetComponent<HorizontalLayoutGroup>();
+        foreach (var layout in new[] { _row1Layout, _row2Layout })
+        {
+            if (layout == null) continue;
+            layout.childAlignment = TextAnchor.MiddleCenter;
+            layout.padding.left = layout.padding.right = 0;
+        }
+        if (_row1 != null && _row2 != null)
+        {
+            _row2.offsetMin = new Vector2(_row1.offsetMin.x, _row2.offsetMin.y);
+            _row2.offsetMax = new Vector2(_row1.offsetMax.x, _row2.offsetMax.y);
+        }
         if (_content != null)
         {
             // Scrolled by the view itself (the copy has no ScrollRect): pinned to the view's left edge, as wide as its tiles.
@@ -129,7 +145,16 @@ internal sealed class BuildPaletteView
         Clear(_content);
         var categories = _palette.Categories;
         int upper = PaletteRules.UpperRow(categories.Count);
-        for (int i = 0; i < categories.Count; i++) AddDiamond(categories[i], i < upper ? _row1 : _row2);
+        for (int i = 0; i < categories.Count; i++) AddDiamond(categories[i], i < upper ? _row1 : _row2, i < upper);
+        if (_row2Layout != null)
+        {
+            // A centred row moves by half of its left padding.
+            float shift = PaletteRules.LowerRowShift(upper, categories.Count - upper, DiamondStep());
+            _row2Layout.padding.left = (int)Math.Round(shift * 2);
+        }
+        if (_row1 != null) LayoutRebuilder.ForceRebuildLayoutImmediate(_row1);
+        if (_row2 != null) LayoutRebuilder.ForceRebuildLayoutImmediate(_row2);
+        PlaceClose();
         var category = _palette.SelectedCategory;
         if (_label != null) _label.text = category?.DisplayName ?? "";
         if (_labelDiv != null) _labelDiv.gameObject.SetActive(category != null);
@@ -139,9 +164,10 @@ internal sealed class BuildPaletteView
         _scroll = PaletteRules.Scroll(_scroll, 0, 0, ContentWidth(), ViewWidth());
         Place();
         Paint();
+        _placeAgain = true;
     }
 
-    private void AddDiamond(PaletteCategory category, RectTransform? row)
+    private void AddDiamond(PaletteCategory category, RectTransform? row, bool upper)
     {
         if (row == null || Theme.BuildCategory == null) return;
         var diamond = Object.Instantiate(Theme.BuildCategory, row, false);
@@ -153,9 +179,11 @@ internal sealed class BuildPaletteView
             icon.enabled = icon.sprite != null;
             icon.preserveAspect = true;
         }
-        var background = diamond.transform.Find("Background")?.GetComponent<Image>();
+        // The menu colours a diamond's frame (its tab's image): clear as it is, orange under the pointer, white chosen. The
+        // dark diamond under it keeps its own colours.
+        var frame = diamond.transform.Find("Background/Frame1")?.GetComponent<Image>();
         var highlight = diamond.transform.Find("Background/Highlight")?.gameObject;
-        _diamonds.Add((diamond.GetComponent<RectTransform>(), category, background, highlight));
+        _diamonds.Add((diamond.GetComponent<RectTransform>(), category, frame, highlight, upper));
     }
 
     private void AddTile(PaletteItem item)
@@ -179,10 +207,10 @@ internal sealed class BuildPaletteView
     private void Paint()
     {
         var (normal, highlight, selected) = Theme.BuildCategoryColors;
-        foreach (var (rect, category, background, glow) in _diamonds)
+        foreach (var (rect, category, frame, glow, _) in _diamonds)
         {
             bool chosen = category == _palette.SelectedCategory, over = _hover == category;
-            if (background != null) background.color = chosen ? selected : over ? highlight : normal;
+            if (frame != null) frame.color = chosen ? selected : over ? highlight : normal;
             if (glow != null) glow.SetActive(chosen || over);
             float scale = chosen ? SelectedScale : over ? HoverScale : 1;
             rect.localScale = new Vector3(scale, scale, 1);
@@ -196,8 +224,44 @@ internal sealed class BuildPaletteView
 
     private void Place()
     {
-        if (_content != null) _content.anchoredPosition = new Vector2(-_scroll, _content.anchoredPosition.y);
+        if (_content == null) return;
+        float content = ContentWidth(), view = ViewWidth();
+        float x = content >= view || _viewport == null ? -_scroll : PaletteRules.FittedLeft(content, view, DiamondsMiddle());
+        _content.anchoredPosition = new Vector2(x, _content.anchoredPosition.y);
     }
+
+    // The middle of the diamonds, in the view's units from its left edge: tiles that fit stand over it.
+    private float DiamondsMiddle()
+    {
+        if (_viewport == null || _diamonds.Count == 0) return ViewWidth() / 2;
+        // In the view's own space: right after a build the canvas may not have taken its scale yet, which moves the world
+        // positions of the view and the diamonds alike.
+        float left = float.MaxValue, right = float.MinValue;
+        foreach (var (rect, _, _, _, _) in _diamonds)
+        {
+            float x = _viewport.InverseTransformPoint(rect.position).x;
+            left = Math.Min(left, x);
+            right = Math.Max(right, x);
+        }
+        return (left + right) / 2 - _viewport.rect.xMin;
+    }
+
+    // The close button right after the upper row's last diamond, as the game's stands after its full row.
+    private void PlaceClose()
+    {
+        if (_close == null || _row1 == null) return;
+        RectTransform? last = null;
+        foreach (var (rect, _, _, _, upper) in _diamonds)
+            if (upper && (last == null || rect.position.x > last.position.x)) last = rect;
+        if (last == null) return;
+        float scale = _row1.lossyScale.x;
+        float closeRight = _close.rect.width * _close.lossyScale.x * (_close.pivot.x - 0.5f);
+        // In the game the button's middle is about 0.45 of a step past the last diamond's.
+        _close.position = new Vector3(last.position.x + 0.45f * DiamondStep() * scale + closeRight, _close.position.y, _close.position.z);
+    }
+
+    private float DiamondStep() =>
+        (Theme.BuildCategory != null ? Theme.BuildCategory.GetComponent<RectTransform>().rect.width : 35) + (_row1Layout != null ? _row1Layout.spacing : 15);
 
     private float ContentWidth() => _content != null ? LayoutUtility.GetPreferredWidth(_content) : 0;
 
@@ -211,7 +275,7 @@ internal sealed class BuildPaletteView
     {
         var camera = _canvas != null && _canvas.renderMode != RenderMode.ScreenSpaceOverlay ? _canvas.worldCamera : null;
         if (_close != null && RectTransformUtility.RectangleContainsScreenPoint(_close, point, camera)) return this;
-        foreach (var (rect, category, _, _) in _diamonds)
+        foreach (var (rect, category, _, _, _) in _diamonds)
             if (RectTransformUtility.RectangleContainsScreenPoint(rect, point, camera)) return category;
         if (_viewport == null || RectTransformUtility.RectangleContainsScreenPoint(_viewport, point, camera))
             foreach (var (rect, item, _, _) in _tiles)
@@ -230,10 +294,18 @@ internal sealed class BuildPaletteView
             _palette.RaiseClosed();
             return;
         }
-        var point = MouseInput.Position;
-        var hit = HitTest(point);
-        bool repaint = !Equals(hit, _hover);
-        _hover = hit is PaletteCategory or PaletteItem ? hit : null;
+        if (_placeAgain)
+        {
+            // Once more a frame after a build, with the canvas's scale applied.
+            _placeAgain = false;
+            PlaceClose();
+            Place();
+        }
+        // Repainted when what is hovered changes: a category or an item (the close button and the label have no hover look).
+        var hit = HitTest(MouseInput.Position);
+        var hover = hit is PaletteCategory or PaletteItem ? hit : null;
+        bool repaint = !Equals(hover, _hover);
+        _hover = hover;
 
         if (KeyboardInput.WasPressed("Q")) _palette.SelectCategory(-1);
         else if (KeyboardInput.WasPressed("E")) _palette.SelectCategory(1);

@@ -4,6 +4,7 @@ using HarmonyLib;
 using SandSailorStudio;
 using SandSailorStudio.Inventory;
 using SSSGame;
+using SSSGame.Render;
 using UnityEngine;
 using Object = UnityEngine.Object;
 using VegetationInfo = AwesomeTechnologies.VegetationSystem.VegetationItemInfoPro;
@@ -43,6 +44,9 @@ internal static class GamePlacement
     private static readonly Dictionary<string, Made> s_byName = new(StringComparer.Ordinal);
     private static readonly Dictionary<string, Made> s_byAsset = new(StringComparer.Ordinal);
     private static readonly List<PlaceableKindData> s_kinds = [];
+    // The game's item kind whose texts a placed kind shows, by the placed kind's object: the game builds a kind's keys from
+    // its asset's name, which is the SDK's own.
+    private static readonly Dictionary<IntPtr, ItemInfo> s_textsOf = [];
     private static GameObject? s_holder;
     private static bool s_made;
 
@@ -200,6 +204,13 @@ internal static class GamePlacement
         info.id = id;
         info.hideFlags |= HideFlags.DontUnloadUnusedAsset;
         info.spawnObject = prefab;
+        // What the player sees of it is the world's own: its name, description and lore (the keys, below) and its icon.
+        if (source != null)
+        {
+            s_textsOf[info.Pointer] = source;
+            if (source.icon != null) info.icon = source.icon;
+            info.previewImage = source.previewImage;
+        }
         string? resource = trunk?.name ?? gives?.itemInfo?.name;
         // The tree's own trunk kind carries the tree's parts and points; any other base takes the world kind's.
         if (trunk == null && source?.TryCast<ResourceInfo>() is { } from && info.TryCast<ResourceInfo>() is { } to)
@@ -262,11 +273,30 @@ internal static class GamePlacement
             // item's manifest: the biome object's place goes to the resource object, or they drop nothing.
             foreach (var spawner in prefab.GetComponentsInChildren<SubcomponentSpawner>(true))
                 if (spawner.masterItem == null || spawner.masterItem.Pointer == biome.Pointer) spawner.masterItem = resource;
+            OutlineAsTheWorld(prefab, biome.geometry);
             Object.DestroyImmediate(biome);
         }
         // The spawners stay, as the game has them: the vegetation spawner lays a felled tree's trunk (lying, from the item
         // kind's first component), the stump's spawner its firewood.
         return prefab;
+    }
+
+    // The world's object of a kind is drawn by the vegetation system: its own model (the biome object's geometry) is
+    // destroyed when it is set up, so the game outlines it by its picking volume alone, which follows the leaves. The copy
+    // keeps the model to be seen, and a pickable outlines its objects' meshes whole: a bush came out as flat cards. So the
+    // model is not the pickable's, as in the world.
+    private static void OutlineAsTheWorld(GameObject prefab, GameObject? geometry)
+    {
+        if (geometry == null) return;
+        foreach (var pickable in prefab.GetComponentsInChildren<Pickable>(true))
+        {
+            var objects = pickable.pickableObjects;
+            for (int i = (objects?.Count ?? 0) - 1; i >= 0; i--)
+            {
+                var part = objects![i];
+                if (part != null && (part.Pointer == geometry.Pointer || part.transform.IsChildOf(geometry.transform))) objects.RemoveAt(i);
+            }
+        }
     }
 
     // A kind of scenery: a raw stone's world item without its look, pick-up or harvest, with the kind's model and colliders.
@@ -348,6 +378,9 @@ internal static class GamePlacement
         if (stump.gameObject.activeSelf != felled) stump.gameObject.SetActive(felled);
     }
 
+    /// <summary>The game's item kind whose texts a placed kind shows; null for any other item kind.</summary>
+    public static ItemInfo? TextsOf(IntPtr info) => s_textsOf.TryGetValue(info, out var source) ? source : null;
+
     /// <summary>A blow landed on a placed object: a tree just felled shows its stump (the game lays its trunk itself).</summary>
     public static void AfterDamage(HarvestInteraction harvest) => Show(harvest);
 
@@ -370,7 +403,8 @@ internal static class GamePlacement
 }
 
 /// <summary>
-/// The placed kinds' hooks: the item database's build (the kinds go into its list first), a placed tree's set-up (it shows
+/// The placed kinds' hooks: the item database's build (the kinds go into its list first), a placed kind's texts' keys (the
+/// world kind's), a placed tree's set-up (it shows
 /// its tree or its stump, as its harvest part says) and a blow on it (a tree just felled drops the game's trunk). Each
 /// method is the game's own; another prefix on the database's build (the content module's) runs beside this one.
 /// </summary>
@@ -388,6 +422,26 @@ internal static class PlacementPatches
         catch (Exception e)
         {
             SdkLog.Error(Landscape.Platform, $"The kinds of the world to place could not be made: {e}");
+        }
+    }
+
+    // A placed kind's texts are the world kind's: the game asks the keys of an item kind's name, description and lore here
+    // (its name and description ask on every read), and a placed kind's own asset name has none.
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(ItemInfo), nameof(ItemInfo.GetKey))]
+    private static bool GetKey(ItemInfo __instance, string token, ref string __result)
+    {
+        var source = GamePlacement.TextsOf(__instance.Pointer);
+        if (source == null) return true;
+        try
+        {
+            __result = source.GetKey(token);
+            return false;
+        }
+        catch (Exception e)
+        {
+            SdkLog.Warn(Landscape.Platform, $"A placed kind's text '{token}' could not be read from its world kind: {e.Message}");
+            return true;
         }
     }
 

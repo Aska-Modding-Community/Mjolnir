@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -5,13 +6,15 @@ namespace Mjolnir.SDK.Terrain;
 
 /// <summary>
 /// A preview of a kind in the world: plain copies of its model's nearest level (meshes and materials, no colliders, no
-/// scripts, no shadows) under a root that outlives the scenes; a blocked one wears one unlit red material instead.
+/// scripts, no shadows) under a root that outlives the scenes; a blocked one wears one unlit red material instead, and
+/// its own again once freed.
 /// </summary>
 internal sealed class GameKindPreview : IKindPreviewView
 {
     private static readonly Color BlockedColor = new(0.85f, 0.15f, 0.1f, 1f);
     private static Material? s_blocked;
 
+    private readonly List<(MeshRenderer Renderer, Material[] Materials)> _parts = [];
     private GameObject? _root;
     private string? _kind;
     private bool _blocked;
@@ -32,6 +35,7 @@ internal sealed class GameKindPreview : IKindPreviewView
             }
             _kind = kind;
             _blocked = false;
+            foreach (var renderer in _root.GetComponentsInChildren<MeshRenderer>(true)) _parts.Add((renderer, renderer.sharedMaterials));
             if (blocked) Paint(true);
         }
         else if (blocked != _blocked) Paint(blocked);
@@ -42,30 +46,23 @@ internal sealed class GameKindPreview : IKindPreviewView
         if (!_root.activeSelf) _root.SetActive(true);
     }
 
-    // Blocked, every slot of every part takes the red material; freed, the parts are copied from the model again.
+    // Blocked, every slot of every part takes the red material; freed, each part takes its own back.
     private void Paint(bool blocked)
     {
-        if (_root == null) return;
+        if (blocked && (s_blocked ??= Blocked()) == null) return;
         _blocked = blocked;
-        if (blocked)
+        foreach (var (renderer, materials) in _parts)
         {
-            s_blocked ??= Blocked();
-            if (s_blocked == null) return;
-            foreach (var renderer in _root.GetComponentsInChildren<MeshRenderer>(true))
+            if (renderer == null) continue;
+            if (!blocked)
             {
-                var slots = renderer.sharedMaterials;
-                var red = new Material[slots.Length];
-                for (int i = 0; i < red.Length; i++) red[i] = s_blocked!;
-                renderer.sharedMaterials = red;
+                renderer.sharedMaterials = materials;
+                continue;
             }
-            return;
+            var red = new Material[materials.Length];
+            for (int i = 0; i < red.Length; i++) red[i] = s_blocked!;
+            renderer.sharedMaterials = red;
         }
-        // Freed: made again from the model, its own look back.
-        var kind = _kind;
-        var transform = _root.transform;
-        var (position, rotation, scale) = (transform.position, transform.eulerAngles.y, transform.localScale.x);
-        Destroy();
-        if (kind != null) Show(kind, position, rotation, scale, false);
     }
 
     private static Material? Blocked()
@@ -86,6 +83,7 @@ internal sealed class GameKindPreview : IKindPreviewView
     {
         if (_root != null) Object.Destroy(_root);
         _root = null;
+        _parts.Clear();
         _kind = null;
         _blocked = false;
     }
