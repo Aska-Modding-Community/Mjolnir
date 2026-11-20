@@ -165,5 +165,6 @@ public static partial class Landscape
         var source = Live();
         LandscapeOutline.Tick(source);
         LandscapeGrid.Tick(source);
+        KindPreview.Tick(source);
     }
 }

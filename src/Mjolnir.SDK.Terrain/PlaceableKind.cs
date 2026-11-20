@@ -22,6 +22,42 @@ public sealed class PlaceableKind
     /// <summary>The game's name of the kind ("tree_willow", "bush_sloe_berries", "rock_shoreline_big").</summary>
     public string Name { get; }
 
+    /// <summary>
+    /// The kind's name for the player: the game's name of its world objects in the player's language where the game gives
+    /// one, else one made from <see cref="Name"/> ("tree_birch1" → "Birch 1").
+    /// </summary>
+    public string DisplayName
+    {
+        get
+        {
+            try
+            {
+                if (Landscape.Source?.KindDisplayName(Name) is { Length: > 0 } text) return text;
+            }
+            catch (System.Exception e)
+            {
+                SdkLog.Warn(Landscape.Platform, $"The name of '{Name}' could not be read: {e.Message}");
+            }
+            return Readable(Name);
+        }
+    }
+
+    /// <summary>A name made from the kind's own: its first word (what it is) dropped, the rest in words, a number apart.</summary>
+    internal static string Readable(string name)
+    {
+        var words = new System.Collections.Generic.List<string>(name.Split('_', System.StringSplitOptions.RemoveEmptyEntries));
+        if (words.Count > 1) words.RemoveAt(0);
+        for (int i = 0; i < words.Count; i++)
+        {
+            string word = words[i];
+            int digits = word.Length;
+            while (digits > 0 && char.IsDigit(word[digits - 1])) digits--;
+            if (digits > 0 && digits < word.Length) words[i] = word[..digits] + " " + word[digits..];
+        }
+        string text = string.Join(" ", words);
+        return text.Length == 0 ? name : char.ToUpperInvariant(text[0]) + text[1..];
+    }
+
     /// <summary>What kind of thing it is: a tree, an object, a large object or a plant.</summary>
     public NaturalObjectKind Kind { get; }
 

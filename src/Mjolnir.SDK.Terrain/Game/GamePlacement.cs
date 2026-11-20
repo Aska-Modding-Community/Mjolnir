@@ -64,6 +64,22 @@ internal static class GamePlacement
             if (IndexOf(list, made.Info) < 0) list.Add(made.Info);
     }
 
+    /// <summary>The name the game gives the world's objects of a kind, in the player's language; null for none.</summary>
+    public static string? DisplayName(string name)
+    {
+        if (!s_byName.TryGetValue(name, out var made) || made.Source == null) return null;
+        string? text = made.Source.Name;
+        // An item kind without a translation answers with its asset's name ("Item_…"): that is no name for a player.
+        return string.IsNullOrWhiteSpace(text) || text.StartsWith("Item_", StringComparison.Ordinal) || text == made.Source.name ? null : text;
+    }
+
+    /// <summary>The vegetation system's model of a kind; null for an unknown kind.</summary>
+    public static GameObject? ModelOf(string name) => s_byName.TryGetValue(name, out var made) ? made.Model : null;
+
+    /// <summary>A picture of a kind's model; null for an unknown kind or one without a model.</summary>
+    public static Texture2D? Picture(string name, int width, int height) =>
+        s_byName.TryGetValue(name, out var made) && made.Model != null ? KindPictures.Of(name, made.Model, width, height) : null;
+
     /// <summary>Places a world item of a kind; the instance the game made of it, or null.</summary>
     public static IWorldObject? Place(string name, Vector3 position, float rotation, float scale)
     {
@@ -224,7 +240,7 @@ internal static class GamePlacement
             _ => NaturalObjectKind.Other,
         };
         var data2 = new PlaceableKindData(vegetation.Name, kind, name, vegetation.MinScale, vegetation.MaxScale, harvest, gather);
-        return new Made(info, data2, trunk, resource ?? "", source?.TryCast<BiomeResourceInfo>());
+        return new Made(info, data2, trunk, resource ?? "", source?.TryCast<BiomeResourceInfo>()) { Model = vegetation.VegetationPrefab, Source = source };
     }
 
     // A kind the game harvests or gathers: its own object, a world item's now.
@@ -343,7 +359,14 @@ internal static class GamePlacement
     }
 
     /// <summary>A kind made: its item kind, what the SDK says of it, a tree's trunk kind, what it gives, the world's kind.</summary>
-    internal sealed record Made(ItemInfo Info, PlaceableKindData Data, ItemInfo? Trunk, string Resource, BiomeResourceInfo? World);
+    internal sealed record Made(ItemInfo Info, PlaceableKindData Data, ItemInfo? Trunk, string Resource, BiomeResourceInfo? World)
+    {
+        /// <summary>The vegetation system's model of the kind: what its pictures are taken of.</summary>
+        public GameObject? Model { get; init; }
+
+        /// <summary>The game's item kind of the world's objects of this kind (their name in the player's language).</summary>
+        public ItemInfo? Source { get; init; }
+    }
 }
 
 /// <summary>

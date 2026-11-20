@@ -61,11 +61,20 @@ internal interface ITerrainSource
     /// <summary>A grid of <paramref name="columns"/> × <paramref name="rows"/> cells drawn on the ground (hidden until placed).</summary>
     IGridView NewGrid(int columns, int rows);
 
+    /// <summary>A new preview of a kind, hidden until shown.</summary>
+    IKindPreviewView NewKindPreview();
+
     /// <summary>The world's natural objects whose place lies within <paramref name="radius"/> metres of a point.</summary>
     IReadOnlyList<IWorldObject> ObjectsIn(float centerX, float centerZ, float radius);
 
     /// <summary>The kinds of the world a mod can place, made once the game has its item database; empty before.</summary>
     IReadOnlyList<PlaceableKindData> PlaceableKinds { get; }
+
+    /// <summary>The game's name of a kind's world objects in the player's language; null when the game has none.</summary>
+    string? KindDisplayName(string name);
+
+    /// <summary>A picture of a kind's model, taken once and kept; null when it has none.</summary>
+    Texture2D? KindPicture(string name, int width, int height);
 
     /// <summary>Places a world item of a kind at a point of the loaded world; null when the game takes none.</summary>
     IWorldObject? Place(string name, Vector3 position, float rotation, float scale);
@@ -255,6 +264,18 @@ internal interface IOutlineView
     void Hide();
 
     /// <summary>Takes the lines out of the world for good.</summary>
+    void Destroy();
+}
+
+/// <summary>A kind's preview in the world (Game/GameKindPreview.cs; a fake in the unit tests). Used on the main thread only.</summary>
+internal interface IKindPreviewView
+{
+    /// <summary>Shows the kind's model standing at <paramref name="position"/> (on the ground), turned and sized; red when blocked.</summary>
+    void Show(string kind, Vector3 position, float rotation, float scale, bool blocked);
+
+    void Hide();
+
+    /// <summary>Takes the model out of the world for good.</summary>
     void Destroy();
 }
 

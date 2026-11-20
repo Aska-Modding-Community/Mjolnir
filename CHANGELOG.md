@@ -22,6 +22,16 @@ must be rebuilt.
   stands — a den, or the rocks of a place the world was made with. The game cannot move them, and ground dug under a
   wolves' den left its rocks hanging in the air. True by default, like `KeepOffBuildings`.
 
+- `BuildPalette` (`PaletteCategory`, `PaletteItem`, `PaletteItemEventArgs`): a palette of a mod's own in the look of the
+  game's build menu — its category diamonds in two rows, the chosen category's name, a strip of tiles with pictures and
+  names, the ✕ — shown in the menu's place while open; the game's own menu is not touched. It takes the mouse itself,
+  also while the player's controls are captured (a diamond chooses its category, a tile raises `ItemChosen` and closes
+  it, the wheel scrolls the tiles, Q and E step the categories), and `MouseInput.IsOverInterface` is true over it.
+- `NaturalObjects.PictureOf(kind, width, height)`: a picture of a kind of the world, its model taken by a camera of its
+  own with lights of its own, kept for the game's run; `PlaceableKind.DisplayName`, the kind's name in the player's
+  language (the game's, else one made from its name); `NaturalObjects.ShowPreview(kind, position)` → `KindPreview`, the
+  kind's model standing on the ground as the ghost of a tool that places objects one at a time (`Kind`, `Position`,
+  `Rotation`, `Scale`, `IsBlocked` drawn red, `IsVisible`, `Dispose`).
 - `UiQuickSlot`, a slot of the game's quick bar (its frame, a picture, the key under it, the orange frame of the slot in
   hand), and `Hud.AddInPlaceOf(element, HudPart.QuickBar)`, which shows an element in the place of the game's quick bar
   and hides the bar until the element is taken off with `Hud.Remove`: a tool of a mod's own shows its modes on 1–0.

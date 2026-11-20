@@ -337,6 +337,59 @@ public sealed class ObjectsTests : IDisposable
     }
 
     [Fact]
+    public void AKindIsNamedByTheGameElseFromItsOwnName()
+    {
+        var willow = NaturalObjects.FindKind("tree_willow")!;
+        Assert.Equal("Willow", willow.DisplayName);
+        _game.KindNames["tree_willow"] = "Ива";
+        Assert.Equal("Ива", willow.DisplayName);
+        Assert.Equal("Birch 1", PlaceableKind.Readable("tree_birch1"));
+        Assert.Equal("Stone clump small", PlaceableKind.Readable("resource_stone_clump_small"));
+        Assert.Equal("Nest", PlaceableKind.Readable("nest"));
+
+        // A picture needs the running game; asked wrongly it says so.
+        Assert.Null(NaturalObjects.PictureOf("tree_willow"));
+        Assert.Throws<ArgumentException>(() => NaturalObjects.PictureOf("no_such_kind"));
+        Assert.Throws<ArgumentOutOfRangeException>(() => NaturalObjects.PictureOf("tree_willow", 8));
+        Assert.Throws<ArgumentOutOfRangeException>(() => NaturalObjects.PictureOf("tree_willow", 256, NaturalObjects.MaximumPictureSize + 1));
+    }
+
+    [Fact]
+    public void APreviewStandsOnTheGroundUntilDisposed()
+    {
+        var preview = NaturalObjects.ShowPreview("Mjolnir_World_tree_willow", V(2, 99, 10));
+        Assert.Equal("tree_willow", preview.Kind);
+        Landscape.Tick();
+        var shown = _game.Previews.Single().Shown!.Value;
+        Assert.Equal("tree_willow", shown.Kind);
+        Assert.Equal(FakeTerrain.Ground(2), shown.Position.y, 3); // on the ground, whatever y was given
+        Assert.False(shown.Blocked);
+
+        preview.Kind = "bush_sloe_berries";
+        preview.Rotation = 45;
+        preview.Scale = 1.2f;
+        preview.IsBlocked = true;
+        Landscape.Tick();
+        Assert.Equal(("bush_sloe_berries", 45f, 1.2f, true), (_game.Previews[0].Shown!.Value.Kind, _game.Previews[0].Shown!.Value.Rotation,
+            _game.Previews[0].Shown!.Value.Scale, _game.Previews[0].Shown!.Value.Blocked));
+        Assert.Throws<ArgumentException>(() => preview.Kind = "no_such_kind");
+        Assert.Throws<ArgumentOutOfRangeException>(() => preview.Scale = 0);
+
+        preview.Position = V(500, 0, 10);                          // not loaded: hidden
+        Landscape.Tick();
+        Assert.Null(_game.Previews[0].Shown);
+        preview.Position = V(2, 0, 10);
+        preview.IsVisible = false;
+        Landscape.Tick();
+        Assert.Null(_game.Previews[0].Shown);
+        preview.Dispose();
+        Landscape.Tick();
+        Assert.True(_game.Previews[0].Destroyed);
+        Assert.Single(_game.Previews);
+        Assert.Throws<ArgumentException>(() => NaturalObjects.ShowPreview("no_such_kind", V(0, 0, 0)));
+    }
+
+    [Fact]
     public void TheConsoleListsAndPlacesKinds()
     {
         DevConsole.Execute("place");

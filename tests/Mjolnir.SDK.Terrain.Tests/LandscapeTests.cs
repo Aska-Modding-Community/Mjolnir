@@ -505,6 +505,13 @@ internal sealed class FakeTerrain : ITerrainSource
 
     public IReadOnlyList<PlaceableKindData> PlaceableKinds => PlaceKinds;
 
+    /// <summary>The game's names of kinds, by kind; none by default.</summary>
+    public Dictionary<string, string> KindNames { get; } = [];
+
+    public string? KindDisplayName(string name) => KindNames.GetValueOrDefault(name);
+
+    public Texture2D? KindPicture(string name, int width, int height) => null;
+
     /// <summary>The placements asked for: kind, place, turn and scale.</summary>
     public List<(string Name, Vector3 Position, float Rotation, float Scale)> Placed { get; } = [];
 
@@ -649,6 +656,16 @@ internal sealed class FakeTerrain : ITerrainSource
     }
 
     public List<FakeGrid> Grids { get; } = [];
+
+    /// <summary>The previews made: what each was last asked to show (null once hidden or destroyed).</summary>
+    public List<FakePreview> Previews { get; } = [];
+
+    public IKindPreviewView NewKindPreview()
+    {
+        var preview = new FakePreview();
+        Previews.Add(preview);
+        return preview;
+    }
 
     public IGridView NewGrid(int columns, int rows)
     {
@@ -838,5 +855,23 @@ internal sealed class FakeGrid(int columns, int rows) : IGridView
     {
         IsShown = false;
         IsDestroyed = true;
+    }
+}
+
+/// <summary>A kind's preview as the model drew it.</summary>
+public sealed class FakePreview : IKindPreviewView
+{
+    public (string Kind, Vector3 Position, float Rotation, float Scale, bool Blocked)? Shown { get; private set; }
+
+    public bool Destroyed { get; private set; }
+
+    public void Show(string kind, Vector3 position, float rotation, float scale, bool blocked) => Shown = (kind, position, rotation, scale, blocked);
+
+    public void Hide() => Shown = null;
+
+    public void Destroy()
+    {
+        Shown = null;
+        Destroyed = true;
     }
 }

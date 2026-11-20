@@ -28,8 +28,11 @@ public static class MouseInput
     /// </summary>
     public static float Wheel => Live() is { } source ? source.Wheel : 0;
 
-    /// <summary>Whether the cursor is over an interface element that takes the pointer: a window, a menu, a mod's own.</summary>
-    public static bool IsOverInterface => Live() is { } source && source.IsOverInterface;
+    /// <summary>
+    /// Whether the cursor is over an interface element that takes the pointer: a window, a menu, a mod's own, an open
+    /// <see cref="BuildPalette"/>'s diamonds and tiles.
+    /// </summary>
+    public static bool IsOverInterface => Live() is { } source && (source.IsOverInterface || BuildPaletteView.AnyOver(source.Position));
 
     /// <summary>Whether the button is held down now.</summary>
     public static bool IsPressed(MouseButton button) => Live() is { } source && source.IsPressed(button);

@@ -154,6 +154,56 @@ public static class NaturalObjects
         }
     }
 
+    /// <summary>
+    /// Shows a kind's model standing on the ground at a point (<see cref="KindPreview"/>): the ghost of a tool that places
+    /// one object at a time, moved with the cursor, turned and sized as <see cref="Place"/> would place it, red where it may
+    /// not go. It stays until disposed. May be called from any thread: it shows from the next frame.
+    /// </summary>
+    /// <param name="kind">The kind's name ("tree_willow") or asset name.</param>
+    /// <param name="position">Where it stands; its y is not used.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="kind"/> is null.</exception>
+    /// <exception cref="ArgumentException">No such kind.</exception>
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static KindPreview ShowPreview(string kind, Vector3 position)
+    {
+        ArgumentNullException.ThrowIfNull(kind);
+        var found = FindKind(kind) ?? throw new ArgumentException($"No kind '{kind}' (NaturalObjects.Kinds).", nameof(kind));
+        return KindPreview.Add(CallingMod.Of(Assembly.GetCallingAssembly()), found.Name, position);
+    }
+
+    /// <summary>The largest side of a kind's picture, in pixels.</summary>
+    public const int MaximumPictureSize = 1024;
+
+    /// <summary>
+    /// A picture of a kind (<see cref="Kinds"/>) for a palette or a list: its model in three quarters view on the build menu's
+    /// dark, lit by lights of its own so the time of day hardly shows. Taken the first time it is asked for (a few
+    /// milliseconds), then kept for the game's run; the same texture comes back each time.
+    /// </summary>
+    /// <param name="kind">The kind's name ("tree_willow") or asset name.</param>
+    /// <param name="width">The picture's width in pixels, 16 to <see cref="MaximumPictureSize"/>.</param>
+    /// <param name="height">Its height; the build menu's tiles are 4 : 3.</param>
+    /// <returns>The picture; null before the game runs, off the main thread, or when the kind has no model.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="kind"/> is null.</exception>
+    /// <exception cref="ArgumentException">No such kind.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">A size out of its range.</exception>
+    public static Texture2D? PictureOf(string kind, int width = 256, int height = 192)
+    {
+        ArgumentNullException.ThrowIfNull(kind);
+        if (width < 16 || width > MaximumPictureSize) throw new ArgumentOutOfRangeException(nameof(width), width, $"A side is 16 to {MaximumPictureSize} pixels.");
+        if (height < 16 || height > MaximumPictureSize) throw new ArgumentOutOfRangeException(nameof(height), height, $"A side is 16 to {MaximumPictureSize} pixels.");
+        var found = FindKind(kind) ?? throw new ArgumentException($"No kind '{kind}' (NaturalObjects.Kinds).", nameof(kind));
+        if (!GameLoop.CanUseUnity("NaturalObjects.PictureOf", Landscape.Platform) || Landscape.Source is not { } source) return null;
+        try
+        {
+            return source.KindPicture(found.Name, width, height);
+        }
+        catch (Exception e)
+        {
+            SdkLog.Warn(Landscape.Platform, $"The picture of '{found.Name}' could not be taken: {e.Message}");
+            return null;
+        }
+    }
+
     private static IReadOnlyList<NaturalObject> Found(ITerrainSource source, float x, float z, float radius, Func<float, float, bool>? where)
     {
         try

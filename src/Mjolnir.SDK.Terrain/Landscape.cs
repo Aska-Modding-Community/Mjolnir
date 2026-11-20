@@ -456,6 +456,7 @@ public static partial class Landscape
         LandscapeOutline.ResetForTests();
         LandscapeGrid.ResetForTests();
         LandscapeZone.ResetForTests();
+        KindPreview.ResetForTests();
         Source = null;
         s_changing = null;
         s_changed = null;

@@ -482,9 +482,15 @@ internal sealed class GameTerrain : ITerrainSource
 
     public IGridView NewGrid(int columns, int rows) => new GameGrid(columns, rows);
 
+    public IKindPreviewView NewKindPreview() => new GameKindPreview();
+
     public IReadOnlyList<IWorldObject> ObjectsIn(float centerX, float centerZ, float radius) => GameObjects.In(centerX, centerZ, radius);
 
     public IReadOnlyList<PlaceableKindData> PlaceableKinds => GamePlacement.Kinds;
+
+    public string? KindDisplayName(string name) => GamePlacement.DisplayName(name);
+
+    public Texture2D? KindPicture(string name, int width, int height) => GamePlacement.Picture(name, width, height);
 
     public IWorldObject? Place(string name, Vector3 position, float rotation, float scale) => GamePlacement.Place(name, position, rotation, scale);
 

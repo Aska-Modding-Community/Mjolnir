@@ -192,6 +192,7 @@ internal static partial class Theme
         LoadHudParts();
         LoadJournalParts();
         LoadListRow();
+        LoadBuildMenuParts();
     }
 
     private static bool MenusReady()
