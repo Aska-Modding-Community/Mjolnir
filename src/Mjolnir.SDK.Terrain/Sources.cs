@@ -67,6 +67,9 @@ internal interface ITerrainSource
     /// <summary>New marks over objects, hidden until shown.</summary>
     IMarksView NewMarks();
 
+    /// <summary>A new point the game keeps the world's items up round, given to the game's tracker.</summary>
+    IActivationView NewActivationPoint();
+
     /// <summary>The world's natural objects whose place lies within <paramref name="radius"/> metres of a point.</summary>
     IReadOnlyList<IWorldObject> ObjectsIn(float centerX, float centerZ, float radius);
 
@@ -291,6 +294,19 @@ internal interface IMarksView
     void Hide();
 
     /// <summary>Takes every mark out of the world for good.</summary>
+    void Destroy();
+}
+
+/// <summary>A point the game tracks (Game/GameActivation.cs; a fake in the unit tests). Used on the main thread only.</summary>
+internal interface IActivationView
+{
+    /// <summary>Puts the point here, giving it to the game's tracker when it is not yet.</summary>
+    void MoveTo(Vector3 center);
+
+    /// <summary>Whether the game tracks the point.</summary>
+    bool IsActive { get; }
+
+    /// <summary>Takes the point from the game's tracker for good.</summary>
     void Destroy();
 }
 

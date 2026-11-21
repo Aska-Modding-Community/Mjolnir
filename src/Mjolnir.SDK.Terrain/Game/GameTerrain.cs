@@ -486,6 +486,8 @@ internal sealed class GameTerrain : ITerrainSource
 
     public IMarksView NewMarks() => new GameMarks();
 
+    public IActivationView NewActivationPoint() => new GameActivation();
+
     public IReadOnlyList<IWorldObject> ObjectsIn(float centerX, float centerZ, float radius) => GameObjects.In(centerX, centerZ, radius);
 
     public IReadOnlyList<IWorldObject> ObjectsTouching(float centerX, float centerZ, float radius) =>

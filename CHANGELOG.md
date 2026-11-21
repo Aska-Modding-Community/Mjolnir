@@ -3,6 +3,18 @@
 The platform has one version for the loader, the SDK and its modules. Mods built against an earlier minor version
 must be rebuilt.
 
+## 0.4.7 — 2026-11-22
+
+### Added
+
+- `NaturalObjects.KeepActive(center)` → `ActivationPoint` (`Center`, `IsActive`, `Dispose`): the game keeps the world's
+  items up round the point as it does round the character — kinds placed by mods, the trees the villagers plant, what
+  lies on the ground. The game brings them up only near the character, so a tool whose camera looks at the world far
+  from it saw none of them, and `NaturalObjects.Around` found none of them there. The point is moved from any thread,
+  kept through a change of world and let go when disposed or its mod is disabled.
+
+Mods built against 0.4.0 to 0.4.6 work unchanged: nothing was taken out of the API.
+
 ## 0.4.6 — 2026-11-21
 
 ### Added

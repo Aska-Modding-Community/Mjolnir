@@ -179,6 +179,17 @@ public static class NaturalObjects
     public static ObjectMarks ShowMarks() => ObjectMarks.Add(CallingMod.Of(Assembly.GetCallingAssembly()));
 
     /// <summary>
+    /// Keeps the world's items up round a point as the game keeps them round the character (<see cref="ActivationPoint"/>):
+    /// what mods placed, the trees the villagers plant, what lies on the ground. The game brings them up only near the
+    /// character, so a tool whose camera looks at the world far from the character sees none of them, and
+    /// <see cref="Around"/> finds none of them there, without such a point under its camera.
+    /// </summary>
+    /// <param name="center">The point; move it with <see cref="ActivationPoint.Center"/>.</param>
+    /// <returns>The point: dispose it to let the game forget it.</returns>
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static ActivationPoint KeepActive(Vector3 center) => ActivationPoint.Add(CallingMod.Of(Assembly.GetCallingAssembly()), center);
+
+    /// <summary>
     /// Shows a kind's model standing on the ground at a point (<see cref="KindPreview"/>): the ghost of a tool that places
     /// one object at a time, moved with the cursor, turned and sized as <see cref="Place"/> would place it, red where it may
     /// not go. It stays until disposed. May be called from any thread: it shows from the next frame.

@@ -1,4 +1,9 @@
 #nullable enable
+Mjolnir.SDK.Terrain.ActivationPoint
+Mjolnir.SDK.Terrain.ActivationPoint.Center.get -> UnityEngine.Vector3
+Mjolnir.SDK.Terrain.ActivationPoint.Center.set -> void
+Mjolnir.SDK.Terrain.ActivationPoint.Dispose() -> void
+Mjolnir.SDK.Terrain.ActivationPoint.IsActive.get -> bool
 Mjolnir.SDK.Terrain.GroundKind
 Mjolnir.SDK.Terrain.GroundKind.Bedrock = 2 -> Mjolnir.SDK.Terrain.GroundKind
 Mjolnir.SDK.Terrain.GroundKind.Dirt = 1 -> Mjolnir.SDK.Terrain.GroundKind
@@ -361,6 +366,7 @@ static Mjolnir.SDK.Terrain.LevellingFields.Place(Mjolnir.SDK.Terrain.LandscapeAr
 static Mjolnir.SDK.Terrain.NaturalObjects.Around(UnityEngine.Vector3 center, float radius) -> System.Collections.Generic.IReadOnlyList<Mjolnir.SDK.Terrain.NaturalObject!>!
 static Mjolnir.SDK.Terrain.NaturalObjects.FindKind(string! name) -> Mjolnir.SDK.Terrain.PlaceableKind?
 static Mjolnir.SDK.Terrain.NaturalObjects.In(Mjolnir.SDK.Terrain.LandscapeArea area) -> System.Collections.Generic.IReadOnlyList<Mjolnir.SDK.Terrain.NaturalObject!>!
+static Mjolnir.SDK.Terrain.NaturalObjects.KeepActive(UnityEngine.Vector3 center) -> Mjolnir.SDK.Terrain.ActivationPoint!
 static Mjolnir.SDK.Terrain.NaturalObjects.Kinds.get -> System.Collections.Generic.IReadOnlyList<Mjolnir.SDK.Terrain.PlaceableKind!>!
 static Mjolnir.SDK.Terrain.NaturalObjects.Nearest(UnityEngine.Vector3 center, float radius = 8) -> Mjolnir.SDK.Terrain.NaturalObject?
 static Mjolnir.SDK.Terrain.NaturalObjects.PictureOf(string! kind, int width = 256, int height = 192) -> UnityEngine.Texture2D?

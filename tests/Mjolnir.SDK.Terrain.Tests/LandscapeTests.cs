@@ -684,6 +684,16 @@ internal sealed class FakeTerrain : ITerrainSource
         return marks;
     }
 
+    /// <summary>The activation points made: where each was last put, and whether it is gone.</summary>
+    internal List<FakeActivation> Activations { get; } = [];
+
+    public IActivationView NewActivationPoint()
+    {
+        var point = new FakeActivation();
+        Activations.Add(point);
+        return point;
+    }
+
     public IKindPreviewView NewKindPreview()
     {
         var preview = new FakePreview();
@@ -879,6 +889,24 @@ internal sealed class FakeGrid(int columns, int rows) : IGridView
     {
         IsShown = false;
         IsDestroyed = true;
+    }
+}
+
+/// <summary>A point given to the game's tracker, as the model put it.</summary>
+internal sealed class FakeActivation : IActivationView
+{
+    public Vector3? Center { get; private set; }
+
+    public bool Destroyed { get; private set; }
+
+    public bool IsActive => Center != null && !Destroyed;
+
+    public void MoveTo(Vector3 center) => Center = center;
+
+    public void Destroy()
+    {
+        Center = null;
+        Destroyed = true;
     }
 }
 

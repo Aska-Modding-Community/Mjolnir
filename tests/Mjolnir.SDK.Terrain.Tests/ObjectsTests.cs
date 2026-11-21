@@ -435,6 +435,39 @@ public sealed class ObjectsTests : IDisposable
     }
 
     [Fact]
+    public void AnActivationPointIsTrackedWhereItIsPutUntilDisposed()
+    {
+        var point = NaturalObjects.KeepActive(V(10, 0, 20));
+        Assert.False(point.IsActive);                                // not given to the game before a frame
+        Landscape.Tick();
+        Assert.True(point.IsActive);
+        Assert.Equal((10f, 20f), XZ(_game.Activations.Single().Center));
+
+        point.Center = V(-5, 0, 7);                                  // moved: the same point, put elsewhere
+        Landscape.Tick();
+        Assert.Equal((-5f, 7f), XZ(_game.Activations.Single().Center));
+
+        _game.IsAvailable = false;                                   // the world left: the game's tracker forgets it
+        Landscape.Tick();
+        Assert.False(point.IsActive);
+        Assert.True(_game.Activations[0].Destroyed);
+        _game.IsAvailable = true;                                    // a world again: given anew
+        Landscape.Tick();
+        Assert.True(point.IsActive);
+        Assert.Equal(2, _game.Activations.Count);
+        Assert.Equal((-5f, 7f), XZ(_game.Activations[1].Center));
+
+        point.Dispose();
+        Landscape.Tick();
+        Assert.False(point.IsActive);
+        Assert.True(_game.Activations[1].Destroyed);
+        Landscape.Tick();
+        Assert.Equal(2, _game.Activations.Count);                    // gone for good
+    }
+
+    private static (float X, float Z) XZ(UnityEngine.Vector3? v) => (v!.Value.x, v.Value.z);
+
+    [Fact]
     public void TheConsoleListsAndPlacesKinds()
     {
         DevConsole.Execute("place");

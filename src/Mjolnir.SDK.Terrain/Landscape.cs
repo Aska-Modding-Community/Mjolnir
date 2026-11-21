@@ -458,6 +458,7 @@ public static partial class Landscape
         LandscapeZone.ResetForTests();
         KindPreview.ResetForTests();
         ObjectMarks.ResetForTests();
+        ActivationPoint.ResetForTests();
         Source = null;
         s_changing = null;
         s_changed = null;

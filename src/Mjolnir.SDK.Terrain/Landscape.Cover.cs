@@ -167,5 +167,6 @@ public static partial class Landscape
         LandscapeGrid.Tick(source);
         KindPreview.Tick(source);
         ObjectMarks.Tick(source);
+        ActivationPoint.Tick(source);
     }
 }
