@@ -11,6 +11,11 @@ namespace Mjolnir.SDK.Camera;
 /// (<see cref="Follow"/>, <see cref="LookAt"/>). Dispose it to give the view back; it also ends when its mod is disabled
 /// after an error or the world is left (<see cref="Ended"/>). The player still walks, aims and builds as ever: the game reads
 /// input whatever the screen shows. Set it on the main thread.
+/// <para>
+/// The game draws the trees and plants between its camera and the player's character see-through, to keep the character in
+/// sight. While this camera is shown and follows or looks at the character, that stays; looking anywhere else, nothing is
+/// drawn see-through.
+/// </para>
 /// </summary>
 public sealed class ModCamera : IDisposable
 {

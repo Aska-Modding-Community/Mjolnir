@@ -3,6 +3,15 @@
 The platform has one version for the loader, the SDK and its modules. Mods built against an earlier minor version
 must be rebuilt.
 
+## Unreleased
+
+### Fixed
+
+- Trees and plants seen through a mod's camera (`GameCamera.Take`) far from the player's character were drawn checkered
+  or not at all: the game draws the vegetation between its camera and the character see-through, to keep the character in
+  sight, and that strip crossed the mod's view. While a mod's camera that neither follows nor looks at the character is
+  shown, nothing is drawn see-through.
+
 ## 0.4.7 — 2026-11-22
 
 ### Added

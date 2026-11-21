@@ -37,6 +37,15 @@ internal static class CameraDirector
 
     internal static ModCamera? Shown => s_shown;
 
+    /// <summary>
+    /// Whether the game's see-through of the vegetation towards the player's character holds this frame: no mod's camera is
+    /// shown, or the one shown follows or looks at the character (<paramref name="isCharacter"/>: whether a thing is the
+    /// local player's character or a part of it). A mod's camera looking elsewhere sees nothing through: the vegetation
+    /// between it and the character, wherever that is, would be drawn half or not at all.
+    /// </summary>
+    internal static bool SeesThroughToCharacter(Func<Transform?, bool> isCharacter) =>
+        s_shown is not { } shown || isCharacter(shown.Follow) || isCharacter(shown.LookAt);
+
     internal static CameraModifier Add(System.Reflection.Assembly owner, Action<CameraView> modify, int priority)
     {
         lock (s_lock)

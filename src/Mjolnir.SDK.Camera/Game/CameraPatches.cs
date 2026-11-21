@@ -1,5 +1,6 @@
 using System;
 using HarmonyLib;
+using SSSGame;
 using SSSGame.Controllers;
 
 namespace Mjolnir.SDK.Camera;
@@ -7,6 +8,7 @@ namespace Mjolnir.SDK.Camera;
 /// <summary>
 /// Around the game's own camera update each frame: <c>PlayerDrive.LateUpdate</c> (its own code, not folded with others',
 /// Mjolnir.CodeMap) calls <c>InputManager.UpdateCamera</c>, the field of view's delta, the state switches and the zoom.
+/// After <c>PlayerEntity.LateUpdate</c>: the vegetation's see-through point (Game/SeeThrough.cs).
 /// </summary>
 // Harmony skips a class without a class-level [HarmonyPatch], even when its methods carry their own.
 [HarmonyPatch]
@@ -25,6 +27,14 @@ internal static class CameraPatches
     {
         if (IsLocal(__instance)) GameCameraSource.Guard("the camera after the game's update", CameraDirector.AfterGame);
     }
+
+    private static readonly Action s_afterCharacterPoint = GameCameraSource.AfterCharacterPoint;
+
+    // The character's place for the vegetation's see-through, written by PlayerEntity.LateUpdate (its own code, not folded
+    // with others', Mjolnir.CodeMap): a mod's camera looking elsewhere puts its own place over it.
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(PlayerEntity), nameof(PlayerEntity.LateUpdate))]
+    private static void AfterCharacterPoint() => GameCameraSource.Guard("the vegetation's see-through", s_afterCharacterPoint);
 
     private static bool s_found;
 

@@ -222,6 +222,21 @@ public sealed class CameraTests : IDisposable
     }
 
     [Fact]
+    public void TheSeeThroughTowardsTheCharacterHoldsUnlessAModsCameraLooksElsewhere()
+    {
+        static bool NoCharacter(Transform? thing) => false;
+        static bool AnyThing(Transform? thing) => true;
+        Assert.True(CameraDirector.SeesThroughToCharacter(NoCharacter)); // the game's camera
+        var camera = GameCamera.Take();
+        Frame();
+        Assert.False(CameraDirector.SeesThroughToCharacter(NoCharacter)); // a mod's camera on a place of its own
+        Assert.True(CameraDirector.SeesThroughToCharacter(AnyThing)); // one that follows or looks at the character
+        camera.Dispose();
+        Frame();
+        Assert.True(CameraDirector.SeesThroughToCharacter(NoCharacter));
+    }
+
+    [Fact]
     public void WhatTheModSetsAfterTakingItIsKept()
     {
         var camera = GameCamera.Take();
