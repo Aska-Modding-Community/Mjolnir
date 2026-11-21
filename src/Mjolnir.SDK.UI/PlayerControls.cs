@@ -10,8 +10,10 @@ namespace Mjolnir.SDK.UI;
 /// <summary>
 /// The player's controls in the world. A mod with a tool of its own — a view from above, a brush, a placement mode —
 /// captures them: the character stands still, attacks nothing, the game's camera, its quick slots and its menu keys (Esc,
-/// inventory, map, build) do nothing, and the mouse cursor shows. The mod then reads the keys (<see cref="HotKeys"/>) and
-/// the mouse (<see cref="MouseInput"/>) itself, and gives the controls back by disposing the capture.
+/// inventory, map, build) do nothing, and the mouse cursor shows. While the cursor shows, the game's aim is off too: no
+/// crosshair, and nothing in the middle of the screen is picked as a target (no card, no key prompt, no highlight). The
+/// mod then reads the keys (<see cref="HotKeys"/>) and the mouse (<see cref="MouseInput"/>) itself, and gives the controls
+/// back by disposing the capture.
 /// </summary>
 /// <remarks>
 /// <para>Esc does not open the pause menu while the controls are captured: give the player a key that ends the tool, Esc
@@ -37,7 +39,8 @@ public static class PlayerControls
     /// Takes the player's controls in a loaded world until the result is disposed. Without a world it ends at once
     /// (<see cref="ControlsCapture.Ended"/> on the next frame). May be called from any thread: it holds from the next frame.
     /// </summary>
-    /// <param name="showCursor">Whether the mouse cursor shows meanwhile (<see cref="ControlsCapture.ShowsCursor"/>).</param>
+    /// <param name="showCursor">Whether the mouse cursor shows meanwhile (<see cref="ControlsCapture.ShowsCursor"/>), the
+    /// game's aim off with it.</param>
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static ControlsCapture Capture(bool showCursor = true) =>
         CaptureFor(CallingMod.Of(Assembly.GetCallingAssembly()), showCursor);
@@ -169,7 +172,10 @@ public sealed class ControlsCapture : IDisposable
         _showsCursor = showCursor;
     }
 
-    /// <summary>Whether the mouse cursor shows while it holds; the cursor shows while any capture asks for it.</summary>
+    /// <summary>
+    /// Whether the mouse cursor shows while it holds, the game's aim (crosshair, target card, highlight) off with it; the
+    /// cursor shows while any capture asks for it.
+    /// </summary>
     public bool ShowsCursor
     {
         get => _showsCursor;
@@ -218,9 +224,12 @@ internal interface IControlsSource
     /// <summary>Gives them back.</summary>
     void Unblock();
 
-    /// <summary>Shows the cursor and lets it move (each frame while wanted: the game hides it when a menu closes).</summary>
+    /// <summary>
+    /// Shows the cursor and lets it move, the game's aim off (each frame while wanted: the game hides the cursor and shows
+    /// its crosshair again when a menu closes).
+    /// </summary>
     void HoldCursor();
 
-    /// <summary>Lets the game decide the cursor again, as its menus do.</summary>
+    /// <summary>Gives the aim back and lets the game decide the cursor again, as its menus do.</summary>
     void ReleaseCursor();
 }

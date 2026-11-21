@@ -52,6 +52,9 @@ must be rebuilt.
 
 ### Changed
 
+- While a capture of the player's controls shows the cursor (`PlayerControls.Capture`), the game's aim is off: no
+  crosshair, and nothing in the middle of the screen becomes a target, so no card, key prompt or highlight follows the
+  view of a mod's tool.
 - A setting's description in a row wraps over up to three lines, and the row grows for them; it was cut to one line
   with an ellipsis.
 

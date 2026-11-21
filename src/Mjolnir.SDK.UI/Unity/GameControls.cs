@@ -1,6 +1,7 @@
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using SandSailorStudio;
 using SandSailorStudio.UI;
+using SSSGame;
 using SSSGame.UI;
 using UnityEngine;
 using Context = SSSGame.InputContext.Context;
@@ -12,12 +13,17 @@ namespace Mjolnir.SDK.UI;
 /// The game's controls for <see cref="PlayerControls"/>. An input context of the SDK's with no input maps, above the
 /// player's own (priority 1) and below mod windows (16) and typing (100): the game then switches off every map below it —
 /// moving, attacking, the camera and its zoom, the quick slots, the menu keys and Esc's pause. The cursor is shown as a
-/// menu with a cursor shows it, and handed back to the menu manager, which decides it by the menus open.
+/// menu with a cursor shows it, and handed back to the menu manager, which decides it by the menus open. While the
+/// cursor shows, the game's aim is off: the HUD's interaction widget (the crosshair) hidden, and the local player's
+/// interaction agent kept from finding targets (`LockAreaDetection`), which takes the target's card, its key prompts and
+/// its highlight away; both are given back with the cursor.
 /// </summary>
 internal sealed class GameControls : IControlsSource
 {
     private static Context? s_context;
     private GameInput? _input;
+    private InteractWidget? _aim;
+    private PlayerInteractionAgent? _agent;
 
     private GameControls() { }
 
@@ -44,9 +50,43 @@ internal sealed class GameControls : IControlsSource
         var mode = Screen.fullScreenMode == FullScreenMode.ExclusiveFullScreen ? CursorLockMode.Confined : CursorLockMode.None;
         if (!Cursor.visible) Cursor.visible = true;
         if (Cursor.lockState != mode) Cursor.lockState = mode;
+        QuietAim();
     }
 
-    public void ReleaseCursor() => MenuManager.Instance?.RefreshInputMode(-1, false);
+    public void ReleaseCursor()
+    {
+        GiveAimBack();
+        MenuManager.Instance?.RefreshInputMode(-1, false);
+    }
+
+    // The aim off while the cursor is the pointer: the crosshair hidden alone left the target's card and its highlight
+    // (seen in game, 2026-11-21: a boulder in the middle of a view from above showed its card and «hold R»); the agent's
+    // area detection locked takes them away. Each frame: a new HUD has a new widget, and the game shows it again when a
+    // menu over it closes.
+    private void QuietAim()
+    {
+        if (_aim == null)
+        {
+            if (Menu.GetInstance<PlayerHUDMenu>() is not { } hud || hud == null) return;
+            _aim = hud.GetComponentInChildren<InteractWidget>(true);
+            if (_aim == null) return;
+        }
+        if (_aim.IsVisible) _aim.IsVisible = false;
+        if (_agent == null) _agent = _aim.InteractionAgent?.TryCast<PlayerInteractionAgent>();
+        if (_agent != null && !_agent.LockAreaDetection)
+        {
+            _agent.LockAreaDetection = true;
+            _agent.ClearInteractionAreas();
+        }
+    }
+
+    private void GiveAimBack()
+    {
+        if (_agent != null) _agent.LockAreaDetection = false;
+        if (_aim != null) _aim.IsVisible = true;
+        _agent = null;
+        _aim = null;
+    }
 
     private static Context Context()
     {
