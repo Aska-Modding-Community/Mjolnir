@@ -3,7 +3,7 @@
 The platform has one version for the loader, the SDK and its modules. Mods built against an earlier minor version
 must be rebuilt.
 
-## Unreleased
+## 0.4.6 — 2026-11-21
 
 ### Added
 
@@ -82,6 +82,8 @@ must be rebuilt.
   every other change gives the game heights that its blur turns into what was asked (to a few millimetres on the
   sharpest edges). A strip puts back its second row only: a row a strip starts on reached only the tiles of the world
   from that row on, and a tile's edge put back so left a crack in the ground.
+
+0.4.0's to 0.4.5's mods work unchanged: nothing was taken out of the API.
 
 ## 0.4.5 — 2026-11-18
 

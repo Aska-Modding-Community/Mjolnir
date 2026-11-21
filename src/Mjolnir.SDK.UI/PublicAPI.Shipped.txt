@@ -11,6 +11,24 @@ Mjolnir.SDK.UI.BindingMode.OneWay = 1 -> Mjolnir.SDK.UI.BindingMode
 Mjolnir.SDK.UI.BindingMode.TwoWay = 2 -> Mjolnir.SDK.UI.BindingMode
 Mjolnir.SDK.UI.Bitmap
 Mjolnir.SDK.UI.Bitmap.Bitmap(string! path) -> void
+Mjolnir.SDK.UI.BuildPalette
+Mjolnir.SDK.UI.BuildPalette.BuildPalette() -> void
+Mjolnir.SDK.UI.BuildPalette.Categories.get -> System.Collections.Generic.List<Mjolnir.SDK.UI.PaletteCategory!>!
+Mjolnir.SDK.UI.BuildPalette.Close() -> void
+Mjolnir.SDK.UI.BuildPalette.Closed -> System.EventHandler?
+Mjolnir.SDK.UI.BuildPalette.Dispose() -> void
+Mjolnir.SDK.UI.BuildPalette.IsOpen.get -> bool
+Mjolnir.SDK.UI.BuildPalette.ItemChosen -> System.EventHandler<Mjolnir.SDK.UI.PaletteItemEventArgs!>?
+Mjolnir.SDK.UI.BuildPalette.Open() -> void
+Mjolnir.SDK.UI.BuildPalette.Refresh() -> void
+Mjolnir.SDK.UI.BuildPalette.Scale.get -> float
+Mjolnir.SDK.UI.BuildPalette.Scale.set -> void
+Mjolnir.SDK.UI.BuildPalette.SelectCategory(int step) -> void
+Mjolnir.SDK.UI.BuildPalette.SelectedCategory.get -> Mjolnir.SDK.UI.PaletteCategory?
+Mjolnir.SDK.UI.BuildPalette.SelectedCategory.set -> void
+Mjolnir.SDK.UI.BuildPalette.SelectedItem.get -> Mjolnir.SDK.UI.PaletteItem?
+Mjolnir.SDK.UI.BuildPalette.SelectedItem.set -> void
+Mjolnir.SDK.UI.BuildPalette.Toggle() -> void
 Mjolnir.SDK.UI.Command
 Mjolnir.SDK.UI.Command.CanExecute(object? parameter) -> bool
 Mjolnir.SDK.UI.Command.CanExecuteChanged -> System.EventHandler?
@@ -101,6 +119,8 @@ Mjolnir.SDK.UI.HudAnchor.BottomRight = 4 -> Mjolnir.SDK.UI.HudAnchor
 Mjolnir.SDK.UI.HudAnchor.TopCenter = 1 -> Mjolnir.SDK.UI.HudAnchor
 Mjolnir.SDK.UI.HudAnchor.TopLeft = 0 -> Mjolnir.SDK.UI.HudAnchor
 Mjolnir.SDK.UI.HudAnchor.TopRight = 2 -> Mjolnir.SDK.UI.HudAnchor
+Mjolnir.SDK.UI.HudPart
+Mjolnir.SDK.UI.HudPart.QuickBar = 0 -> Mjolnir.SDK.UI.HudPart
 Mjolnir.SDK.UI.IDataTemplate
 Mjolnir.SDK.UI.IDataTemplate.Build(object? data) -> Mjolnir.SDK.UI.Control?
 Mjolnir.SDK.UI.IDataTemplate.Match(object? data) -> bool
@@ -158,6 +178,26 @@ Mjolnir.SDK.UI.Notify
 Mjolnir.SDK.UI.Orientation
 Mjolnir.SDK.UI.Orientation.Horizontal = 1 -> Mjolnir.SDK.UI.Orientation
 Mjolnir.SDK.UI.Orientation.Vertical = 0 -> Mjolnir.SDK.UI.Orientation
+Mjolnir.SDK.UI.PaletteCategory
+Mjolnir.SDK.UI.PaletteCategory.DisplayName.get -> string!
+Mjolnir.SDK.UI.PaletteCategory.DisplayName.set -> void
+Mjolnir.SDK.UI.PaletteCategory.Icon.get -> Mjolnir.SDK.UI.Bitmap?
+Mjolnir.SDK.UI.PaletteCategory.Icon.set -> void
+Mjolnir.SDK.UI.PaletteCategory.Items.get -> System.Collections.Generic.List<Mjolnir.SDK.UI.PaletteItem!>!
+Mjolnir.SDK.UI.PaletteCategory.PaletteCategory(string! displayName, Mjolnir.SDK.UI.Bitmap? icon = null) -> void
+Mjolnir.SDK.UI.PaletteCategory.Tag.get -> object?
+Mjolnir.SDK.UI.PaletteCategory.Tag.set -> void
+Mjolnir.SDK.UI.PaletteItem
+Mjolnir.SDK.UI.PaletteItem.DisplayName.get -> string!
+Mjolnir.SDK.UI.PaletteItem.DisplayName.set -> void
+Mjolnir.SDK.UI.PaletteItem.PaletteItem(string! displayName, Mjolnir.SDK.UI.Bitmap? picture = null) -> void
+Mjolnir.SDK.UI.PaletteItem.Picture.get -> Mjolnir.SDK.UI.Bitmap?
+Mjolnir.SDK.UI.PaletteItem.Picture.set -> void
+Mjolnir.SDK.UI.PaletteItem.Tag.get -> object?
+Mjolnir.SDK.UI.PaletteItem.Tag.set -> void
+Mjolnir.SDK.UI.PaletteItemEventArgs
+Mjolnir.SDK.UI.PaletteItemEventArgs.Item.get -> Mjolnir.SDK.UI.PaletteItem!
+Mjolnir.SDK.UI.PaletteItemEventArgs.PaletteItemEventArgs(Mjolnir.SDK.UI.PaletteItem! item) -> void
 Mjolnir.SDK.UI.Panel
 Mjolnir.SDK.UI.Panel.Children.get -> Mjolnir.SDK.UI.Controls!
 Mjolnir.SDK.UI.PlayerControls
@@ -342,6 +382,14 @@ Mjolnir.SDK.UI.UiProgressRing
 Mjolnir.SDK.UI.UiProgressRing.Icon.get -> Mjolnir.SDK.UI.Bitmap?
 Mjolnir.SDK.UI.UiProgressRing.Icon.set -> void
 Mjolnir.SDK.UI.UiProgressRing.UiProgressRing() -> void
+Mjolnir.SDK.UI.UiQuickSlot
+Mjolnir.SDK.UI.UiQuickSlot.Icon.get -> Mjolnir.SDK.UI.Bitmap?
+Mjolnir.SDK.UI.UiQuickSlot.Icon.set -> void
+Mjolnir.SDK.UI.UiQuickSlot.IsSelected.get -> bool
+Mjolnir.SDK.UI.UiQuickSlot.IsSelected.set -> void
+Mjolnir.SDK.UI.UiQuickSlot.Key.get -> string!
+Mjolnir.SDK.UI.UiQuickSlot.Key.set -> void
+Mjolnir.SDK.UI.UiQuickSlot.UiQuickSlot() -> void
 Mjolnir.SDK.UI.UiScrollViewer
 Mjolnir.SDK.UI.UiScrollViewer.Content.get -> Mjolnir.SDK.UI.Control?
 Mjolnir.SDK.UI.UiScrollViewer.Content.set -> void
@@ -505,6 +553,8 @@ Mjolnir.SDK.UI.WrapPanelItemsAlignment
 Mjolnir.SDK.UI.WrapPanelItemsAlignment.Center = 1 -> Mjolnir.SDK.UI.WrapPanelItemsAlignment
 Mjolnir.SDK.UI.WrapPanelItemsAlignment.End = 2 -> Mjolnir.SDK.UI.WrapPanelItemsAlignment
 Mjolnir.SDK.UI.WrapPanelItemsAlignment.Start = 0 -> Mjolnir.SDK.UI.WrapPanelItemsAlignment
+const Mjolnir.SDK.UI.BuildPalette.MaximumScale = 1.5 -> float
+const Mjolnir.SDK.UI.BuildPalette.MinimumScale = 0.5 -> float
 const Mjolnir.SDK.UI.InterfaceScale.Maximum = 1.5 -> double
 const Mjolnir.SDK.UI.InterfaceScale.Minimum = 0.75 -> double
 override Mjolnir.SDK.UI.BindableValue<T>.ToString() -> string!
@@ -513,6 +563,8 @@ override Mjolnir.SDK.UI.Control.ToString() -> string!
 override Mjolnir.SDK.UI.ControlsCapture.ToString() -> string!
 override Mjolnir.SDK.UI.HeaderedControl.ToString() -> string!
 override Mjolnir.SDK.UI.MjolnirProperty.ToString() -> string!
+override Mjolnir.SDK.UI.PaletteCategory.ToString() -> string!
+override Mjolnir.SDK.UI.PaletteItem.ToString() -> string!
 override Mjolnir.SDK.UI.Thickness.Equals(object? obj) -> bool
 override Mjolnir.SDK.UI.Thickness.GetHashCode() -> int
 override Mjolnir.SDK.UI.Thickness.ToString() -> string!
@@ -556,6 +608,7 @@ static Mjolnir.SDK.UI.HotKeys.Add(Mjolnir.SDK.KeyGesture gesture, System.Action!
 static Mjolnir.SDK.UI.Hud.Add<T>(T! element, Mjolnir.SDK.UI.HudAnchor anchor = Mjolnir.SDK.UI.HudAnchor.TopLeft) -> T!
 static Mjolnir.SDK.UI.Hud.AddAt<T>(T! element, System.Func<UnityEngine.Vector3>! worldPosition, UnityEngine.Vector2 offset = default(UnityEngine.Vector2)) -> T!
 static Mjolnir.SDK.UI.Hud.AddAt<T>(T! element, UnityEngine.Transform! target, UnityEngine.Vector3 worldOffset = default(UnityEngine.Vector3), UnityEngine.Vector2 offset = default(UnityEngine.Vector2)) -> T!
+static Mjolnir.SDK.UI.Hud.AddInPlaceOf<T>(T! element, Mjolnir.SDK.UI.HudPart part) -> T!
 static Mjolnir.SDK.UI.Hud.Ready -> System.EventHandler?
 static Mjolnir.SDK.UI.Hud.Remove(Mjolnir.SDK.UI.Control! element) -> bool
 static Mjolnir.SDK.UI.Hud.Root.get -> UnityEngine.RectTransform?
@@ -657,6 +710,9 @@ static readonly Mjolnir.SDK.UI.UiMenuItem.CommandParameterProperty -> Mjolnir.SD
 static readonly Mjolnir.SDK.UI.UiMenuItem.CommandProperty -> Mjolnir.SDK.UI.MjolnirProperty<System.Windows.Input.ICommand?>!
 static readonly Mjolnir.SDK.UI.UiMenuItem.HeaderProperty -> Mjolnir.SDK.UI.MjolnirProperty<string!>!
 static readonly Mjolnir.SDK.UI.UiProgressRing.IconProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.UI.Bitmap?>!
+static readonly Mjolnir.SDK.UI.UiQuickSlot.IconProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.UI.Bitmap?>!
+static readonly Mjolnir.SDK.UI.UiQuickSlot.IsSelectedProperty -> Mjolnir.SDK.UI.MjolnirProperty<bool>!
+static readonly Mjolnir.SDK.UI.UiQuickSlot.KeyProperty -> Mjolnir.SDK.UI.MjolnirProperty<string!>!
 static readonly Mjolnir.SDK.UI.UiScrollViewer.ContentProperty -> Mjolnir.SDK.UI.MjolnirProperty<Mjolnir.SDK.UI.Control?>!
 static readonly Mjolnir.SDK.UI.UiSectionHeader.TextProperty -> Mjolnir.SDK.UI.MjolnirProperty<string!>!
 static readonly Mjolnir.SDK.UI.UiSlider.IsSnapToTickEnabledProperty -> Mjolnir.SDK.UI.MjolnirProperty<bool>!

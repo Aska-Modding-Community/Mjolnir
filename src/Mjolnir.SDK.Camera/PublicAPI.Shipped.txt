@@ -56,5 +56,6 @@ static Mjolnir.SDK.Camera.GameCamera.Rotation.get -> UnityEngine.Quaternion
 static Mjolnir.SDK.Camera.GameCamera.ScreenPointToRay(UnityEngine.Vector2 screen) -> UnityEngine.Ray
 static Mjolnir.SDK.Camera.GameCamera.ShownCamera.get -> Mjolnir.SDK.Camera.ModCamera?
 static Mjolnir.SDK.Camera.GameCamera.Take(int priority = 0, System.TimeSpan blend = default(System.TimeSpan)) -> Mjolnir.SDK.Camera.ModCamera!
+static Mjolnir.SDK.Camera.GameCamera.TryRaycast(UnityEngine.Ray ray, float maxDistance, out UnityEngine.Vector3 point, out UnityEngine.GameObject? target) -> bool
 static Mjolnir.SDK.Camera.GameCamera.TryRaycast(float maxDistance, out UnityEngine.Vector3 point, out UnityEngine.GameObject? target) -> bool
 static Mjolnir.SDK.Camera.GameCamera.WorldToScreen(UnityEngine.Vector3 world) -> UnityEngine.Vector3

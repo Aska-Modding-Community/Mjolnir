@@ -15,6 +15,20 @@ Mjolnir.SDK.Terrain.HarvestOptions.AwardExperience.init -> void
 Mjolnir.SDK.Terrain.HarvestOptions.ChopTrunk.get -> bool
 Mjolnir.SDK.Terrain.HarvestOptions.ChopTrunk.init -> void
 Mjolnir.SDK.Terrain.HarvestOptions.HarvestOptions() -> void
+Mjolnir.SDK.Terrain.KindPreview
+Mjolnir.SDK.Terrain.KindPreview.Dispose() -> void
+Mjolnir.SDK.Terrain.KindPreview.IsBlocked.get -> bool
+Mjolnir.SDK.Terrain.KindPreview.IsBlocked.set -> void
+Mjolnir.SDK.Terrain.KindPreview.IsVisible.get -> bool
+Mjolnir.SDK.Terrain.KindPreview.IsVisible.set -> void
+Mjolnir.SDK.Terrain.KindPreview.Kind.get -> string!
+Mjolnir.SDK.Terrain.KindPreview.Kind.set -> void
+Mjolnir.SDK.Terrain.KindPreview.Position.get -> UnityEngine.Vector3
+Mjolnir.SDK.Terrain.KindPreview.Position.set -> void
+Mjolnir.SDK.Terrain.KindPreview.Rotation.get -> float
+Mjolnir.SDK.Terrain.KindPreview.Rotation.set -> void
+Mjolnir.SDK.Terrain.KindPreview.Scale.get -> float
+Mjolnir.SDK.Terrain.KindPreview.Scale.set -> void
 Mjolnir.SDK.Terrain.Landscape
 Mjolnir.SDK.Terrain.LandscapeArea
 Mjolnir.SDK.Terrain.LandscapeArea.Blend.get -> float
@@ -85,6 +99,16 @@ Mjolnir.SDK.Terrain.LandscapeObjects.Harvest = 4 -> Mjolnir.SDK.Terrain.Landscap
 Mjolnir.SDK.Terrain.LandscapeObjects.Keep = 1 -> Mjolnir.SDK.Terrain.LandscapeObjects
 Mjolnir.SDK.Terrain.LandscapeObjects.Remove = 0 -> Mjolnir.SDK.Terrain.LandscapeObjects
 Mjolnir.SDK.Terrain.LandscapeObjects.Settle = 2 -> Mjolnir.SDK.Terrain.LandscapeObjects
+Mjolnir.SDK.Terrain.LandscapeObstacleMode
+Mjolnir.SDK.Terrain.LandscapeObstacleMode.Fit = 2 -> Mjolnir.SDK.Terrain.LandscapeObstacleMode
+Mjolnir.SDK.Terrain.LandscapeObstacleMode.GoAround = 1 -> Mjolnir.SDK.Terrain.LandscapeObstacleMode
+Mjolnir.SDK.Terrain.LandscapeObstacleMode.Refuse = 0 -> Mjolnir.SDK.Terrain.LandscapeObstacleMode
+Mjolnir.SDK.Terrain.LandscapeObstacles
+Mjolnir.SDK.Terrain.LandscapeObstacles.Covers(float x, float z) -> bool
+Mjolnir.SDK.Terrain.LandscapeObstacles.Fits.get -> bool
+Mjolnir.SDK.Terrain.LandscapeObstacles.HeightAfter(float x, float z, float now, float changed) -> float
+Mjolnir.SDK.Terrain.LandscapeObstacles.IsEmpty.get -> bool
+Mjolnir.SDK.Terrain.LandscapeObstacles.Names.get -> System.Collections.Generic.IReadOnlyList<string!>!
 Mjolnir.SDK.Terrain.LandscapeOperation
 Mjolnir.SDK.Terrain.LandscapeOperation.ClearVegetation = 4 -> Mjolnir.SDK.Terrain.LandscapeOperation
 Mjolnir.SDK.Terrain.LandscapeOperation.Level = 2 -> Mjolnir.SDK.Terrain.LandscapeOperation
@@ -107,11 +131,15 @@ Mjolnir.SDK.Terrain.LandscapeOptions.KeepKind.get -> bool
 Mjolnir.SDK.Terrain.LandscapeOptions.KeepKind.init -> void
 Mjolnir.SDK.Terrain.LandscapeOptions.KeepOffBuildings.get -> bool
 Mjolnir.SDK.Terrain.LandscapeOptions.KeepOffBuildings.init -> void
+Mjolnir.SDK.Terrain.LandscapeOptions.KeepOffLandmarks.get -> bool
+Mjolnir.SDK.Terrain.LandscapeOptions.KeepOffLandmarks.init -> void
 Mjolnir.SDK.Terrain.LandscapeOptions.Kind.get -> Mjolnir.SDK.Terrain.GroundKind?
 Mjolnir.SDK.Terrain.LandscapeOptions.Kind.init -> void
 Mjolnir.SDK.Terrain.LandscapeOptions.LandscapeOptions() -> void
 Mjolnir.SDK.Terrain.LandscapeOptions.Objects.get -> Mjolnir.SDK.Terrain.LandscapeObjects
 Mjolnir.SDK.Terrain.LandscapeOptions.Objects.init -> void
+Mjolnir.SDK.Terrain.LandscapeOptions.ObstacleMode.get -> Mjolnir.SDK.Terrain.LandscapeObstacleMode
+Mjolnir.SDK.Terrain.LandscapeOptions.ObstacleMode.init -> void
 Mjolnir.SDK.Terrain.LandscapeOptions.OnlyOn.get -> Mjolnir.SDK.Terrain.GroundKind?
 Mjolnir.SDK.Terrain.LandscapeOptions.OnlyOn.init -> void
 Mjolnir.SDK.Terrain.LandscapeOptions.UpdateNavigation.get -> bool
@@ -135,6 +163,7 @@ Mjolnir.SDK.Terrain.LandscapeResult.Done = 0 -> Mjolnir.SDK.Terrain.LandscapeRes
 Mjolnir.SDK.Terrain.LandscapeResult.Failed = 9 -> Mjolnir.SDK.Terrain.LandscapeResult
 Mjolnir.SDK.Terrain.LandscapeResult.NotAvailable = 2 -> Mjolnir.SDK.Terrain.LandscapeResult
 Mjolnir.SDK.Terrain.LandscapeResult.NotLoaded = 3 -> Mjolnir.SDK.Terrain.LandscapeResult
+Mjolnir.SDK.Terrain.LandscapeResult.Partial = 10 -> Mjolnir.SDK.Terrain.LandscapeResult
 Mjolnir.SDK.Terrain.LandscapeResult.Queued = 1 -> Mjolnir.SDK.Terrain.LandscapeResult
 Mjolnir.SDK.Terrain.LandscapeResult.TooHigh = 6 -> Mjolnir.SDK.Terrain.LandscapeResult
 Mjolnir.SDK.Terrain.LandscapeResult.TooSteep = 5 -> Mjolnir.SDK.Terrain.LandscapeResult
@@ -201,14 +230,26 @@ Mjolnir.SDK.Terrain.NaturalObjectKind.Other = 6 -> Mjolnir.SDK.Terrain.NaturalOb
 Mjolnir.SDK.Terrain.NaturalObjectKind.Plant = 1 -> Mjolnir.SDK.Terrain.NaturalObjectKind
 Mjolnir.SDK.Terrain.NaturalObjectKind.Tree = 2 -> Mjolnir.SDK.Terrain.NaturalObjectKind
 Mjolnir.SDK.Terrain.NaturalObjects
+Mjolnir.SDK.Terrain.ObjectMarks
+Mjolnir.SDK.Terrain.ObjectMarks.Count.get -> int
+Mjolnir.SDK.Terrain.ObjectMarks.Dispose() -> void
+Mjolnir.SDK.Terrain.ObjectMarks.IsVisible.get -> bool
+Mjolnir.SDK.Terrain.ObjectMarks.IsVisible.set -> void
+Mjolnir.SDK.Terrain.ObjectMarks.Set(System.Collections.Generic.IEnumerable<Mjolnir.SDK.Terrain.NaturalObject!>! objects) -> void
 Mjolnir.SDK.Terrain.PlaceableKind
 Mjolnir.SDK.Terrain.PlaceableKind.AssetName.get -> string!
+Mjolnir.SDK.Terrain.PlaceableKind.DisplayName.get -> string!
 Mjolnir.SDK.Terrain.PlaceableKind.IsGathered.get -> bool
 Mjolnir.SDK.Terrain.PlaceableKind.IsHarvestable.get -> bool
 Mjolnir.SDK.Terrain.PlaceableKind.Kind.get -> Mjolnir.SDK.Terrain.NaturalObjectKind
 Mjolnir.SDK.Terrain.PlaceableKind.MaximumScale.get -> float
 Mjolnir.SDK.Terrain.PlaceableKind.MinimumScale.get -> float
 Mjolnir.SDK.Terrain.PlaceableKind.Name.get -> string!
+Mjolnir.SDK.Terrain.RoadLine
+Mjolnir.SDK.Terrain.RoadLine.Fits.get -> bool
+Mjolnir.SDK.Terrain.RoadLine.Length.get -> float
+Mjolnir.SDK.Terrain.RoadLine.Samples.get -> System.Collections.Generic.IReadOnlyList<UnityEngine.Vector3>!
+Mjolnir.SDK.Terrain.RoadLine.Sections.get -> int
 Mjolnir.SDK.Terrain.RoadPlan
 Mjolnir.SDK.Terrain.RoadPlan.Build() -> bool
 Mjolnir.SDK.Terrain.RoadPlan.IsBuilt.get -> bool
@@ -238,14 +279,17 @@ const Mjolnir.SDK.Terrain.LandscapeOutline.MaximumHeight = 10 -> float
 const Mjolnir.SDK.Terrain.LandscapeOutline.MaximumLineWidth = 2 -> float
 const Mjolnir.SDK.Terrain.LevellingFields.MaximumTiles = 256 -> int
 const Mjolnir.SDK.Terrain.LevellingFields.TileSize = 2 -> float
+const Mjolnir.SDK.Terrain.NaturalObjects.MaximumPictureSize = 1024 -> int
 const Mjolnir.SDK.Terrain.NaturalObjects.MaximumRadius = 64 -> float
 const Mjolnir.SDK.Terrain.NaturalObjects.MaximumScale = 4 -> float
+const Mjolnir.SDK.Terrain.ObjectMarks.MaximumCount = 128 -> int
 const Mjolnir.SDK.Terrain.RoadPlans.MaximumPoints = 8 -> int
 const Mjolnir.SDK.Terrain.RoadPlans.MaximumSections = 96 -> int
 const Mjolnir.SDK.Terrain.RoadPlans.MaximumWidth = 16 -> float
 const Mjolnir.SDK.Terrain.RoadPlans.MinimumWidth = 1 -> float
 const Mjolnir.SDK.Terrain.RoadPlans.SectionLength = 2 -> float
 const Mjolnir.SDK.Terrain.RoadPlans.WidthStep = 0.5 -> float
+override Mjolnir.SDK.Terrain.KindPreview.ToString() -> string!
 override Mjolnir.SDK.Terrain.LandscapeArea.Equals(object? obj) -> bool
 override Mjolnir.SDK.Terrain.LandscapeArea.GetHashCode() -> int
 override Mjolnir.SDK.Terrain.LandscapeArea.ToString() -> string!
@@ -256,6 +300,7 @@ override Mjolnir.SDK.Terrain.LandscapeGrid.ToString() -> string!
 override Mjolnir.SDK.Terrain.LandscapeHeights.Equals(object? obj) -> bool
 override Mjolnir.SDK.Terrain.LandscapeHeights.GetHashCode() -> int
 override Mjolnir.SDK.Terrain.LandscapeHeights.ToString() -> string!
+override Mjolnir.SDK.Terrain.LandscapeObstacles.ToString() -> string!
 override Mjolnir.SDK.Terrain.LandscapeOutline.ToString() -> string!
 override Mjolnir.SDK.Terrain.LandscapeSnapshot.ToString() -> string!
 override Mjolnir.SDK.Terrain.LandscapeZone.ToString() -> string!
@@ -268,6 +313,7 @@ static Mjolnir.SDK.Terrain.Landscape.BiomeAt(float x, float z) -> Mjolnir.SDK.Te
 static Mjolnir.SDK.Terrain.Landscape.Biomes.get -> System.Collections.Generic.IReadOnlyList<Mjolnir.SDK.Terrain.LandscapeBiome>!
 static Mjolnir.SDK.Terrain.Landscape.Capture(Mjolnir.SDK.Terrain.LandscapeArea area) -> Mjolnir.SDK.Terrain.LandscapeSnapshot?
 static Mjolnir.SDK.Terrain.Landscape.Check(Mjolnir.SDK.Terrain.LandscapeArea area, Mjolnir.SDK.Terrain.LandscapeOperation operation) -> Mjolnir.SDK.Terrain.LandscapeResult
+static Mjolnir.SDK.Terrain.Landscape.Check(Mjolnir.SDK.Terrain.LandscapeArea area, Mjolnir.SDK.Terrain.LandscapeOperation operation, Mjolnir.SDK.Terrain.LandscapeOptions! options) -> Mjolnir.SDK.Terrain.LandscapeResult
 static Mjolnir.SDK.Terrain.Landscape.ClearVegetation(Mjolnir.SDK.Terrain.LandscapeArea area, Mjolnir.SDK.Terrain.LandscapeOptions? options = null) -> Mjolnir.SDK.Terrain.LandscapeResult
 static Mjolnir.SDK.Terrain.Landscape.FindBiome(string! name) -> Mjolnir.SDK.Terrain.LandscapeBiome?
 static Mjolnir.SDK.Terrain.Landscape.GroundChanged -> System.EventHandler<Mjolnir.SDK.Terrain.LandscapeChangedEventArgs!>?
@@ -282,6 +328,7 @@ static Mjolnir.SDK.Terrain.Landscape.Level(Mjolnir.SDK.Terrain.LandscapeArea are
 static Mjolnir.SDK.Terrain.Landscape.Lower(Mjolnir.SDK.Terrain.LandscapeArea area, float depth, Mjolnir.SDK.Terrain.LandscapeOptions? options = null) -> Mjolnir.SDK.Terrain.LandscapeResult
 static Mjolnir.SDK.Terrain.Landscape.Measure(Mjolnir.SDK.Terrain.LandscapeArea area) -> Mjolnir.SDK.Terrain.LandscapeHeights
 static Mjolnir.SDK.Terrain.Landscape.NormalAt(float x, float z) -> UnityEngine.Vector3
+static Mjolnir.SDK.Terrain.Landscape.ObstaclesIn(Mjolnir.SDK.Terrain.LandscapeArea area, Mjolnir.SDK.Terrain.LandscapeOptions? options = null) -> Mjolnir.SDK.Terrain.LandscapeObstacles!
 static Mjolnir.SDK.Terrain.Landscape.Paint(Mjolnir.SDK.Terrain.LandscapeArea area, Mjolnir.SDK.Terrain.GroundKind kind, Mjolnir.SDK.Terrain.LandscapeOptions? options = null) -> Mjolnir.SDK.Terrain.LandscapeResult
 static Mjolnir.SDK.Terrain.Landscape.PaintBiome(Mjolnir.SDK.Terrain.LandscapeArea area, Mjolnir.SDK.Terrain.LandscapeBiome biome, Mjolnir.SDK.Terrain.LandscapeOptions? options = null) -> Mjolnir.SDK.Terrain.LandscapeResult
 static Mjolnir.SDK.Terrain.Landscape.Protect(Mjolnir.SDK.Terrain.LandscapeArea area) -> Mjolnir.SDK.Terrain.LandscapeZone!
@@ -306,6 +353,7 @@ static Mjolnir.SDK.Terrain.LandscapeBiome.operator !=(Mjolnir.SDK.Terrain.Landsc
 static Mjolnir.SDK.Terrain.LandscapeBiome.operator ==(Mjolnir.SDK.Terrain.LandscapeBiome left, Mjolnir.SDK.Terrain.LandscapeBiome right) -> bool
 static Mjolnir.SDK.Terrain.LandscapeHeights.operator !=(Mjolnir.SDK.Terrain.LandscapeHeights left, Mjolnir.SDK.Terrain.LandscapeHeights right) -> bool
 static Mjolnir.SDK.Terrain.LandscapeHeights.operator ==(Mjolnir.SDK.Terrain.LandscapeHeights left, Mjolnir.SDK.Terrain.LandscapeHeights right) -> bool
+static Mjolnir.SDK.Terrain.LandscapeObstacles.None.get -> Mjolnir.SDK.Terrain.LandscapeObstacles!
 static Mjolnir.SDK.Terrain.LandscapeOptions.Default.get -> Mjolnir.SDK.Terrain.LandscapeOptions!
 static Mjolnir.SDK.Terrain.LevellingFields.All.get -> System.Collections.Generic.IReadOnlyList<Mjolnir.SDK.Terrain.LevellingField!>!
 static Mjolnir.SDK.Terrain.LevellingFields.Nearest(UnityEngine.Vector3 center, float radius = 16) -> Mjolnir.SDK.Terrain.LevellingField?
@@ -315,9 +363,14 @@ static Mjolnir.SDK.Terrain.NaturalObjects.FindKind(string! name) -> Mjolnir.SDK.
 static Mjolnir.SDK.Terrain.NaturalObjects.In(Mjolnir.SDK.Terrain.LandscapeArea area) -> System.Collections.Generic.IReadOnlyList<Mjolnir.SDK.Terrain.NaturalObject!>!
 static Mjolnir.SDK.Terrain.NaturalObjects.Kinds.get -> System.Collections.Generic.IReadOnlyList<Mjolnir.SDK.Terrain.PlaceableKind!>!
 static Mjolnir.SDK.Terrain.NaturalObjects.Nearest(UnityEngine.Vector3 center, float radius = 8) -> Mjolnir.SDK.Terrain.NaturalObject?
+static Mjolnir.SDK.Terrain.NaturalObjects.PictureOf(string! kind, int width = 256, int height = 192) -> UnityEngine.Texture2D?
 static Mjolnir.SDK.Terrain.NaturalObjects.Place(string! kind, UnityEngine.Vector3 position, float rotation = 0, float scale = 1) -> Mjolnir.SDK.Terrain.NaturalObject?
+static Mjolnir.SDK.Terrain.NaturalObjects.ShowMarks() -> Mjolnir.SDK.Terrain.ObjectMarks!
+static Mjolnir.SDK.Terrain.NaturalObjects.ShowPreview(string! kind, UnityEngine.Vector3 position) -> Mjolnir.SDK.Terrain.KindPreview!
+static Mjolnir.SDK.Terrain.NaturalObjects.Touching(UnityEngine.Vector3 center, float radius) -> System.Collections.Generic.IReadOnlyList<Mjolnir.SDK.Terrain.NaturalObject!>!
 static Mjolnir.SDK.Terrain.NaturalObjects.TreeGrowthDays.get -> float
 static Mjolnir.SDK.Terrain.NaturalObjects.TreeGrowthDays.set -> void
 static Mjolnir.SDK.Terrain.RoadPlans.All.get -> System.Collections.Generic.IReadOnlyList<Mjolnir.SDK.Terrain.RoadPlan!>!
+static Mjolnir.SDK.Terrain.RoadPlans.Line(System.Collections.Generic.IEnumerable<UnityEngine.Vector3>! points, Mjolnir.SDK.Terrain.GroundKind kind = Mjolnir.SDK.Terrain.GroundKind.Road) -> Mjolnir.SDK.Terrain.RoadLine?
 static Mjolnir.SDK.Terrain.RoadPlans.Nearest(UnityEngine.Vector3 center, float radius = 32) -> Mjolnir.SDK.Terrain.RoadPlan?
 static Mjolnir.SDK.Terrain.RoadPlans.Place(System.Collections.Generic.IEnumerable<UnityEngine.Vector3>! points, Mjolnir.SDK.Terrain.GroundKind kind = Mjolnir.SDK.Terrain.GroundKind.Road, float width = 0) -> Mjolnir.SDK.Terrain.RoadPlan?
