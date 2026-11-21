@@ -457,6 +457,7 @@ public static partial class Landscape
         LandscapeGrid.ResetForTests();
         LandscapeZone.ResetForTests();
         KindPreview.ResetForTests();
+        ObjectMarks.ResetForTests();
         Source = null;
         s_changing = null;
         s_changed = null;

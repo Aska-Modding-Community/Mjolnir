@@ -131,6 +131,24 @@ public static class GameCamera
     }
 
     /// <summary>
+    /// The first thing a ray hits within <paramref name="maxDistance"/> metres, the local player and the game's trigger
+    /// volumes left out: what a cursor points at (<see cref="ScreenPointToRay"/>) — a rock, a trunk, a wall — where a ray
+    /// over the ground alone would pass through it to the ground behind.
+    /// </summary>
+    /// <param name="ray">The ray, in the world.</param>
+    /// <param name="maxDistance">How far to look, in metres.</param>
+    /// <param name="point">Where the ray hits.</param>
+    /// <param name="target">The object it hits.</param>
+    /// <returns>Whether it hits anything.</returns>
+    public static bool TryRaycast(Ray ray, float maxDistance, out Vector3 point, out GameObject? target)
+    {
+        if (Live() is { } source && maxDistance > 0) return source.Raycast(ray, maxDistance, out point, out target);
+        point = default;
+        target = null;
+        return false;
+    }
+
+    /// <summary>
     /// Changes the game's cameras every frame: <paramref name="modify"/> gets each of them as the game set it (and the
     /// modifiers of a lower priority changed it) and changes it in place. Modifiers add up, so two mods widening the view
     /// both count. The game's values come back once the modifier is disposed or its mod disabled. A modifier that throws

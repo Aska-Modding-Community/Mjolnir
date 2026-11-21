@@ -31,7 +31,14 @@ public sealed class BuildPalette : IDisposable
     private ModHandlers<EventHandler<PaletteItemEventArgs>>? _itemChosen;
     private ModHandlers<EventHandler>? _closed;
     private BuildPaletteView? _view;
+    private float _scale = 1f;
     private bool _disposed;
+
+    /// <summary>The smallest <see cref="Scale"/>.</summary>
+    public const float MinimumScale = 0.5f;
+
+    /// <summary>The largest <see cref="Scale"/>.</summary>
+    public const float MaximumScale = 1.5f;
 
     /// <summary>A palette of the calling mod, closed and without categories.</summary>
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -48,6 +55,24 @@ public sealed class BuildPalette : IDisposable
 
     /// <summary>Whether the palette is on screen.</summary>
     public bool IsOpen => _view is { IsOpen: true };
+
+    /// <summary>
+    /// The palette's size against the game's build menu, 1 for the menu's own; it shrinks or grows about the bottom of its
+    /// diamonds, which stay where the menu's stand. A palette held open while the player works the ground (a mod's tools)
+    /// covers less of it smaller.
+    /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException">Outside <see cref="MinimumScale"/>…<see cref="MaximumScale"/>.</exception>
+    public float Scale
+    {
+        get => _scale;
+        set
+        {
+            if (!(value >= MinimumScale && value <= MaximumScale))
+                throw new ArgumentOutOfRangeException(nameof(value), value, $"A palette's scale is {MinimumScale} to {MaximumScale}.");
+            _scale = value;
+            Refresh();
+        }
+    }
 
     /// <summary>A tile was clicked; the palette has closed.</summary>
     public event EventHandler<PaletteItemEventArgs>? ItemChosen

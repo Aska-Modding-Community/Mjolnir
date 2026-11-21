@@ -27,6 +27,15 @@ must be rebuilt.
   names, the ✕ — shown in the menu's place while open; the game's own menu is not touched. It takes the mouse itself,
   also while the player's controls are captured (a diamond chooses its category, a tile raises `ItemChosen` and closes
   it, the wheel scrolls the tiles, Q and E step the categories), and `MouseInput.IsOverInterface` is true over it.
+  `Scale` (0.5–1.5) makes it smaller or larger than the menu about the bottom of its diamonds.
+- `NaturalObjects.ShowMarks()` → `ObjectMarks`: natural objects drawn over in the game's own see-through red, the red it
+  lays on what keeps a building from its place — for a tool, what it is about to take. A kind's ghost blocked
+  (`KindPreview.IsBlocked`) wears the same red.
+- `NaturalObjects.Touching(center, radius)`: the natural objects that reach into a circle — those whose place lies in it
+  and those whose footprint on the ground does, a large boulder whose place stands metres from the part of it a player
+  points at.
+- `GameCamera.TryRaycast(ray, maxDistance, out point, out target)`: what any ray meets first (a cursor's, through
+  `ScreenPointToRay`), the player and the game's trigger volumes left out.
 - `NaturalObjects.PictureOf(kind, width, height)`: a picture of a kind of the world, its model taken by a camera of its
   own with lights of its own, kept for the game's run; `PlaceableKind.DisplayName`, the kind's name in the player's
   language (the game's, else one made from its name); `NaturalObjects.ShowPreview(kind, position)` → `KindPreview`, the
@@ -45,6 +54,11 @@ must be rebuilt.
 
 ### Fixed
 
+- An object next to one the SDK took away (`Clear`, `Remove`, `Harvest`, a change of the ground) no longer counts as
+  taken for a minute: the game moves another object into the place in its data the taken one frees, and the SDK read
+  that one's spot. A boulder beside one taken could not be found, marked or taken until then.
+- An outline on the ground (`Landscape.ShowOutline`) is drawn over whatever stands in front of it: a ring round a rock
+  went into the rock.
 - A placed kind of the world (`NaturalObjects.Place`) shows the world's own name, description and icon in the game's
   card (a flax bush showed a missing key and another item's icon), and is outlined as the world's object is, along its
   leaves (a bush was outlined as flat cards).

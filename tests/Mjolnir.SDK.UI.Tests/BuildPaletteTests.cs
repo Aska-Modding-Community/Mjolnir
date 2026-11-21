@@ -1,3 +1,4 @@
+using System;
 using Xunit;
 
 namespace Mjolnir.SDK.UI.Tests;
@@ -12,6 +13,18 @@ public sealed class BuildPaletteTests
         Assert.Equal(1, PaletteRules.UpperRow(1));
         Assert.Equal(5, PaletteRules.UpperRow(10));
         Assert.Equal(9, PaletteRules.UpperRow(17)); // the game's 9 over 8
+    }
+
+    [Fact]
+    public void AScaleIsHalfToOneAndAHalf()
+    {
+        var palette = new BuildPalette();
+        Assert.Equal(1f, palette.Scale);
+        palette.Scale = 0.8f;
+        Assert.Equal(0.8f, palette.Scale);
+        Assert.Throws<ArgumentOutOfRangeException>(() => palette.Scale = 0.4f);
+        Assert.Throws<ArgumentOutOfRangeException>(() => palette.Scale = float.NaN);
+        Assert.Equal(0.8f, palette.Scale);
     }
 
     [Fact]

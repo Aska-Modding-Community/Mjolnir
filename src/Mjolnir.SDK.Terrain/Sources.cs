@@ -64,8 +64,17 @@ internal interface ITerrainSource
     /// <summary>A new preview of a kind, hidden until shown.</summary>
     IKindPreviewView NewKindPreview();
 
+    /// <summary>New marks over objects, hidden until shown.</summary>
+    IMarksView NewMarks();
+
     /// <summary>The world's natural objects whose place lies within <paramref name="radius"/> metres of a point.</summary>
     IReadOnlyList<IWorldObject> ObjectsIn(float centerX, float centerZ, float radius);
+
+    /// <summary>
+    /// The world's natural objects whose place lies within <paramref name="radius"/> metres of a point, or whose footprint on
+    /// the ground reaches into that circle.
+    /// </summary>
+    IReadOnlyList<IWorldObject> ObjectsTouching(float centerX, float centerZ, float radius);
 
     /// <summary>The kinds of the world a mod can place, made once the game has its item database; empty before.</summary>
     IReadOnlyList<PlaceableKindData> PlaceableKinds { get; }
@@ -134,6 +143,12 @@ internal interface IWorldObject
     NaturalObjectKind Kind { get; }
 
     Vector3 Position { get; }
+
+    /// <summary>Its turn in the world.</summary>
+    Quaternion Rotation { get; }
+
+    /// <summary>Its size against its kind's model.</summary>
+    Vector3 Scale { get; }
 
     float Health { get; }
 
@@ -264,6 +279,18 @@ internal interface IOutlineView
     void Hide();
 
     /// <summary>Takes the lines out of the world for good.</summary>
+    void Destroy();
+}
+
+/// <summary>Marks over objects in the world (Game/GameMarks.cs; a fake in the unit tests). Used on the main thread only.</summary>
+internal interface IMarksView
+{
+    /// <summary>Marks these objects and no others.</summary>
+    void Show(IReadOnlyList<MarkedObject> objects);
+
+    void Hide();
+
+    /// <summary>Takes every mark out of the world for good.</summary>
     void Destroy();
 }
 

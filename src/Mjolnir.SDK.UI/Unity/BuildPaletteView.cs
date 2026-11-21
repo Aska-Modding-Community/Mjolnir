@@ -30,7 +30,8 @@ internal sealed class BuildPaletteView
     private readonly List<(RectTransform Rect, PaletteItem Item, GameObject? Hover, GameObject? Selected)> _tiles = [];
     private GameObject? _root;
     private Canvas? _canvas;
-    private RectTransform? _row1, _row2, _content, _viewport, _close, _labelDiv;
+    private RectTransform? _panel, _row1, _row2, _content, _viewport, _close, _labelDiv;
+    private Vector2 _panelPivot, _panelPosition;
     private TMP_Text? _label;
     private HorizontalLayoutGroup? _contentLayout, _row1Layout, _row2Layout;
     private float _scroll;
@@ -93,6 +94,12 @@ internal sealed class BuildPaletteView
             _canvas.sortingOrder = SortingOrder;
         }
         var root = _root.transform;
+        _panel = Rect(root.Find("Panel"));
+        if (_panel != null)
+        {
+            _panelPivot = _panel.pivot;
+            _panelPosition = _panel.anchoredPosition;
+        }
         _row1 = Rect(root.Find("Panel/Categories/PanelCategories/Row1"));
         _row2 = Rect(root.Find("Panel/Categories/PanelCategories/Row2"));
         _close = Rect(root.Find("Panel/Categories/Close"));
@@ -137,6 +144,7 @@ internal sealed class BuildPaletteView
     public void Build()
     {
         if (_root == null) return;
+        Resize();
         _diamonds.Clear();
         _tiles.Clear();
         _hover = null;
@@ -220,6 +228,29 @@ internal sealed class BuildPaletteView
             if (hover != null) hover.SetActive(_hover == item && item != _palette.SelectedItem);
             if (chosen != null) chosen.SetActive(item == _palette.SelectedItem);
         }
+    }
+
+    // The palette's size: the panel scaled about the bottom of its diamonds' rows, which keeps them where the menu's stand.
+    private void Resize()
+    {
+        if (_panel == null) return;
+        float scale = _palette.Scale;
+        var size = _panel.rect.size;
+        float bottom = 0;
+        if (_row1?.parent is RectTransform rows)
+        {
+            // The rows' bottom edge in the panel's own space, from its bottom (0) to its top (1).
+            var corners = new Vector3[4];
+            rows.GetWorldCorners(corners);
+            float y = _panel.InverseTransformPoint(corners[0]).y;
+            bottom = Math.Clamp((y - _panel.rect.yMin) / Math.Max(size.y, 1), 0, 1);
+        }
+        // The same place for the pivot whatever the scale: its position follows the pivot's move at scale 1.
+        var pivot = new Vector2(0.5f, bottom);
+        var moved = new Vector2((pivot.x - _panelPivot.x) * size.x, (pivot.y - _panelPivot.y) * size.y);
+        _panel.pivot = pivot;
+        _panel.anchoredPosition = _panelPosition + moved;
+        _panel.localScale = new Vector3(scale, scale, 1);
     }
 
     private void Place()

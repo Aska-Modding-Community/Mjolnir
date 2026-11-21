@@ -9,6 +9,8 @@ Mjolnir.SDK.UI.BuildPalette.IsOpen.get -> bool
 Mjolnir.SDK.UI.BuildPalette.ItemChosen -> System.EventHandler<Mjolnir.SDK.UI.PaletteItemEventArgs!>?
 Mjolnir.SDK.UI.BuildPalette.Open() -> void
 Mjolnir.SDK.UI.BuildPalette.Refresh() -> void
+Mjolnir.SDK.UI.BuildPalette.Scale.get -> float
+Mjolnir.SDK.UI.BuildPalette.Scale.set -> void
 Mjolnir.SDK.UI.BuildPalette.SelectCategory(int step) -> void
 Mjolnir.SDK.UI.BuildPalette.SelectedCategory.get -> Mjolnir.SDK.UI.PaletteCategory?
 Mjolnir.SDK.UI.BuildPalette.SelectedCategory.set -> void
@@ -45,6 +47,8 @@ Mjolnir.SDK.UI.UiQuickSlot.IsSelected.set -> void
 Mjolnir.SDK.UI.UiQuickSlot.Key.get -> string!
 Mjolnir.SDK.UI.UiQuickSlot.Key.set -> void
 Mjolnir.SDK.UI.UiQuickSlot.UiQuickSlot() -> void
+const Mjolnir.SDK.UI.BuildPalette.MaximumScale = 1.5 -> float
+const Mjolnir.SDK.UI.BuildPalette.MinimumScale = 0.5 -> float
 override Mjolnir.SDK.UI.PaletteCategory.ToString() -> string!
 override Mjolnir.SDK.UI.PaletteItem.ToString() -> string!
 static Mjolnir.SDK.UI.Hud.AddInPlaceOf<T>(T! element, Mjolnir.SDK.UI.HudPart part) -> T!

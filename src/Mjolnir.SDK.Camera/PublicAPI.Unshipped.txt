@@ -1,1 +1,2 @@
 #nullable enable
+static Mjolnir.SDK.Camera.GameCamera.TryRaycast(UnityEngine.Ray ray, float maxDistance, out UnityEngine.Vector3 point, out UnityEngine.GameObject? target) -> bool

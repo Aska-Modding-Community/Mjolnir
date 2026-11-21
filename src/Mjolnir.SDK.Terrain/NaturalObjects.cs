@@ -46,6 +46,21 @@ public static class NaturalObjects
         return Found(source, center.x, center.z, radius, null);
     }
 
+    /// <summary>
+    /// The natural objects that reach into a circle, nearest first: those whose place lies in it, and those whose footprint
+    /// on the ground does though their place lies outside — a large boulder or a cliff of the shore, whose place can stand
+    /// several metres from the part of it a player points at. A tool that takes what is under it asks this.
+    /// </summary>
+    /// <param name="center">The middle of the circle (its y is not used).</param>
+    /// <param name="radius">The circle's radius, over 0 and at most <see cref="MaximumRadius"/> metres.</param>
+    /// <exception cref="ArgumentOutOfRangeException">The radius is out of range or not a number.</exception>
+    public static IReadOnlyList<NaturalObject> Touching(Vector3 center, float radius)
+    {
+        if (!(radius > 0 && radius <= MaximumRadius)) throw new ArgumentOutOfRangeException(nameof(radius), radius, $"A radius is over 0 and at most {MaximumRadius} m.");
+        if (Landscape.LiveSource() is not { } source) return [];
+        return Found(source, center.x, center.z, radius, null, byFootprint: true);
+    }
+
     /// <summary>The nearest natural object within <paramref name="radius"/> metres of a point; null for none.</summary>
     /// <param name="center">Where to look from (its y is not used).</param>
     /// <param name="radius">How far round it to look, over 0 and at most <see cref="MaximumRadius"/> metres.</param>
@@ -155,6 +170,15 @@ public static class NaturalObjects
     }
 
     /// <summary>
+    /// Marks objects in the world in the game's own see-through red, the red it lays on what keeps a building from its
+    /// place (<see cref="ObjectMarks"/>): a tool shows so what it is about to take. Empty until <see cref="ObjectMarks.Set"/>
+    /// is given objects; it stays until disposed.
+    /// </summary>
+    /// <returns>The marks: set their objects, then dispose them to take them away.</returns>
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static ObjectMarks ShowMarks() => ObjectMarks.Add(CallingMod.Of(Assembly.GetCallingAssembly()));
+
+    /// <summary>
     /// Shows a kind's model standing on the ground at a point (<see cref="KindPreview"/>): the ghost of a tool that places
     /// one object at a time, moved with the cursor, turned and sized as <see cref="Place"/> would place it, red where it may
     /// not go. It stays until disposed. May be called from any thread: it shows from the next frame.
@@ -204,11 +228,12 @@ public static class NaturalObjects
         }
     }
 
-    private static IReadOnlyList<NaturalObject> Found(ITerrainSource source, float x, float z, float radius, Func<float, float, bool>? where)
+    private static IReadOnlyList<NaturalObject> Found(ITerrainSource source, float x, float z, float radius, Func<float, float, bool>? where,
+        bool byFootprint = false)
     {
         try
         {
-            var objects = source.ObjectsIn(x, z, radius);
+            var objects = byFootprint ? source.ObjectsTouching(x, z, radius) : source.ObjectsIn(x, z, radius);
             var list = new List<(NaturalObject Object, float Distance)>(objects.Count);
             foreach (var found in objects)
             {
@@ -216,7 +241,7 @@ public static class NaturalObjects
                 var at = found.Position;
                 float dx = at.x - x, dz = at.z - z;
                 float distance = dx * dx + dz * dz;
-                if (distance > radius * radius) continue;
+                if (!byFootprint && distance > radius * radius) continue;
                 if (where != null && !where(at.x, at.z)) continue;
                 list.Add((new NaturalObject(found), distance));
             }
@@ -279,6 +304,10 @@ public sealed class NaturalObject
 
     /// <summary>Where it stands now; (0, 0, 0) once it is gone or off the main thread.</summary>
     public Vector3 Position => Read(() => _object.Position, default);
+
+    /// <summary>What a mark draws of it: its kind and where it stands, turned and sized; null once it is gone.</summary>
+    internal MarkedObject? Placement() =>
+        IsGone ? null : Read<MarkedObject?>(() => new MarkedObject(AssetName, _object.Position, _object.Rotation, _object.Scale), null);
 
     /// <summary>What is left of it, as the game counts a tree's or a deposit's; 0 for a thing with no health of its own.</summary>
     public float Health => Read(() => _object.Health, 0f);

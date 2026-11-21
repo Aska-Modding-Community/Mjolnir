@@ -524,6 +524,20 @@ internal sealed class FakeTerrain : ITerrainSource
         return placed;
     }
 
+    public IReadOnlyList<IWorldObject> ObjectsTouching(float centerX, float centerZ, float radius)
+    {
+        ObjectLookups++;
+        if (Throw) throw new InvalidOperationException("the game's objects could not be read");
+        var found = new List<IWorldObject>();
+        foreach (var o in Objects)
+        {
+            if (o.IsGone) continue;
+            float dx = o.Position.x - centerX, dz = o.Position.z - centerZ, reach = radius + o.FootprintRadius;
+            if (dx * dx + dz * dz <= reach * reach) found.Add(o);
+        }
+        return found;
+    }
+
     public IReadOnlyList<IWorldObject> ObjectsIn(float centerX, float centerZ, float radius)
     {
         ObjectLookups++;
@@ -659,6 +673,16 @@ internal sealed class FakeTerrain : ITerrainSource
 
     /// <summary>The previews made: what each was last asked to show (null once hidden or destroyed).</summary>
     public List<FakePreview> Previews { get; } = [];
+
+    /// <summary>The marks made: what each was last asked to show (null once hidden or destroyed).</summary>
+    internal List<FakeMarks> Marks { get; } = [];
+
+    public IMarksView NewMarks()
+    {
+        var marks = new FakeMarks();
+        Marks.Add(marks);
+        return marks;
+    }
 
     public IKindPreviewView NewKindPreview()
     {
@@ -859,6 +883,23 @@ internal sealed class FakeGrid(int columns, int rows) : IGridView
 }
 
 /// <summary>A kind's preview as the model drew it.</summary>
+internal sealed class FakeMarks : IMarksView
+{
+    public IReadOnlyList<MarkedObject>? Shown { get; private set; }
+
+    public bool Destroyed { get; private set; }
+
+    public void Show(IReadOnlyList<MarkedObject> objects) => Shown = [.. objects];
+
+    public void Hide() => Shown = null;
+
+    public void Destroy()
+    {
+        Shown = null;
+        Destroyed = true;
+    }
+}
+
 public sealed class FakePreview : IKindPreviewView
 {
     public (string Kind, Vector3 Position, float Rotation, float Scale, bool Blocked)? Shown { get; private set; }

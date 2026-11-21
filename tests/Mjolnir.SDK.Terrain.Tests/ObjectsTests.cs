@@ -82,6 +82,22 @@ public sealed class ObjectsTests : IDisposable
     }
 
     [Fact]
+    public void ABoulderWhoseFootprintReachesInIsTouching()
+    {
+        Add(0, 10, NaturalObjectKind.Plant);
+        var boulder = Add(7, 10, NaturalObjectKind.LargeObject, "rock_shoreline_large");
+        boulder.FootprintRadius = 5;
+        Add(20, 10, NaturalObjectKind.LargeObject, "rock_far").FootprintRadius = 5;
+
+        // Its place stands 7 m off, out of a circle of 3 m; its footprint reaches 2 m into it.
+        Assert.Single(NaturalObjects.Around(V(0, 0, 10), 3));
+        var touching = NaturalObjects.Touching(V(0, 0, 10), 3);
+        Assert.Equal(["Harvest_Plant_Flax", "rock_shoreline_large"], touching.Select(o => o.AssetName));
+        Assert.Throws<ArgumentOutOfRangeException>(() => NaturalObjects.Touching(V(0, 0, 0), 0));
+        Assert.Throws<ArgumentOutOfRangeException>(() => NaturalObjects.Touching(V(0, 0, 0), NaturalObjects.MaximumRadius + 1));
+    }
+
+    [Fact]
     public void WithoutAWorldOrOffTheMainThreadNothingIsFound()
     {
         Add(0, 10);
@@ -390,6 +406,35 @@ public sealed class ObjectsTests : IDisposable
     }
 
     [Fact]
+    public void MarksShowTheirObjectsUntilDisposed()
+    {
+        var rock = new FakeObject { AssetName = "rock_shoreline_big", Kind = NaturalObjectKind.LargeObject, Position = V(2, 1, 3) };
+        var bush = new FakeObject { AssetName = "bush_sloe_berries", Kind = NaturalObjectKind.Object, Position = V(4, 1, 3) };
+        _game.Objects.Add(rock);
+        _game.Objects.Add(bush);
+        var marks = NaturalObjects.ShowMarks();
+        Landscape.Tick();
+        Assert.Empty(_game.Marks);                                   // nothing to mark yet: no view made
+
+        marks.Set(NaturalObjects.Around(V(3, 0, 3), 4));
+        Assert.Equal(2, marks.Count);
+        Landscape.Tick();
+        Assert.Equal(["rock_shoreline_big", "bush_sloe_berries"], _game.Marks.Single().Shown!.Select(m => m.AssetName).OrderByDescending(n => n));
+
+        bush.IsGone = true;                                          // a gone object loses its mark
+        Landscape.Tick();
+        Assert.Equal("rock_shoreline_big", _game.Marks[0].Shown!.Single().AssetName);
+
+        marks.IsVisible = false;
+        Landscape.Tick();
+        Assert.Null(_game.Marks[0].Shown);
+        marks.Dispose();
+        Landscape.Tick();
+        Assert.True(_game.Marks[0].Destroyed);
+        Assert.Throws<ArgumentNullException>(() => marks.Set(null!));
+    }
+
+    [Fact]
     public void TheConsoleListsAndPlacesKinds()
     {
         DevConsole.Execute("place");
@@ -523,6 +568,13 @@ internal sealed class FakeObject : IWorldObject
     public NaturalObjectKind Kind { get; set; }
 
     public Vector3 Position { get; set; }
+
+    public Quaternion Rotation { get; set; }
+
+    /// <summary>How far round its place its footprint reaches (the fake's footprint is a circle).</summary>
+    public float FootprintRadius { get; set; }
+
+    public Vector3 Scale { get; set; }
 
     public float Health { get; set; }
 

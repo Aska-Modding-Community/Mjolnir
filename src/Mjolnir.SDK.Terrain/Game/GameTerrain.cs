@@ -484,7 +484,12 @@ internal sealed class GameTerrain : ITerrainSource
 
     public IKindPreviewView NewKindPreview() => new GameKindPreview();
 
+    public IMarksView NewMarks() => new GameMarks();
+
     public IReadOnlyList<IWorldObject> ObjectsIn(float centerX, float centerZ, float radius) => GameObjects.In(centerX, centerZ, radius);
+
+    public IReadOnlyList<IWorldObject> ObjectsTouching(float centerX, float centerZ, float radius) =>
+        GameObjects.In(centerX, centerZ, radius, byFootprint: true);
 
     public IReadOnlyList<PlaceableKindData> PlaceableKinds => GamePlacement.Kinds;
 

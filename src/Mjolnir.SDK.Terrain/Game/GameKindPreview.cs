@@ -6,12 +6,11 @@ namespace Mjolnir.SDK.Terrain;
 
 /// <summary>
 /// A preview of a kind in the world: plain copies of its model's nearest level (meshes and materials, no colliders, no
-/// scripts, no shadows) under a root that outlives the scenes; a blocked one wears one unlit red material instead, and
-/// its own again once freed.
+/// scripts, no shadows) under a root that outlives the scenes; a blocked one wears the game's see-through red instead (the
+/// red it lays on what keeps a building from its place), and its own again once freed.
 /// </summary>
 internal sealed class GameKindPreview : IKindPreviewView
 {
-    private static readonly Color BlockedColor = new(0.85f, 0.15f, 0.1f, 1f);
     private static Material? s_blocked;
 
     private readonly List<(MeshRenderer Renderer, Material[] Materials)> _parts = [];
@@ -49,7 +48,7 @@ internal sealed class GameKindPreview : IKindPreviewView
     // Blocked, every slot of every part takes the red material; freed, each part takes its own back.
     private void Paint(bool blocked)
     {
-        if (blocked && (s_blocked ??= Blocked()) == null) return;
+        if (blocked && (s_blocked ??= OverlayMaterials.Invalid()) == null) return;
         _blocked = blocked;
         foreach (var (renderer, materials) in _parts)
         {
@@ -63,15 +62,6 @@ internal sealed class GameKindPreview : IKindPreviewView
             for (int i = 0; i < red.Length; i++) red[i] = s_blocked!;
             renderer.sharedMaterials = red;
         }
-    }
-
-    private static Material? Blocked()
-    {
-        var shader = Shader.Find("HDRP/Unlit");
-        if (shader == null) return null;
-        var material = new Material(shader) { color = BlockedColor };
-        material.hideFlags |= HideFlags.DontUnloadUnusedAsset;
-        return material;
     }
 
     public void Hide()

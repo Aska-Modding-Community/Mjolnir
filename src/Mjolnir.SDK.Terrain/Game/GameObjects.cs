@@ -45,7 +45,13 @@ internal static class GameObjects
         return (at - taken.At).sqrMagnitude < 0.01f; // a place in the data given to another object since is not it
     }
 
-    private static void MarkTaken(WorldItemInstance instance)
+    // An object as it is before it is taken: its place in the data and where it stands. Read before the game takes it: the
+    // game moves the data's last object into the place it frees, so read after, the place and the spot were another
+    // object's, which then counted as taken for a minute — a shore's boulder beside one taken could be neither marked nor
+    // taken by the eraser (seen in game, 2026-11-21).
+    private static ((IntPtr Data, int Index) Key, Vector3 At) Before(WorldItemInstance instance) => (KeyOf(instance), instance.GetPosition());
+
+    private static void MarkTaken(((IntPtr Data, int Index) Key, Vector3 At) gone)
     {
         float now = Time.realtimeSinceStartup;
         if (s_taken.Count > 2048)
@@ -55,11 +61,15 @@ internal static class GameObjects
                 if (now - taken.When > TakenFor) old.Add(key);
             foreach (var key in old) s_taken.Remove(key);
         }
-        s_taken[KeyOf(instance)] = (instance.GetPosition(), now);
+        s_taken[gone.Key] = (gone.At, now);
     }
 
-    /// <summary>The objects whose place lies within <paramref name="radius"/> metres of a point.</summary>
-    public static IReadOnlyList<IWorldObject> In(float centerX, float centerZ, float radius)
+    /// <summary>
+    /// The objects whose place lies within <paramref name="radius"/> metres of a point; with <paramref name="byFootprint"/>,
+    /// also those whose footprint reaches into the circle (the vegetation kind's footprint, turned and sized as the object
+    /// is: the game's own search tests it when asked to). A shore's large boulder stands some metres from its place.
+    /// </summary>
+    public static IReadOnlyList<IWorldObject> In(float centerX, float centerZ, float radius, bool byFootprint = false)
     {
         var resources = GameManagers.Get<ResourceManager>();
         if (resources == null) return [];
@@ -68,7 +78,7 @@ internal static class GameObjects
         middle.y = ground;
         var found = new Il2CppSystem.Collections.Generic.List<WorldItemInstance>();
         resources.GetAllInstancesList(found, middle, Quaternion.identity, At(radius * 2, SearchHeight, radius * 2), SDFShape.CIRCLE,
-            null, InstanceActivationContext.ALL, false);
+            null, InstanceActivationContext.ALL, byFootprint);
         var list = new List<IWorldObject>(found.Count);
         for (int i = 0; i < found.Count; i++)
         {
@@ -101,8 +111,9 @@ internal static class GameObjects
             if (!where(position.x, position.z) || !instance.IsRemovable(InstanceDestructionLevel.TERRAFORMING)) continue;
             bool silent = false;
             var level = InstanceDestructionLevel.TERRAFORMING;
+            var before = Before(instance);
             instance.Destroy(ref silent, ref level);
-            MarkTaken(instance);
+            MarkTaken(before);
         }
     }
 
@@ -152,6 +163,10 @@ internal static class GameObjects
 
         public Vector3 Position => instance.GetPosition();
 
+        public Quaternion Rotation => instance.GetRotation();
+
+        public Vector3 Scale => instance.GetScale();
+
         public float Health => _biome != null ? _biome.GetHealth() : 0f;
 
         public int Quantity => _biome != null ? _biome.GetQuantity() : 0;
@@ -192,9 +207,10 @@ internal static class GameObjects
             if (!IsClearable) return false;
             bool silent = false;
             var level = InstanceDestructionLevel.SYSTEM;
+            var before = Before(instance);
             instance.Destroy(ref silent, ref level);
             _taken = true;
-            MarkTaken(instance);
+            MarkTaken(before);
             return true;
         }
 
@@ -208,10 +224,11 @@ internal static class GameObjects
             var at = instance.GetPosition();
             bool tree = Kind == NaturalObjectKind.Tree && options.ChopTrunk && resource.Length > 0;
             var lying = tree ? GameHarvest.TrunksAround(at, resource) : null;
+            var before = Before(instance);
             bool done = GameHarvest.Strike(harvest, options);
             if (!done) return false;
             _taken = true; // used up: the game takes it (seen in game: a felled tree's place held only its loot)
-            MarkTaken(instance);
+            MarkTaken(before);
             if (lying != null) GameHarvest.ChopTrunk(at, resource, lying, options);
             return true;
         }
@@ -222,9 +239,10 @@ internal static class GameObjects
             if (!IsRemovable) return false;
             bool silent = false;
             var level = InstanceDestructionLevel.TERRAFORMING;
+            var before = Before(instance);
             instance.Destroy(ref silent, ref level);
             _taken = true;
-            MarkTaken(instance);
+            MarkTaken(before);
             return true;
         }
 

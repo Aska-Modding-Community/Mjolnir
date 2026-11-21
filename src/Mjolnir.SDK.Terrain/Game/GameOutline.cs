@@ -7,7 +7,7 @@ namespace Mjolnir.SDK.Terrain;
 
 /// <summary>
 /// An outline's two lines in the world: line renderers with an unlit material of the game's render pipeline (lit ones fade
-/// in the shade), on an object that outlives the scenes, hidden until drawn.
+/// in the shade) that draws over what stands in front of it, on an object that outlives the scenes, hidden until drawn.
 /// </summary>
 internal sealed class GameOutline : IOutlineView
 {
@@ -41,7 +41,8 @@ internal sealed class GameOutline : IOutlineView
         line.widthMultiplier = width;
         line.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         line.receiveShadows = false;
-        if (Shader() is { } shader) line.material = new Material(shader);
+        // Drawn through whatever stands in front of it: a ring on the ground stays whole over a rock or a trunk in its way.
+        if (OverlayMaterials.OnTop(Shader()) is { } material) line.material = material;
         return line;
     }
 
