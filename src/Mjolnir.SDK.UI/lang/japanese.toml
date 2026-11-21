@@ -1,0 +1,76 @@
+# The UI module's own texts in Japanese. A key missing here is taken from english.toml.
+
+[mods]
+disabled = "エラーのため無効になりました：Mjolnir/LogOutput.log を参照してください"
+reset = "このMODのすべての設定をデフォルトに戻しますか？"
+restart = "変更した設定を適用するには、ゲームを再起動してください。"
+apply = "MODのオン・オフを反映するには、ゲームを再起動してください。"
+none = "MODがインストールされていません：Mjolnir/Mods に、MODごとに個別のフォルダーで配置してください。"
+other_loader = "Mjolnir と同じ場所に {0} がインストールされています。2つのMODローダーは1つのゲームで共存できません：{0} は動作しておらず、そのMODも読み込まれていません。どちらか一方だけを残してください。"
+off = "オフ"
+turns_off = "再起動後にオフになります"
+turns_on = "再起動後にオンになります"
+failed = "読み込みに失敗しました：Mjolnir/LogOutput.log を参照してください"
+not_loaded = "読み込まれていません：{0}"
+required_by = "{0} は {1} がないと読み込めません。それでも {1} をオフにしますか？"
+required_by_many = "{0} は {1} がないと読み込めません。それでも {1} をオフにしますか？"
+requires = "{0} は {1} がないと読み込めませんが、{1} はオフです。{1} もオンにしますか？"
+requires_many = "{0} は {1} がないと読み込めませんが、これらはオフです。これらもオンにしますか？"
+turn_off = "オフにする"
+turn_on_too = "オンにする"
+only_this = "このMODのみ"
+
+[mods.reason]
+duplicate = "別のMODが同じID（{0}）を使っています"
+missing = "{0} が必要ですが、インストールされていません"
+wrong_version = "{0} が必要ですが、インストールされているのは {1} です"
+wrong_platform = "Mjolnir {0} 向けに作られていますが、インストールされているのは {1} です：MODの新しいビルドが必要です"
+dependency_not_loaded = "{0} が必要ですが、読み込まれませんでした"
+dependency_turned_off = "{0} が必要ですが、オフになっています"
+dependency_failed = "{0} が必要ですが、読み込みに失敗しました"
+self_dependency = "自分自身に依存しています"
+cycle = "依存関係が循環しています：{0}"
+
+[sections]
+UI = "インターフェース"
+Kit = "Mjolnirキット"
+Console = "コンソール"
+
+[config.UI.Menus]
+name = "インターフェースの拡大率"
+description = "MODのウィンドウ、およびゲームのメニューとダイアログ（最大100 %）の拡大率（%）"
+
+[config.UI.Hud]
+name = "HUDの拡大率"
+description = "HUDとその通知の拡大率（%）。ゲーム自体のHUD拡大率に上乗せされます"
+
+[config.Console.Key]
+name = "コンソールキー"
+description = "開発者コンソールを開閉します"
+
+[setting]
+restart = "{0}（再起動後に適用）"
+restart_alone = "再起動後に適用されます。"
+
+[dialog]
+ok = "OK"
+cancel = "キャンセル"
+
+[hotkey]
+press = "キーを押してください…"
+none = "なし"
+
+[console]
+title = "コンソール"
+placeholder = "コマンドを入力して Enter（help で一覧表示）"
+
+[config.Kit.Models]
+name = "キット用のキャラクターモデル"
+description = "Mjolnirキットのプレビュー用に、キャラクターのモデルとテクスチャを Mjolnir/ModKit に書き出します（約160 MB、このコンピューターのみ）。MOD制作者向け"
+
+[config.Kit.Animations]
+name = "キット用のゲームのアニメーション"
+description = "Mjolnirキット用に、ゲーム本来の人物のアニメーションを Mjolnir/ModKit に書き出します（約50 MB、このコンピューターのみ）。MOD制作者向け"
+
+[keys]
+wheel = "ホイール"

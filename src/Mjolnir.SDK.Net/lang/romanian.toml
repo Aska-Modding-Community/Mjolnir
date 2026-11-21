@@ -1,0 +1,14 @@
+# Mjolnir.SDK.Net's texts in Romanian (NetTexts). A key missing here is taken from english.toml.
+
+[refusal]
+title = "Nu te poți alătura sesiunii"
+differs = "Configurația ta de moduri nu se potrivește cu cea a gazdei."
+platform = "Versiunea Mjolnir: gazda {0}, a ta {1}. Instalează aceeași versiune ca gazda."
+missing = "Necesare gazdei, dar neinstalate sau dezactivate:"
+extra = "Instalate, dar nefolosite de gazdă:"
+versions = "Versiuni diferite:"
+version = "{0}: gazda {1}, a ta {2}"
+vanilla = "Gazda joacă fără Mjolnir. Ca să te alături, dezactivează modurile de care au nevoie toți jucătorii:"
+no_answer = "Gazda nu a confirmat la timp configurația modurilor. Încearcă din nou să te alături."
+action = "Activează sau dezactivează modurile în fereastra Mjolnir din meniul principal, apoi repornește jocul."
+ok = "OK"

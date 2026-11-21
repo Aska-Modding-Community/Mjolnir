@@ -1,0 +1,14 @@
+# Mjolnir.SDK.Net's texts in French (NetTexts). A key missing here is taken from english.toml.
+
+[refusal]
+title = "Impossible de rejoindre la session"
+differs = "Votre configuration de mods ne correspond pas à celle de l'hôte."
+platform = "Version de Mjolnir : hôte {0}, la vôtre {1}. Installer la même version que l'hôte."
+missing = "Requis par l'hôte, mais non installés ou désactivés :"
+extra = "Installés, mais non utilisés par l'hôte :"
+versions = "Versions différentes :"
+version = "{0} : hôte {1}, la vôtre {2}"
+vanilla = "L'hôte joue sans Mjolnir. Pour rejoindre, désactiver les mods nécessaires à tous les joueurs :"
+no_answer = "L'hôte n'a pas confirmé la configuration des mods à temps. Réessayer de rejoindre."
+action = "Activer ou désactiver les mods dans la fenêtre Mjolnir du menu principal, puis redémarrer le jeu."
+ok = "OK"

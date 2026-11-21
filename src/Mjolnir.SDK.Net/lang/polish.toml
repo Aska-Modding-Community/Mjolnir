@@ -1,0 +1,14 @@
+# Mjolnir.SDK.Net's texts in Polish (NetTexts). A key missing here is taken from english.toml.
+
+[refusal]
+title = "Nie udało się dołączyć do sesji"
+differs = "Twoja konfiguracja modów nie zgadza się z konfiguracją hosta."
+platform = "Wersja Mjolnir: host {0}, twoja {1}. Zainstaluj tę samą wersję co host."
+missing = "Wymagane przez hosta, ale niezainstalowane lub wyłączone:"
+extra = "Zainstalowane, ale nieużywane przez hosta:"
+versions = "Różne wersje:"
+version = "{0}: host {1}, twoja {2}"
+vanilla = "Host gra bez Mjolnira. Aby dołączyć, wyłącz mody potrzebne wszystkim graczom:"
+no_answer = "Host nie potwierdził konfiguracji modów na czas. Spróbuj dołączyć ponownie."
+action = "Włącz lub wyłącz mody w oknie Mjolnir w menu głównym, a potem uruchom grę ponownie."
+ok = "OK"

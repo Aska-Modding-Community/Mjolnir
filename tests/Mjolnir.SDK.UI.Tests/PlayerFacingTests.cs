@@ -148,7 +148,7 @@ public sealed class PlayerFacingTests : ViewTestBase, IDisposable
         Assert.Equal("ОК", SdkTexts.Get("dialog.ok"));
         Assert.Equal("Вернуть все настройки этого мода к значениям по умолчанию?", SdkTexts.Get("mods.reset"));
 
-        Localization.LanguageLoaded("german"); // no German file: English
+        Localization.LanguageLoaded("englishUS"); // no file of its own: English
         Assert.Equal("Restart the game to apply the changed settings.", SdkTexts.Get("mods.restart"));
     }
 

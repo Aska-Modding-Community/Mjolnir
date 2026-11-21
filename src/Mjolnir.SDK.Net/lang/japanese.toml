@@ -1,0 +1,14 @@
+# Mjolnir.SDK.Net's texts in Japanese (NetTexts). A key missing here is taken from english.toml.
+
+[refusal]
+title = "セッションに参加できません"
+differs = "あなたのMOD構成がホストと一致しません。"
+platform = "Mjolnirのバージョン：ホスト {0}、あなた {1}。ホストと同じバージョンをインストールしてください。"
+missing = "ホストに必要ですが、インストールされていないかオフのMOD："
+extra = "インストール済みですが、ホストが使用していないMOD："
+versions = "バージョンが異なるMOD："
+version = "{0}：ホスト {1}、あなた {2}"
+vanilla = "ホストはMjolnirなしでプレイしています。参加するには、全プレイヤーに必要なMODをオフにしてください："
+no_answer = "ホストが時間内にMOD構成を確認しませんでした。もう一度参加してください。"
+action = "メインメニューのMjolnirウィンドウでMODをオン・オフしてから、ゲームを再起動してください。"
+ok = "OK"

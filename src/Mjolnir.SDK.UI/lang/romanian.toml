@@ -1,0 +1,76 @@
+# The UI module's own texts in Romanian. A key missing here is taken from english.toml.
+
+[mods]
+disabled = "Dezactivat după o eroare: vezi Mjolnir/LogOutput.log"
+reset = "Readuci toate setările acestui mod la valorile implicite?"
+restart = "Repornește jocul pentru a aplica setările modificate."
+apply = "Repornește jocul pentru a activa sau dezactiva modurile."
+none = "Niciun mod instalat: pune-le în Mjolnir/Mods, fiecare în propriul folder."
+other_loader = "{0} este instalat lângă Mjolnir. Două încărcătoare de moduri nu pot împărți același joc: {0} nu rulează, iar modurile sale nu sunt încărcate. Păstrează doar unul dintre ele."
+off = "Dezactivat"
+turns_off = "Se dezactivează după repornire"
+turns_on = "Se activează după repornire"
+failed = "Încărcare eșuată: vezi Mjolnir/LogOutput.log"
+not_loaded = "Neîncărcat: {0}"
+required_by = "{0} nu se poate încărca fără {1}. Dezactivezi totuși {1}?"
+required_by_many = "{0} nu se pot încărca fără {1}. Dezactivezi totuși {1}?"
+requires = "{0} nu se poate încărca fără {1}, care este dezactivat. Activezi și {1}?"
+requires_many = "{0} nu se poate încărca fără {1}, care sunt dezactivate. Le activezi și pe ele?"
+turn_off = "Dezactivează"
+turn_on_too = "Activează"
+only_this = "Doar acest mod"
+
+[mods.reason]
+duplicate = "alt mod are același id, {0}"
+missing = "necesită {0}, care nu este instalat"
+wrong_version = "necesită {0}, dar este instalat {1}"
+wrong_platform = "creat pentru Mjolnir {0}, dar este instalat {1}: e nevoie de o versiune mai nouă a modului"
+dependency_not_loaded = "necesită {0}, care nu s-a încărcat"
+dependency_turned_off = "necesită {0}, care este dezactivat"
+dependency_failed = "necesită {0}, a cărui încărcare a eșuat"
+self_dependency = "depinde de el însuși"
+cycle = "dependențele sale formează un cerc: {0}"
+
+[sections]
+UI = "Interfață"
+Kit = "Kitul Mjolnir"
+Console = "Consolă"
+
+[config.UI.Menus]
+name = "Scara interfeței"
+description = "Ferestrele modurilor; meniurile și dialogurile jocului până la 100 %, în procente"
+
+[config.UI.Hud]
+name = "Scara HUD"
+description = "HUD-ul și notificările sale, peste scara HUD a jocului, în procente"
+
+[config.Console.Key]
+name = "Tasta consolei"
+description = "Deschide și închide consola pentru dezvoltatori"
+
+[setting]
+restart = "{0} (se aplică după repornire)"
+restart_alone = "Se aplică după repornire."
+
+[dialog]
+ok = "OK"
+cancel = "Anulează"
+
+[hotkey]
+press = "Apasă o tastă…"
+none = "Niciuna"
+
+[console]
+title = "Consolă"
+placeholder = "O comandă, apoi Enter (help le listează)"
+
+[config.Kit.Models]
+name = "Modelele personajelor pentru kit"
+description = "Scrie modelele și texturile personajelor în Mjolnir/ModKit pentru previzualizările din kitul Mjolnir (circa 160 MB, doar pe acest computer); pentru creatorii de moduri"
+
+[config.Kit.Animations]
+name = "Animațiile jocului pentru kit"
+description = "Scrie animațiile oamenilor din jocul însuși în Mjolnir/ModKit pentru kitul Mjolnir (circa 50 MB, doar pe acest computer); pentru creatorii de moduri"
+
+[keys]
+wheel = "rotiță"

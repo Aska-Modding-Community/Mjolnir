@@ -1,0 +1,14 @@
+# Mjolnir.SDK.Net's texts in Italian (NetTexts). A key missing here is taken from english.toml.
+
+[refusal]
+title = "Impossibile unirsi alla sessione"
+differs = "La tua configurazione dei mod non corrisponde a quella dell'host."
+platform = "Versione di Mjolnir: host {0}, la tua {1}. Installare la stessa versione dell'host."
+missing = "Richiesti dall'host, ma non installati o disattivati:"
+extra = "Installati, ma non usati dall'host:"
+versions = "Versioni diverse:"
+version = "{0}: host {1}, la tua {2}"
+vanilla = "L'host gioca senza Mjolnir. Per unirsi, disattivare i mod necessari a tutti i giocatori:"
+no_answer = "L'host non ha confermato in tempo la configurazione dei mod. Riprovare a unirsi."
+action = "Attivare o disattivare i mod nella finestra Mjolnir del menu principale, poi riavviare il gioco."
+ok = "OK"

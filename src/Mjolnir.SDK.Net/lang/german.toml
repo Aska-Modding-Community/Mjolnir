@@ -1,0 +1,14 @@
+# Mjolnir.SDK.Net's texts in German (NetTexts). A key missing here is taken from english.toml.
+
+[refusal]
+title = "Beitritt zur Sitzung nicht möglich"
+differs = "Deine Mod-Konfiguration stimmt nicht mit der des Hosts überein."
+platform = "Mjolnir-Version: Host {0}, deine {1}. Dieselbe Version wie der Host installieren."
+missing = "Vom Host benötigt, aber nicht installiert oder ausgeschaltet:"
+extra = "Installiert, aber vom Host nicht verwendet:"
+versions = "Abweichende Versionen:"
+version = "{0}: Host {1}, deine {2}"
+vanilla = "Der Host spielt ohne Mjolnir. Zum Beitreten die Mods ausschalten, die alle Spieler brauchen:"
+no_answer = "Der Host hat die Mod-Konfiguration nicht rechtzeitig bestätigt. Den Beitritt erneut versuchen."
+action = "Mods im Mjolnir-Fenster des Hauptmenüs ein- oder ausschalten, dann das Spiel neu starten."
+ok = "OK"

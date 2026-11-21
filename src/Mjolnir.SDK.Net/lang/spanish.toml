@@ -1,0 +1,14 @@
+# Mjolnir.SDK.Net's texts in Spanish (NetTexts). A key missing here is taken from english.toml.
+
+[refusal]
+title = "No se pudo unir a la sesión"
+differs = "Tu configuración de mods no coincide con la del anfitrión."
+platform = "Versión de Mjolnir: anfitrión {0}, la tuya {1}. Instala la misma versión que el anfitrión."
+missing = "Requeridos por el anfitrión, pero no instalados o desactivados:"
+extra = "Instalados, pero el anfitrión no los usa:"
+versions = "Versiones distintas:"
+version = "{0}: anfitrión {1}, la tuya {2}"
+vanilla = "El anfitrión juega sin Mjolnir. Para unirte, desactiva los mods que necesitan todos los jugadores:"
+no_answer = "El anfitrión no confirmó la configuración de mods a tiempo. Intenta unirte de nuevo."
+action = "Activa o desactiva los mods en la ventana Mjolnir del menú principal y reinicia el juego."
+ok = "Aceptar"

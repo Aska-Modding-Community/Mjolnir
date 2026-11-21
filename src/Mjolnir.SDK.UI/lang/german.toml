@@ -1,0 +1,76 @@
+# The UI module's own texts in German. A key missing here is taken from english.toml.
+
+[mods]
+disabled = "Nach einem Fehler deaktiviert: siehe Mjolnir/LogOutput.log"
+reset = "Alle Einstellungen dieser Mod auf die Standardwerte zurücksetzen?"
+restart = "Das Spiel neu starten, um die geänderten Einstellungen zu übernehmen."
+apply = "Das Spiel neu starten, um die Mods ein- oder auszuschalten."
+none = "Keine Mods installiert: Mods in Mjolnir/Mods ablegen, jede in einem eigenen Ordner."
+other_loader = "{0} ist neben Mjolnir installiert. Zwei Mod-Loader können nicht im selben Spiel laufen: {0} läuft nicht, seine Mods werden nicht geladen. Nur einen der beiden behalten."
+off = "Ausgeschaltet"
+turns_off = "Wird nach einem Neustart ausgeschaltet"
+turns_on = "Wird nach einem Neustart eingeschaltet"
+failed = "Laden fehlgeschlagen: siehe Mjolnir/LogOutput.log"
+not_loaded = "Nicht geladen: {0}"
+required_by = "{0} kann ohne {1} nicht geladen werden. {1} trotzdem ausschalten?"
+required_by_many = "{0} können ohne {1} nicht geladen werden. {1} trotzdem ausschalten?"
+requires = "{0} kann ohne {1} nicht geladen werden: {1} ist ausgeschaltet. Auch einschalten?"
+requires_many = "{0} kann ohne {1} nicht geladen werden: sie sind ausgeschaltet. Auch diese einschalten?"
+turn_off = "Ausschalten"
+turn_on_too = "Einschalten"
+only_this = "Nur diese Mod"
+
+[mods.reason]
+duplicate = "eine andere Mod hat dieselbe ID, {0}"
+missing = "benötigt {0}, nicht installiert"
+wrong_version = "benötigt {0}, installiert ist {1}"
+wrong_platform = "für Mjolnir {0} gebaut, installiert ist {1}: eine neuere Version der Mod wird benötigt"
+dependency_not_loaded = "benötigt {0}, nicht geladen"
+dependency_turned_off = "benötigt {0}, ausgeschaltet"
+dependency_failed = "benötigt {0}, Laden fehlgeschlagen"
+self_dependency = "hängt von sich selbst ab"
+cycle = "Abhängigkeiten im Kreis: {0}"
+
+[sections]
+UI = "Oberfläche"
+Kit = "Mjolnir-Kit"
+Console = "Konsole"
+
+[config.UI.Menus]
+name = "Oberflächenskalierung"
+description = "Mod-Fenster; Menüs und Dialoge des Spiels bis 100 %, in Prozent"
+
+[config.UI.Hud]
+name = "HUD-Skalierung"
+description = "Das HUD und seine Benachrichtigungen, zusätzlich zur HUD-Skalierung des Spiels, in Prozent"
+
+[config.Console.Key]
+name = "Konsolentaste"
+description = "Öffnet und schließt die Entwicklerkonsole"
+
+[setting]
+restart = "{0} (wirkt nach einem Neustart)"
+restart_alone = "Wirkt nach einem Neustart."
+
+[dialog]
+ok = "OK"
+cancel = "Abbrechen"
+
+[hotkey]
+press = "Taste drücken…"
+none = "Keine"
+
+[console]
+title = "Konsole"
+placeholder = "Befehl, dann Enter (help listet alle auf)"
+
+[config.Kit.Models]
+name = "Charaktermodelle für das Kit"
+description = "Schreibt die Modelle und Texturen der Charaktere nach Mjolnir/ModKit, für die Vorschauen im Mjolnir-Kit (etwa 160 MB, nur auf diesem Computer); für Mod-Autoren"
+
+[config.Kit.Animations]
+name = "Animationen des Spiels für das Kit"
+description = "Schreibt die Animationsclips der Menschen aus dem Spiel selbst nach Mjolnir/ModKit, für das Mjolnir-Kit (etwa 50 MB, nur auf diesem Computer); für Mod-Autoren"
+
+[keys]
+wheel = "Mausrad"

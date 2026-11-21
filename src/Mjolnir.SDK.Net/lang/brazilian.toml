@@ -1,0 +1,14 @@
+# Mjolnir.SDK.Net's texts in Brazilian Portuguese (NetTexts). A key missing here is taken from english.toml.
+
+[refusal]
+title = "Não foi possível entrar na sessão"
+differs = "Sua configuração de mods não corresponde à do host."
+platform = "Versão do Mjolnir: host {0}, a sua {1}. Instale a mesma versão do host."
+missing = "Exigidos pelo host, mas não instalados ou desativados:"
+extra = "Instalados, mas não usados pelo host:"
+versions = "Versões diferentes:"
+version = "{0}: host {1}, a sua {2}"
+vanilla = "O host joga sem o Mjolnir. Para entrar, desative os mods de que todos os jogadores precisam:"
+no_answer = "O host não confirmou a configuração de mods a tempo. Tente entrar de novo."
+action = "Ative ou desative os mods na janela Mjolnir do menu principal e reinicie o jogo."
+ok = "OK"

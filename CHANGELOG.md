@@ -46,6 +46,9 @@ must be rebuilt.
   and hides the bar until the element is taken off with `Hud.Remove`: a tool of a mod's own shows its modes on 1–0.
 - `UiKeyHint` shows the mouse: `LeftButton`, `RightButton` and `MiddleButton` in the game's pictures, `Wheel` written
   out in the player's language (the game has no picture of it), with modifiers: `KeyGesture.Parse("Shift+Wheel")`.
+- The platform's own texts in every language of the game: the Mods window, the platform's settings, the console, the
+  mouse wheel's word in key hints and the refusal of a session's join, in German, Polish, Ukrainian, French, Italian,
+  Romanian, Spanish, Brazilian Portuguese, Japanese and Simplified and Traditional Chinese besides English and Russian.
 
 ### Changed
 

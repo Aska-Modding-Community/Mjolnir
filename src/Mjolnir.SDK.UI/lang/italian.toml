@@ -1,0 +1,76 @@
+# The UI module's own texts in Italian. A key missing here is taken from english.toml.
+
+[mods]
+disabled = "Disattivato dopo un errore: vedi Mjolnir/LogOutput.log"
+reset = "Ripristinare i valori predefiniti di tutte le impostazioni di questo mod?"
+restart = "Riavviare il gioco per applicare le impostazioni modificate."
+apply = "Riavviare il gioco per attivare o disattivare i mod."
+none = "Nessun mod installato: metterli in Mjolnir/Mods, ognuno in una cartella a sé."
+other_loader = "{0} è installato accanto a Mjolnir. Due loader di mod non possono condividere lo stesso gioco: {0} non è in esecuzione e i suoi mod non sono caricati. Tenerne solo uno."
+off = "Disattivato"
+turns_off = "Si disattiverà dopo un riavvio"
+turns_on = "Si attiverà dopo un riavvio"
+failed = "Caricamento non riuscito: vedi Mjolnir/LogOutput.log"
+not_loaded = "Non caricato: {0}"
+required_by = "{0} non può caricarsi senza {1}. Disattivare comunque {1}?"
+required_by_many = "{0} non possono caricarsi senza {1}. Disattivare comunque {1}?"
+requires = "{0} non può caricarsi senza {1}, che è disattivato. Attivare anche {1}?"
+requires_many = "{0} non può caricarsi senza {1}, che sono disattivati. Attivare anche questi?"
+turn_off = "Disattiva"
+turn_on_too = "Attiva"
+only_this = "Solo questo mod"
+
+[mods.reason]
+duplicate = "un altro mod ha lo stesso id, {0}"
+missing = "richiede {0}, che non è installato"
+wrong_version = "richiede {0}, ma è installato {1}"
+wrong_platform = "creato per Mjolnir {0}, ed è installato {1}: serve una versione più recente del mod"
+dependency_not_loaded = "richiede {0}, che non si è caricato"
+dependency_turned_off = "richiede {0}, che è disattivato"
+dependency_failed = "richiede {0}, il cui caricamento non è riuscito"
+self_dependency = "dipende da sé stesso"
+cycle = "le sue dipendenze formano un cerchio: {0}"
+
+[sections]
+UI = "Interfaccia"
+Kit = "Kit Mjolnir"
+Console = "Console"
+
+[config.UI.Menus]
+name = "Scala dell'interfaccia"
+description = "Finestre dei mod; menu e finestre di dialogo del gioco fino al 100 %, in percentuale"
+
+[config.UI.Hud]
+name = "Scala dell'HUD"
+description = "L'HUD e le sue notifiche, in aggiunta alla scala dell'HUD del gioco, in percentuale"
+
+[config.Console.Key]
+name = "Tasto della console"
+description = "Apre e chiude la console per sviluppatori"
+
+[setting]
+restart = "{0} (si applica dopo un riavvio)"
+restart_alone = "Si applica dopo un riavvio."
+
+[dialog]
+ok = "OK"
+cancel = "Annulla"
+
+[hotkey]
+press = "Premi un tasto…"
+none = "Nessuno"
+
+[console]
+title = "Console"
+placeholder = "Un comando, poi Enter (help li elenca)"
+
+[config.Kit.Models]
+name = "Modelli dei personaggi per il kit"
+description = "Scrive i modelli e le texture dei personaggi in Mjolnir/ModKit per le anteprime del kit Mjolnir (circa 160 MB, solo su questo computer); per chi crea mod"
+
+[config.Kit.Animations]
+name = "Animazioni del gioco per il kit"
+description = "Scrive le animazioni delle persone del gioco stesso in Mjolnir/ModKit per il kit Mjolnir (circa 50 MB, solo su questo computer); per chi crea mod"
+
+[keys]
+wheel = "rotella"

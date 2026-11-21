@@ -1,0 +1,14 @@
+# Mjolnir.SDK.Net's texts in Traditional Chinese (NetTexts). A key missing here is taken from english.toml.
+
+[refusal]
+title = "無法加入遊戲"
+differs = "你的模組設定與主機不一致。"
+platform = "Mjolnir 版本：主機 {0}，你的 {1}。請安裝與主機相同的版本。"
+missing = "主機需要，但未安裝或已停用："
+extra = "已安裝，但主機未使用："
+versions = "版本不同："
+version = "{0}：主機 {1}，你的 {2}"
+vanilla = "主機未使用 Mjolnir。若要加入，請停用所有玩家都需要的模組："
+no_answer = "主機未及時確認模組設定。請再次嘗試加入。"
+action = "在主選單的 Mjolnir 視窗中啟用或停用模組，然後重新啟動遊戲。"
+ok = "確定"

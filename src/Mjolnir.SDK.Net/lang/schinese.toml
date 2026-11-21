@@ -1,0 +1,14 @@
+# Mjolnir.SDK.Net's texts in Simplified Chinese (NetTexts). A key missing here is taken from english.toml.
+
+[refusal]
+title = "无法加入游戏"
+differs = "你的模组配置与主机不一致。"
+platform = "Mjolnir 版本：主机 {0}，你的 {1}。请安装与主机相同的版本。"
+missing = "主机需要，但未安装或已禁用："
+extra = "已安装，但主机未使用："
+versions = "版本不同："
+version = "{0}：主机 {1}，你的 {2}"
+vanilla = "主机未使用 Mjolnir。要加入，请禁用所有玩家都需要的模组："
+no_answer = "主机未及时确认模组配置。请再次尝试加入。"
+action = "在主菜单的 Mjolnir 窗口中启用或禁用模组，然后重启游戏。"
+ok = "确定"

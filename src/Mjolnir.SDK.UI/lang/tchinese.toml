@@ -1,0 +1,76 @@
+# The UI module's own texts in Traditional Chinese. A key missing here is taken from english.toml.
+
+[mods]
+disabled = "因發生錯誤已停用：詳見 Mjolnir/LogOutput.log"
+reset = "要將此模組的所有設定恢復為預設值嗎？"
+restart = "請重新啟動遊戲以套用變更的設定。"
+apply = "請重新啟動遊戲以啟用或停用模組。"
+none = "未安裝任何模組：請將模組放入 Mjolnir/Mods，每個模組各用一個資料夾。"
+other_loader = "{0} 與 Mjolnir 安裝在一起。兩個模組載入器無法共用同一個遊戲：{0} 未執行，其模組也未載入。請只保留其中一個。"
+off = "已停用"
+turns_off = "重新啟動後停用"
+turns_on = "重新啟動後啟用"
+failed = "載入失敗：詳見 Mjolnir/LogOutput.log"
+not_loaded = "未載入：{0}"
+required_by = "沒有 {1}，{0} 就無法載入。仍要停用 {1} 嗎？"
+required_by_many = "沒有 {1}，{0} 就無法載入。仍要停用 {1} 嗎？"
+requires = "沒有 {1}，{0} 就無法載入，而 {1} 已停用。也要啟用 {1} 嗎？"
+requires_many = "沒有 {1}，{0} 就無法載入，而它們已停用。也要啟用它們嗎？"
+turn_off = "停用"
+turn_on_too = "啟用"
+only_this = "僅此模組"
+
+[mods.reason]
+duplicate = "另一個模組使用相同的 ID：{0}"
+missing = "需要 {0}，但未安裝"
+wrong_version = "需要 {0}，但已安裝的是 {1}"
+wrong_platform = "為 Mjolnir {0} 建置，但已安裝的是 {1}：需要此模組的較新版本"
+dependency_not_loaded = "需要 {0}，但它未載入"
+dependency_turned_off = "需要 {0}，但它已停用"
+dependency_failed = "需要 {0}，但它載入失敗"
+self_dependency = "依賴自身"
+cycle = "依賴關係形成循環：{0}"
+
+[sections]
+UI = "介面"
+Kit = "Mjolnir 套件"
+Console = "主控台"
+
+[config.UI.Menus]
+name = "介面縮放"
+description = "模組視窗；遊戲的選單與對話方塊最多到 100 %，單位為百分比"
+
+[config.UI.Hud]
+name = "HUD 縮放"
+description = "HUD 及其通知，疊加在遊戲本身的 HUD 縮放之上，單位為百分比"
+
+[config.Console.Key]
+name = "主控台按鍵"
+description = "開啟或關閉開發者主控台"
+
+[setting]
+restart = "{0}（重新啟動後生效）"
+restart_alone = "重新啟動後生效。"
+
+[dialog]
+ok = "確定"
+cancel = "取消"
+
+[hotkey]
+press = "請按下按鍵…"
+none = "無"
+
+[console]
+title = "主控台"
+placeholder = "輸入指令後按 Enter（help 列出所有指令）"
+
+[config.Kit.Models]
+name = "套件用的角色模型"
+description = "將角色的模型與材質寫入 Mjolnir/ModKit，供 Mjolnir 套件預覽使用（約 160 MB，僅限本機）；供模組作者使用"
+
+[config.Kit.Animations]
+name = "套件用的遊戲動畫"
+description = "將遊戲本身的人物動畫寫入 Mjolnir/ModKit，供 Mjolnir 套件使用（約 50 MB，僅限本機）；供模組作者使用"
+
+[keys]
+wheel = "滾輪"
