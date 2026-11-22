@@ -44,6 +44,7 @@ internal static class TerrainCommands
         DevConsole.AddFor(owner, "objects", "Lists the trees, stones and plants of the world round the player, clears them, or harvests them with their loot.", Objects, "[radius=8] [name] | clear [radius=4] | harvest [radius=4] [player]");
         DevConsole.AddFor(owner, "field", "Lists the game's levelling fields, or places, levels, finishes or takes away the nearest one.", Field, "[place [size=8]|level|finish|remove]");
         DevConsole.AddFor(owner, "road", "Lists the game's road plans, or lays one ahead of the player, or widens, builds, paves or takes away the nearest one.", Road, "[place [length=16] [dirt]|width <metres>|build|level|remove]");
+        DevConsole.AddFor(owner, "water", "Lists the ponds and lakes, fills the basin ahead of the player into a pond, or takes the nearest pond away.", Water, "[fill [depth=1.5] [size=32]|remove]");
         DevConsole.AddFor(owner, "protect", "Protects a square in front of the player from the player's tools, the villagers and other mods, or lists or ends the console's zones.", Protect, "[size=8|list|clear]");
         DevConsole.AddFor(owner, "undo", "Puts back the ground the console's last change changed.", Undo);
     }
@@ -417,6 +418,55 @@ internal static class TerrainCommands
         center.z = position.z + fz * ahead;
         float rotation = (float)(Math.Atan2(fx, fz) * 180 / Math.PI);
         return LandscapeArea.Rectangle(center, size, size, rotation, 1f);
+    }
+
+    // Ponds: listed, one filled ahead of the player up to a depth over the ground there, the nearest taken away.
+    private static void Water(DevCommandContext context)
+    {
+        var (position, forward) = Player();
+        string what = context.Arguments.Count > 0 ? context.GetString(0).ToLowerInvariant() : "list";
+        switch (what)
+        {
+            case "list":
+                var all = WaterBodies.All;
+                if (all.Count == 0)
+                {
+                    context.Print("No ponds or lakes in the world.");
+                    return;
+                }
+                context.Print(Invariant($"{all.Count} pond(s) and lake(s):"));
+                foreach (var one in all.OrderBy(b => Distance2(b.Center)).Take(ListedObjects))
+                    context.Print(Invariant($"  {one}, {one.Area:0} m², {one.Volume:0} m³"));
+                return;
+            case "fill":
+                float depth = context.GetFloat(1, 1.5f), size = context.GetFloat(2, 32f);
+                if (!(depth > 0 && depth <= 20)) throw new DevCommandException("A depth is over 0 and at most 20 m.");
+                if (!(size >= WaterBodies.MinimumSize && size <= WaterBodies.MaximumSize)) throw new DevCommandException(Invariant($"A size is from {WaterBodies.MinimumSize} to {WaterBodies.MaximumSize} m."));
+                float fl = MathF.Sqrt(forward.x * forward.x + forward.z * forward.z);
+                Vector3 point = default;
+                point.x = position.x + (fl > 0 ? forward.x / fl : 0) * 4f;
+                point.z = position.z + (fl > 0 ? forward.z / fl : 1) * 4f;
+                float level = Landscape.HeightAt(point.x, point.z) + depth;
+                var fill = WaterBodies.Measure(point, level, size);
+                if (fill.Result != WaterFillResult.Fits)
+                {
+                    context.Error($"No pond: {fill.Result}.");
+                    return;
+                }
+                var pond = WaterBodies.Place(point, level, size);
+                if (pond == null) context.Error("No pond placed (see the log).");
+                else context.Print(Invariant($"Filled a {pond}: {fill.Area:0} m², {fill.Volume:0} m³."));
+                return;
+            case "remove":
+                var nearest = WaterBodies.All.Where(b => !b.IsWorldLake).OrderBy(b => Distance2(b.Center)).FirstOrDefault(b => Distance2(b.Center) <= 32 * 32)
+                    ?? throw new DevCommandException("No pond within 32 m.");
+                context.Print(nearest.Remove() ? $"Took away the {nearest}." : "The pond could not be taken away (see the log).");
+                return;
+            default:
+                throw new DevCommandException($"'{what}' is nothing water does: fill or remove.");
+        }
+
+        float Distance2(Vector3 at) => (at.x - position.x) * (at.x - position.x) + (at.z - position.z) * (at.z - position.z);
     }
 
     private static (Vector3 Position, Vector3 Forward) Player()

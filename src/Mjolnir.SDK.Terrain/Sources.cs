@@ -519,3 +519,48 @@ internal sealed class LandscapeSamples
 
 /// <summary>A change to the ground as the model hands it to the game.</summary>
 internal readonly record struct LandscapeEdit(LandscapeArea Area, LandscapeOperation Operation, float Amount, GroundKind? Kind, LandscapeOptions Options);
+
+/// <summary>
+/// The game's still water for the model (Game/GameWater.cs; a fake in the unit tests): the ponds of mods, kept in the world as
+/// items of the SDK's own, and the world's lakes. Used on the main thread only.
+/// </summary>
+internal interface IWaterSource
+{
+    /// <summary>Whether a world is loaded.</summary>
+    bool IsAvailable { get; }
+
+    /// <summary>The ponds of the whole world and the lakes of the loaded part; read again by the source as it needs.</summary>
+    IReadOnlyList<IWaterBodyView> Bodies { get; }
+
+    /// <summary>Places a pond: its middle and surface (<paramref name="center"/>'s y) and the side of its square.</summary>
+    IWaterBodyView? Place(Vector3 center, float size);
+
+    /// <summary>Draws a pond's water over what the model filled and makes it swum in; null takes its water away.</summary>
+    void Show(IWaterBodyView pond, WaterFill? fill);
+}
+
+/// <summary>A pond or a lake of the game, read each time it is asked.</summary>
+internal interface IWaterBodyView
+{
+    /// <summary>Its identity across reads.</summary>
+    object Key { get; }
+
+    /// <summary>A pond's point it is filled from, a lake's middle; y the height of its surface.</summary>
+    Vector3 Center { get; }
+
+    /// <summary>The side of the square its water reaches no further than.</summary>
+    float Size { get; }
+
+    bool IsWorldLake { get; }
+
+    bool IsGone { get; }
+
+    /// <summary>A lake's area (a pond's is the model's fill).</summary>
+    Rect Bounds { get; }
+
+    /// <summary>Whether a lake's water covers a point (a pond's is the model's fill).</summary>
+    bool Covers(float x, float z);
+
+    /// <summary>Takes a pond away, as it was placed; false for a lake.</summary>
+    bool Remove();
+}

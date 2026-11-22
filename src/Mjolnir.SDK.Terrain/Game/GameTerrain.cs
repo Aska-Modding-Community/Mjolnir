@@ -75,6 +75,17 @@ internal sealed class GameTerrain : ITerrainSource
             {
                 SdkLog.Warn(Landscape.Platform, $"Placed bushes neither keep nor give again once gathered: their patches failed: {e.Message}");
             }
+            try
+            {
+                patched += s_harmony.CreateClassProcessor(typeof(WaterPatches)).Patch()?.Count ?? 0;
+                WaterBodies.Source = GameWater.Instance;
+                Action water = GameWater.Instance.Tick;
+                GameLoop.Update += () => GameGuard.RunLogOnce(Landscape.Platform, "keeping the character in its pond", water);
+            }
+            catch (Exception e)
+            {
+                SdkLog.Warn(Landscape.Platform, $"No ponds can be placed: their patch failed: {e.Message}");
+            }
             TerrainCommands.Register();
             SdkLog.Info(Landscape.Platform, $"Terrain module started: {patched} game methods patched");
         }

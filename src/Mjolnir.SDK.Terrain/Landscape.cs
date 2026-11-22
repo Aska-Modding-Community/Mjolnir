@@ -147,7 +147,7 @@ public static partial class Landscape
         }
     }
 
-    /// <summary>Whether the ground at a point lies under the water.</summary>
+    /// <summary>Whether the ground at a point lies under the water: the sea, a lake or a pond (<see cref="WaterBodies"/>).</summary>
     public static bool IsUnderwater(float x, float z) => Live() is { } source && source.IsLoaded(x, z) && source.IsUnderwater(x, z);
 
     /// <summary>
@@ -431,11 +431,12 @@ public static partial class Landscape
     }
 
     /// <summary>Whether anyone listens to <see cref="GroundChanged"/>: the game's side keeps nothing for it otherwise.</summary>
-    internal static bool IsChangedWatched => s_changed is { Count: > 0 };
+    internal static bool IsChangedWatched => s_changed is { Count: > 0 } || WaterBodies.WatchesGround;
 
     /// <summary>Raises <see cref="GroundChanged"/> for a change the game applied.</summary>
     internal static void RaiseChanged(Rect area, LandscapeOperation? operation, LandscapeSource source, string? modId)
     {
+        WaterBodies.GroundChanged(area);
         if (s_changed is not { Count: > 0 } handlers) return;
         var args = new LandscapeChangedEventArgs(area, operation, source, modId);
         handlers.Raise(h => h(null, args));
@@ -459,6 +460,7 @@ public static partial class Landscape
         KindPreview.ResetForTests();
         ObjectMarks.ResetForTests();
         ActivationPoint.ResetForTests();
+        WaterBodies.ResetForTests();
         Source = null;
         s_changing = null;
         s_changed = null;

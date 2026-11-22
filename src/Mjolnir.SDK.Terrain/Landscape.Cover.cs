@@ -159,7 +159,7 @@ public static partial class Landscape
         return samples.Kinds[k >= 0 ? k : fallback];
     }
 
-    /// <summary>The module's tick on the main thread: the outlines and grids drawn, moved and taken away.</summary>
+    /// <summary>The module's tick on the main thread: the outlines and grids drawn, moved and taken away; the ponds filled.</summary>
     internal static void Tick()
     {
         var source = Live();
@@ -168,5 +168,6 @@ public static partial class Landscape
         KindPreview.Tick(source);
         ObjectMarks.Tick(source);
         ActivationPoint.Tick(source);
+        WaterBodies.Tick(source);
     }
 }

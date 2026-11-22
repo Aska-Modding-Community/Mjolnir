@@ -64,6 +64,7 @@ internal static class GamePlacement
             Make(list);
         }
         GameRoads.BeforeDatabase(list);
+        GameWater.BeforeDatabase(list);
         foreach (var made in s_byName.Values)
             if (IndexOf(list, made.Info) < 0) list.Add(made.Info);
     }
