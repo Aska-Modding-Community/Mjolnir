@@ -10,8 +10,8 @@ must be rebuilt.
 - Ponds (`WaterBodies`, `WaterBody`, `WaterFill`): a mod digs a basin with the ground's changes and fills it —
   `WaterBodies.Place(point, level, size)` fills the basin the point lies in up to the level, as far as the ground under
   that level reaches from the point within a square of `size` metres (4 to 128). The water is the game's lake water, the
-  character swims in it, creatures and fishing see it, and the game saves the pond and sends it to the other players (who
-  need the same SDK). Dig its shore and the water follows on the next frame. `WaterBodies.Measure` answers the same fill
+  character swims in it, the game's own question of what water stands at a point (which creatures and fishing ask) is
+  answered with the pond, and the game saves the pond and sends it to the other players (who need the same SDK). Dig its shore and the water follows on the next frame. `WaterBodies.Measure` answers the same fill
   without placing it — `WaterFillResult.Fits`, or why not: `Spills` (the basin is open at that level), `AboveLevel`,
   `InWater`, `Overlaps`, `NotLoaded` — with its `Bounds`, `Area` and `Volume`, for a preview. `All`, `At(x, z)` and
   `Nearest` give the ponds and the world's lakes (read-only); `WaterBody.Covers`, `DepthAt`, `Remove`. The console's
