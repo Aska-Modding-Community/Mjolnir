@@ -54,6 +54,8 @@ internal sealed class GameWater : IWaterSource
     private readonly Dictionary<object, PondView> _ponds = [];
     private readonly Dictionary<IntPtr, LakeView> _lakes = [];
     private readonly List<IWaterBodyView> _bodies = [];
+    // Ponds taken away that the item data may still list for a frame or two: not taken for ponds again until gone from it.
+    private readonly Dictionary<object, float> _removed = [];
     private readonly Dictionary<object, PondWater> _water = [];
     private float _readAt = -1;
     private bool _dirty = true;
@@ -136,6 +138,7 @@ internal sealed class GameWater : IWaterSource
     private void Read()
     {
         _bodies.Clear();
+        var stillListed = new HashSet<object>();
         foreach (var pond in _ponds.Values) pond.Seen = false;
         if (s_info != null && GameManagers.Get<WorldDataManager>() is { } data && Items(data) is { } items)
         {
@@ -160,8 +163,17 @@ internal sealed class GameWater : IWaterSource
                             if (!buffer.IsValidIndex(ref k)) continue;
                             var at = buffer.GetPosAt(ref k);
                             float side = Math.Clamp(buffer.GetScaleAt(ref k).x / ScalePerMetre, WaterBodies.MinimumSize, WaterBodies.MaximumSize);
-                            var key = KeyOf(at);
+                            // The data keeps the item where the game put it, which may be a little off the point the pond
+                            // was placed at: a pond is matched by its place within a quarter of a metre.
+                            if (Near(_removed.Keys, at) is { } removed)
+                            {
+                                stillListed.Add(removed);
+                                continue;
+                            }
+                            var key = Near(_ponds.Keys, at) ?? KeyOf(at);
                             if (!_ponds.TryGetValue(key, out var pond)) _ponds[key] = pond = new PondView(key, at, side);
+                            if (pond.Placing && (MathF.Abs(pond.Center.x - at.x) > 0.005f || MathF.Abs(pond.Center.z - at.z) > 0.005f || MathF.Abs(pond.Center.y - at.y) > 0.005f))
+                                SdkLog.Info(Landscape.Platform, FormattableString.Invariant($"A pond placed at ({pond.Center.x:0.###}, {pond.Center.y:0.###}, {pond.Center.z:0.###}) is kept at ({at.x:0.###}, {at.y:0.###}, {at.z:0.###})"));
                             pond.Seen = true;
                             pond.Placing = false;
                             pond.Cell = (at.x, at.z, k);
@@ -169,6 +181,11 @@ internal sealed class GameWater : IWaterSource
                     }
             }
         }
+        float now = Time.unscaledTime;
+        var forgotten = new List<object>();
+        foreach (var (key, until) in _removed)
+            if (!stillListed.Contains(key) || now > until) forgotten.Add(key);
+        foreach (var key in forgotten) _removed.Remove(key);
         foreach (var (key, pond) in _ponds)
             if (!pond.Seen && !(pond.Placing && Time.unscaledTime < pond.PlacedAt + PlacingSeconds)) pond.Gone = true;
         foreach (var pond in _ponds.Values)
@@ -209,11 +226,19 @@ internal sealed class GameWater : IWaterSource
     // A pond's identity: its point to the centimetre (two ponds never share one: the second would stand in the first's water).
     private static object KeyOf(Vector3 at) => ((int)MathF.Round(at.x * 100), (int)MathF.Round(at.z * 100));
 
-    private bool IsOurs(BiomeLakeStampMask mask)
+    // The key among <paramref name="keys"/> whose point lies within a quarter of a metre of a point; null for none.
+    private static object? Near(IEnumerable<object> keys, Vector3 at)
     {
-        foreach (var water in _water.Values) if (water.Lake != null && water.Lake.Pointer == mask.Pointer) return true;
-        return false;
+        int x = (int)MathF.Round(at.x * 100), z = (int)MathF.Round(at.z * 100);
+        foreach (var key in keys)
+            if (key is ValueTuple<int, int> (int kx, int kz) && Math.Abs(kx - x) <= 25 && Math.Abs(kz - z) <= 25) return key;
+        return null;
     }
+
+    // A pond's own lake component, even one being destroyed this frame (taken out of the SDK's list already): no lake of the world.
+    private static bool IsOurs(BiomeLakeStampMask mask) => mask.gameObject.name == PondObjectName;
+
+    private const string PondObjectName = "Mjolnir_Pond";
 
     public IWaterBodyView? Place(Vector3 center, float size)
     {
@@ -227,6 +252,7 @@ internal sealed class GameWater : IWaterSource
         if (spawned == null) return null;
         var instance = spawned.GetComponentInChildren<WorldItemObject>(true)?.WorldInstance?.TryCast<InventoryItemInstance>();
         var key = KeyOf(center);
+        if (Near(_removed.Keys, center) is { } removed) _removed.Remove(removed);
         var pond = new PondView(key, center, size) { Instance = instance, Placing = true, Seen = true, PlacedAt = Time.unscaledTime };
         _ponds[key] = pond;
         _dirty = true;
@@ -356,6 +382,7 @@ internal sealed class GameWater : IWaterSource
         var level = InstanceDestructionLevel.SYSTEM;
         instance.Destroy(ref silent, ref level);
         pond.Gone = true;
+        _removed[pond.Key] = Time.unscaledTime + PlacingSeconds;
         Hide(pond.Key);
         _dirty = true;
         return true;
@@ -457,7 +484,7 @@ internal sealed class GameWater : IWaterSource
         public static PondWater Create(BiomeLakeStampMask template, PondView pond)
         {
             var water = new PondWater();
-            var root = new GameObject("Mjolnir_Pond");
+            var root = new GameObject(PondObjectName);
             root.SetActive(false);
             root.transform.position = pond.Center;
             var tile = Object.Instantiate(template.waterTile.gameObject, root.transform);
