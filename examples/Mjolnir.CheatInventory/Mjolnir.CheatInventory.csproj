@@ -1,12 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <!-- Example mod: the item catalog of Mjolnir.SDK.Content (Items.All, Items.Give) in a window of Mjolnir.SDK.UI, a reference
-       for mod authors. It needs no game types and no Harmony patch of its own. deploy.ps1 -Examples ships
-       Mjolnir.CheatInventory.dll/.pdb and lang/ to Mjolnir\Mods\Mjolnir.CheatInventory. -->
+       for mod authors and a mod players download on its own. It needs no game types and no Harmony patch of its own.
+       deploy.ps1 -Examples ships Mjolnir.CheatInventory.dll/.pdb, icon.png and lang/ to Mjolnir\Mods\Mjolnir.CheatInventory;
+       the release archive carries the same without the .pdb. The version here and the manifest's are one. -->
   <PropertyGroup>
     <AssemblyName>Mjolnir.CheatInventory</AssemblyName>
     <RootNamespace>Mjolnir.CheatInventory</RootNamespace>
-    <Version>1.0.0</Version>
+    <Version>1.1.0</Version>
+    <Authors>FibonacciFox</Authors>
+    <Product>Cheat Inventory</Product>
     <IsMjolnirMod>true</IsMjolnirMod>
   </PropertyGroup>
 
@@ -14,7 +17,9 @@
     <MjolnirSdk Include="Mjolnir.SDK.Content;Mjolnir.SDK.UI" />
   </ItemGroup>
 
+  <!-- Next to the .dll: the mod's picture in the Mods window (icon.png, found without any setting) and its texts. -->
   <ItemGroup>
+    <None Update="icon.png" CopyToOutputDirectory="PreserveNewest" />
     <None Update="lang\*.toml" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 

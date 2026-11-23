@@ -1,0 +1,52 @@
+# Cheat Inventory の日本語テキスト（SDK の Localization）。ここにないキーは english.toml から取られます。
+
+found = "{0} 件"
+
+[mod]
+name = "Cheat Inventory"
+description = "ゲームの全アイテムを1つのウィンドウに表示し、指定した数をインベントリに追加します。"
+
+[menu]
+open = "アイテムウィンドウ"
+
+[window]
+title = "アイテム"
+
+[category]
+all = "すべてのアイテム"
+every = "すべてのカテゴリ"
+whole = "「{0}」すべて"
+header = "カテゴリ"
+
+[search]
+header = "検索"
+placeholder = "アイテム名"
+
+[page]
+number = "{0} / {1}"
+previous = "‹ 前へ"
+next = "次へ ›"
+
+[world]
+only = "アイテムはワールド内のプレイヤーに渡されます。受け取るにはセーブデータをロードしてください。"
+
+[row]
+details = "{0} · 1スタック最大 {1}"
+give = "追加"
+
+[given]
+all = "+{0} {1}"
+some = "+{0} {1}：{2} 個が入りきりませんでした"
+none = "{0}：インベントリに空きがありません"
+
+[sections]
+Keys = "キー"
+Window = "ウィンドウ"
+
+[config.Keys.Window]
+name = "ウィンドウのキー"
+description = "アイテムウィンドウを開閉します。"
+
+[config.Window.PageSize]
+name = "1ページのアイテム数"
+description = "ウィンドウの1ページに表示するアイテムの数。"

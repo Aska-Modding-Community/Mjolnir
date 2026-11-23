@@ -3,6 +3,13 @@
 The platform has one version for the loader, the SDK and its modules. Mods built against an earlier minor version
 must be rebuilt.
 
+## Unreleased
+
+### Examples
+
+- `Mjolnir.CheatInventory` 1.1.0, published as a mod of its own: a picture in the Mods window, its texts in every
+  language of the game, and it declares the platform it needs (`Platform = ">=0.4.8 <0.5"`).
+
 ## 0.4.8 — 2026-11-23
 
 ### Added

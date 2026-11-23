@@ -1,0 +1,52 @@
+# Teksty Cheat Inventory po polsku (Localization z SDK). Klucz, którego tu brak, jest brany z english.toml.
+
+found = "Znaleziono: {0}"
+
+[mod]
+name = "Cheat Inventory"
+description = "Wszystkie przedmioty gry w jednym oknie, dodawane do ekwipunku w wybranej liczbie."
+
+[menu]
+open = "Okno przedmiotów"
+
+[window]
+title = "Przedmioty"
+
+[category]
+all = "Wszystkie przedmioty"
+every = "Wszystkie kategorie"
+whole = "Cała kategoria „{0}”"
+header = "Kategoria"
+
+[search]
+header = "Szukaj"
+placeholder = "Nazwa przedmiotu"
+
+[page]
+number = "{0} z {1}"
+previous = "‹ Wstecz"
+next = "Dalej ›"
+
+[world]
+only = "Przedmioty otrzymuje gracz w świecie: wczytaj zapis, aby je dostać."
+
+[row]
+details = "{0} · do {1} w stosie"
+give = "Dodaj"
+
+[given]
+all = "+{0} {1}"
+some = "+{0} {1}: {2} się nie zmieściło"
+none = "{0}: brak miejsca w ekwipunku"
+
+[sections]
+Keys = "Klawisze"
+Window = "Okno"
+
+[config.Keys.Window]
+name = "Klawisz okna"
+description = "Otwiera i zamyka okno przedmiotów."
+
+[config.Window.PageSize]
+name = "Przedmiotów na stronie"
+description = "Ile przedmiotów pokazuje jedna strona okna."

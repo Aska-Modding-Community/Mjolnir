@@ -1,0 +1,52 @@
+# Die Texte von Cheat Inventory auf Deutsch (Localization des SDK). Ein Schlüssel, der hier fehlt, kommt aus english.toml.
+
+found = "Gefunden: {0}"
+
+[mod]
+name = "Cheat Inventory"
+description = "Alle Gegenstände des Spiels in einem Fenster, in der gewünschten Menge ins Inventar."
+
+[menu]
+open = "Gegenstandsfenster"
+
+[window]
+title = "Gegenstände"
+
+[category]
+all = "Alle Gegenstände"
+every = "Alle Kategorien"
+whole = "Ganz „{0}“"
+header = "Kategorie"
+
+[search]
+header = "Suchen"
+placeholder = "Name eines Gegenstands"
+
+[page]
+number = "{0} von {1}"
+previous = "‹ Zurück"
+next = "Weiter ›"
+
+[world]
+only = "Gegenstände erhält ein Spieler in einer Welt: einen Spielstand laden, um sie zu bekommen."
+
+[row]
+details = "{0} · bis zu {1} im Stapel"
+give = "Hinzufügen"
+
+[given]
+all = "+{0} {1}"
+some = "+{0} {1}: {2} passten nicht"
+none = "{0}: kein Platz im Inventar"
+
+[sections]
+Keys = "Tasten"
+Window = "Fenster"
+
+[config.Keys.Window]
+name = "Fenstertaste"
+description = "Öffnet und schließt das Gegenstandsfenster."
+
+[config.Window.PageSize]
+name = "Gegenstände pro Seite"
+description = "Wie viele Gegenstände eine Seite des Fensters zeigt."

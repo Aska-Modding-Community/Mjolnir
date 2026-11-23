@@ -11,13 +11,12 @@ title = "Items"
 [category]
 all = "All items"
 every = "Every category"
-whole = "All of «{0}»"
+whole = "All {0}"
 header = "Category"
 
 [search]
 header = "Find"
 placeholder = "An item's name"
-
 
 [page]
 number = "{0} of {1}"

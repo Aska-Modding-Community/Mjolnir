@@ -14,14 +14,16 @@ namespace Mjolnir.CheatInventory;
 /// name, a field for how many and a button that gives them;</item>
 /// <item>the window opens from the pause menu and with a key (F6, rebound in the Mods window).</item>
 /// </list>
-/// Next to the .dll: <c>lang/english.toml</c> and <c>lang/russian.toml</c>, its texts in the player's language.
+/// Next to the .dll: <c>icon.png</c>, its picture in the Mods window, and <c>lang/</c>, its texts in every language of the
+/// game.
 /// </summary>
 [ModManifest(
     "mjolnir.cheatinventory",
     "Cheat Inventory",
-    "1.0.0",
+    "1.1.0",
     Description = "Every item of the game in one window, given in the amount you ask for.",
-    Author = "Mjolnir",
+    Author = "FibonacciFox",
+    Platform = ">=0.4.8 <0.5",
     Network = NetworkCompatibility.ClientOnly)]
 public sealed class CheatInventoryMod : Mod
 {
@@ -33,7 +35,7 @@ public sealed class CheatInventoryMod : Mod
         _settings = new InventorySettings(Config);
         // The window reads the game's item database and makes the pictures' sprites, so it is built on first use, not here.
         Menus.Pause.Add(new UiButton().WithBinding(UiButton.ContentProperty, Localization.GetBindable("menu.open")).OnClick(Show));
-        
+
         HotKeys.Add(_settings.WindowKey, () =>
         {
             if (_window is { IsOpen: true } window) window.Close();

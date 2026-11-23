@@ -22,7 +22,10 @@ internal sealed class ItemRow : UiUserControl
         {
             Name = "Count",
             Header = item.DisplayName,
-            Description = Localization.Get("row.details", item.Category?.DisplayName ?? "", item.StackSize),
+            // The stack only where items stack: "up to 1 in a stack" says nothing.
+            Description = item.StackSize > 1
+                ? Localization.Get("row.details", item.Category?.DisplayName ?? "", item.StackSize)
+                : item.Category?.DisplayName ?? "",
             Icon = item.Icon,
             // A full stack to start with: that is what a cheat window is asked for, and the field says how many fit.
             Text = Math.Clamp(item.StackSize, 1, MostAtOnce).ToString(CultureInfo.InvariantCulture),
@@ -43,7 +46,7 @@ internal sealed class ItemRow : UiUserControl
     private static void Give(ItemDefinition item, UiTextBox count)
     {
         int asked = int.TryParse(count.Text, out int n) ? Math.Clamp(n, 1, MostAtOnce) : 1;
-        count.Text = asked.ToString();
+        count.Text = asked.ToString(CultureInfo.InvariantCulture);
         int given = Items.Give(item, asked);
         string text = given == asked ? Localization.Get("given.all", given, item.DisplayName)
                     : given > 0 ? Localization.Get("given.some", given, item.DisplayName, asked - given)

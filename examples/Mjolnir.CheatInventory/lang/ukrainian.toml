@@ -1,0 +1,52 @@
+# Тексти Cheat Inventory українською (Localization із SDK). Ключ, якого тут немає, береться з english.toml.
+
+found = "Знайдено: {0}"
+
+[mod]
+name = "Cheat Inventory"
+description = "Усі предмети гри в одному вікні: видаються в інвентар у потрібній кількості."
+
+[menu]
+open = "Вікно предметів"
+
+[window]
+title = "Предмети"
+
+[category]
+all = "Усі предмети"
+every = "Усі розділи"
+whole = "Увесь розділ «{0}»"
+header = "Розділ"
+
+[search]
+header = "Знайти"
+placeholder = "Назва предмета"
+
+[page]
+number = "{0} з {1}"
+previous = "‹ Назад"
+next = "Далі ›"
+
+[world]
+only = "Предмети видаються гравцеві у світі: завантажте збереження, щоб їх отримати."
+
+[row]
+details = "{0} · до {1} у стосі"
+give = "Додати"
+
+[given]
+all = "+{0} {1}"
+some = "+{0} {1}: {2} не вмістилося"
+none = "{0}: в інвентарі немає місця"
+
+[sections]
+Keys = "Клавіші"
+Window = "Вікно"
+
+[config.Keys.Window]
+name = "Клавіша вікна"
+description = "Відкриває і закриває вікно предметів."
+
+[config.Window.PageSize]
+name = "Предметів на сторінці"
+description = "Скільки предметів показує одна сторінка вікна."

@@ -1,0 +1,52 @@
+# Os textos do Cheat Inventory em português do Brasil (Localization do SDK). Uma chave que falte aqui vem de english.toml.
+
+found = "Encontrados: {0}"
+
+[mod]
+name = "Cheat Inventory"
+description = "Todos os itens do jogo em uma janela, adicionados ao inventário na quantidade que você pedir."
+
+[menu]
+open = "Janela de itens"
+
+[window]
+title = "Itens"
+
+[category]
+all = "Todos os itens"
+every = "Todas as categorias"
+whole = "Toda a categoria “{0}”"
+header = "Categoria"
+
+[search]
+header = "Buscar"
+placeholder = "Nome de um item"
+
+[page]
+number = "{0} de {1}"
+previous = "‹ Voltar"
+next = "Próxima ›"
+
+[world]
+only = "Os itens são dados a um jogador em um mundo: carregue um jogo salvo para recebê-los."
+
+[row]
+details = "{0} · até {1} por pilha"
+give = "Adicionar"
+
+[given]
+all = "+{0} {1}"
+some = "+{0} {1}: {2} não couberam"
+none = "{0}: sem espaço no inventário"
+
+[sections]
+Keys = "Teclas"
+Window = "Janela"
+
+[config.Keys.Window]
+name = "Tecla da janela"
+description = "Abre e fecha a janela de itens."
+
+[config.Window.PageSize]
+name = "Itens por página"
+description = "Quantos itens uma página da janela mostra."

@@ -1,0 +1,52 @@
+# Cheat Inventory 的繁體中文文字（SDK 的 Localization）。此處缺少的鍵取自 english.toml。
+
+found = "找到：{0}"
+
+[mod]
+name = "Cheat Inventory"
+description = "遊戲的所有物品都在一個視窗中，依需要的數量放入背包。"
+
+[menu]
+open = "物品視窗"
+
+[window]
+title = "物品"
+
+[category]
+all = "所有物品"
+every = "所有分類"
+whole = "整個「{0}」"
+header = "分類"
+
+[search]
+header = "搜尋"
+placeholder = "物品名稱"
+
+[page]
+number = "{0} / {1}"
+previous = "‹ 上一頁"
+next = "下一頁 ›"
+
+[world]
+only = "物品只發給世界中的玩家：請載入存檔後領取。"
+
+[row]
+details = "{0} · 每堆最多 {1}"
+give = "新增"
+
+[given]
+all = "+{0} {1}"
+some = "+{0} {1}：{2} 個放不下"
+none = "{0}：背包沒有空位"
+
+[sections]
+Keys = "按鍵"
+Window = "視窗"
+
+[config.Keys.Window]
+name = "視窗按鍵"
+description = "開啟和關閉物品視窗。"
+
+[config.Window.PageSize]
+name = "每頁物品數"
+description = "視窗每頁顯示多少物品。"

@@ -1,0 +1,52 @@
+# Textele Cheat Inventory în română (Localization din SDK). O cheie care lipsește aici se ia din english.toml.
+
+found = "Găsite: {0}"
+
+[mod]
+name = "Cheat Inventory"
+description = "Toate obiectele jocului într-o fereastră, adăugate în inventar în cantitatea dorită."
+
+[menu]
+open = "Fereastra obiectelor"
+
+[window]
+title = "Obiecte"
+
+[category]
+all = "Toate obiectele"
+every = "Toate categoriile"
+whole = "Toată categoria „{0}”"
+header = "Categorie"
+
+[search]
+header = "Caută"
+placeholder = "Numele unui obiect"
+
+[page]
+number = "{0} din {1}"
+previous = "‹ Înapoi"
+next = "Înainte ›"
+
+[world]
+only = "Obiectele se dau unui jucător într-o lume: încarcă o salvare ca să le primești."
+
+[row]
+details = "{0} · până la {1} într-un teanc"
+give = "Adaugă"
+
+[given]
+all = "+{0} {1}"
+some = "+{0} {1}: {2} nu au încăput"
+none = "{0}: nu e loc în inventar"
+
+[sections]
+Keys = "Taste"
+Window = "Fereastră"
+
+[config.Keys.Window]
+name = "Tasta ferestrei"
+description = "Deschide și închide fereastra obiectelor."
+
+[config.Window.PageSize]
+name = "Obiecte pe pagină"
+description = "Câte obiecte arată o pagină a ferestrei."

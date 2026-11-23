@@ -1,0 +1,52 @@
+# I testi di Cheat Inventory in italiano (Localization dell’SDK). Una chiave che manca qui viene presa da english.toml.
+
+found = "Trovati: {0}"
+
+[mod]
+name = "Cheat Inventory"
+description = "Tutti gli oggetti del gioco in una finestra, aggiunti all’inventario nella quantità voluta."
+
+[menu]
+open = "Finestra oggetti"
+
+[window]
+title = "Oggetti"
+
+[category]
+all = "Tutti gli oggetti"
+every = "Tutte le categorie"
+whole = "Tutto «{0}»"
+header = "Categoria"
+
+[search]
+header = "Cerca"
+placeholder = "Nome di un oggetto"
+
+[page]
+number = "{0} di {1}"
+previous = "‹ Indietro"
+next = "Avanti ›"
+
+[world]
+only = "Gli oggetti vengono dati a un giocatore in un mondo: caricare un salvataggio per riceverli."
+
+[row]
+details = "{0} · fino a {1} per pila"
+give = "Aggiungi"
+
+[given]
+all = "+{0} {1}"
+some = "+{0} {1}: {2} non entravano"
+none = "{0}: nessuno spazio nell’inventario"
+
+[sections]
+Keys = "Tasti"
+Window = "Finestra"
+
+[config.Keys.Window]
+name = "Tasto della finestra"
+description = "Aprire e chiudere la finestra degli oggetti."
+
+[config.Window.PageSize]
+name = "Oggetti per pagina"
+description = "Quanti oggetti mostra una pagina della finestra."
