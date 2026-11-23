@@ -81,9 +81,12 @@ internal static partial class Autopilot
         else Log("Catalog: no item row to rest the pointer on");
         if (SearchField(window) is { } search)
         {
-            search.text = "верёв";
+            // The start of the rope's name in the game's language, lower case: the search matches the name the player sees.
+            string rope = CatalogItems.Find("Item_Materials_BasicRope")?.DisplayName ?? "Rope";
+            string query = rope[..System.Math.Min(4, rope.Length)].ToLowerInvariant();
+            search.text = query;
             yield return 0.5f;
-            Log($"Catalog: searched 'верёв': {CatalogPage(window)}");
+            Log($"Catalog: searched '{query}' (the start of '{rope}', the rope among the rows expected): {CatalogPage(window)}");
         }
         Shot("catalog-menu");
         yield return AfterShot;
