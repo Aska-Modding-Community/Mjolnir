@@ -18,8 +18,9 @@
          0.4.2's mods keep working. 0.4.4: ToolTipOnIcon added, nothing taken away, so 0.4.3's mods keep
          working. 0.4.5: the terrain module's zones, roads, objects and grid, and the player's controls for a mod's
          tool, added, nothing taken away, so 0.4.4's mods keep working. 0.4.6: the build palette, quick slots, object
-         marks and previews, obstacles and road lines added, nothing taken away, so 0.4.5's mods keep working. -->
-    <MjolnirPlatformVersion>0.4.7</MjolnirPlatformVersion>
+         marks and previews, obstacles and road lines added, nothing taken away, so 0.4.5's mods keep working.
+         0.4.7 and 0.4.8: activation points, then ponds, added, nothing taken away, so 0.4.6's mods keep working. -->
+    <MjolnirPlatformVersion>0.4.8</MjolnirPlatformVersion>
   </PropertyGroup>
 
   <!-- The SDK's public API: Mjolnir.SDK and its modules Mjolnir.SDK.<Facade> (not their tests), the assemblies mods

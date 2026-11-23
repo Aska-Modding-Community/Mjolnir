@@ -3,7 +3,7 @@
 The platform has one version for the loader, the SDK and its modules. Mods built against an earlier minor version
 must be rebuilt.
 
-## Unreleased
+## 0.4.8 — 2026-11-23
 
 ### Added
 
@@ -11,12 +11,13 @@ must be rebuilt.
   `WaterBodies.Place(point, level, size)` fills the basin the point lies in up to the level, as far as the ground under
   that level reaches from the point within a square of `size` metres (4 to 128). The water is the game's lake water, the
   character swims in it, the game's own question of what water stands at a point (which creatures and fishing ask) is
-  answered with the pond, and the game saves the pond and sends it to the other players (who need the same SDK). Dig its shore and the water follows on the next frame. `WaterBodies.Measure` answers the same fill
-  without placing it — `WaterFillResult.Fits`, or why not: `Spills` (the basin is open at that level), `AboveLevel`,
-  `InWater`, `Overlaps`, `NotLoaded` — with its `Bounds`, `Area` and `Volume`, for a preview. `All`, `At(x, z)` and
-  `Nearest` give the ponds and the world's lakes (read-only); `WaterBody.Covers`, `DepthAt`, `Remove`. The console's
-  `water` lists them, fills the basin ahead of the player (`water fill [depth] [size]`) and takes the nearest pond away.
-  `Landscape.IsUnderwater` is true in a pond, as in a lake.
+  answered with the pond, and the game saves the pond and sends it to the other players (who need the same SDK). Dig
+  its shore and the water follows on the next frame. `WaterBodies.Measure` answers the same fill without placing it —
+  `WaterFillResult.Fits`, or why not: `Spills` (the basin is open at that level), `AboveLevel`, `InWater`, `Overlaps`,
+  `NotLoaded` — with its `Bounds`, `Area` and `Volume`, for a preview. `All`, `At(x, z)` and `Nearest` give the ponds
+  and the world's lakes (read-only); `WaterBody.Covers`, `DepthAt`, `Remove`. The console's `water` lists them, fills
+  the basin ahead of the player (`water fill [depth] [size]`) and takes the nearest pond away. `Landscape.IsUnderwater`
+  is true in a pond, as in a lake.
 
 ### Fixed
 
@@ -24,6 +25,8 @@ must be rebuilt.
   or not at all: the game draws the vegetation between its camera and the character see-through, to keep the character in
   sight, and that strip crossed the mod's view. While a mod's camera that neither follows nor looks at the character is
   shown, nothing is drawn see-through.
+
+Mods built against 0.4.0 to 0.4.7 work unchanged: nothing was taken out of the API.
 
 ## 0.4.7 — 2026-11-22
 
