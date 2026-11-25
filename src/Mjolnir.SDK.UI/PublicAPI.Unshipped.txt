@@ -1,1 +1,4 @@
 #nullable enable
+Mjolnir.SDK.UI.ModSettings
+static Mjolnir.SDK.UI.ModSettings.ClearPage() -> void
+static Mjolnir.SDK.UI.ModSettings.SetPage(System.Func<Mjolnir.SDK.UI.Control!>! build) -> void

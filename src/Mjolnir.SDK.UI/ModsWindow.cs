@@ -308,10 +308,20 @@ internal static class ModsWindow
         page.Show();
     }
 
-    private static UiWindow BuildSettings(Mod mod) => BuildSettingsWindow(NameOf(mod), mod.ConfigIfUsed!, StringsOf(mod));
+    // The mod's own page when it set one (ModSettings.SetPage), else the one built from its config. The builder is the
+    // mod's code: a throwing one disables that mod and leaves it the built page.
+    private static UiWindow BuildSettings(Mod mod)
+    {
+        var assembly = mod.GetType().Assembly;
+        Control? own = null;
+        if (ModSettings.PageOf(assembly) is { } build)
+            ModCall.TryRun(assembly, "its settings page", build, out own);
+        return BuildSettingsWindow(NameOf(mod), mod.ConfigIfUsed!, StringsOf(mod), own);
+    }
 
-    // A settings page: the config's controls (SettingsContent), and in its footer Reset and Close; the file is written when it closes.
-    private static UiWindow BuildSettingsWindow(string name, ModConfig config, ModStrings? strings)
+    // A settings page: the mod's own content or the config's controls (SettingsContent), and in its footer Reset and
+    // Close; the file is written when it closes.
+    private static UiWindow BuildSettingsWindow(string name, ModConfig config, ModStrings? strings, Control? content = null)
     {
         var window = new UiWindow
         {
@@ -322,7 +332,7 @@ internal static class ModsWindow
         {
             foreach (var entry in config.Entries) entry.BoxedValue = entry.BoxedDefault;
         }, confirmText: resetText, cancelText: Theme.Loc("common.cancel", "Cancel")), "Reset");
-        window.Content = SettingsContent(config, strings);
+        window.Content = content ?? SettingsContent(config, strings);
         window.Footer = SettingsFooter(config, reset, Button(Theme.Loc("common.close", "Close"), window.Close, "Close"));
         window.Closed += (_, _) => config.SaveIfChanged();
         return window;

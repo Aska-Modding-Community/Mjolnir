@@ -5,6 +5,14 @@ must be rebuilt.
 
 ## Unreleased
 
+### Added
+
+- A mod's own settings page (`ModSettings.SetPage`, `ClearPage`): the control a mod builds stands behind its Settings
+  button in the Mods window, in place of the page built from its config. The window around it stays the platform's —
+  the title, Reset, Close and the restart note — and the file is still written when the page closes, so controls bound
+  with `SettingControls` behave as they do on the built page. For settings that need more shape than a flat list: a mod
+  that carries other mods' settings, or a page with rows and pages of its own.
+
 ### Examples
 
 - `Mjolnir.CheatInventory` 1.1.0, published as a mod of its own: a picture in the Mods window, its texts in every
